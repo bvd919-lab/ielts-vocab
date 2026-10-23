@@ -261,6 +261,14 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .mbtn.bad{background:rgba(236,107,98,.35)}
 .shareimg{width:100%;border-radius:16px;display:block}
 
+.wl{background:var(--surface);border-radius:20px;padding:18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.wlnum{display:block;font:800 30px var(--display);font-variant-numeric:tabular-nums}
+.wl span{font:600 12px var(--display);letter-spacing:.1em;color:var(--muted)}
+.pring{--p:0;width:92px;height:92px;border-radius:50%;flex:none;background:conic-gradient(var(--confident) calc(var(--p)*1%),var(--surface-3) 0);display:grid;place-items:center}
+.pring div{width:74px;height:74px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font:800 20px var(--display)}
+.lvrow{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;padding:4px 0;font-variant-numeric:tabular-nums}
+.lvrow b{font:700 14px var(--display)}
+
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(16,19,18,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
@@ -1219,8 +1227,11 @@ if(S.day!==todayStr){S.day=todayStr;S.today=0;save()}
 function all(){const ex=Object.entries(S.extra).flatMap(([d,arr])=>(arr||[]).map(c=>({...c,deck:d})));
   return BASE.concat(ex,S.mine.map(c=>({...c,deck:"mine"})))}
 const deckOf=id=>DECKS.find(d=>d.id===id)||{name:"My added words",c:["#4b3f7a","#211b3d"]};
+const LEVELS=["A1","A2","B1","B2","C1","C2"];
+function levelOf(c){return c.lv||deckOf(c.deck).lv||""}
+function uniq(cs){const m=new Map();cs.forEach(c=>{if(!m.has(c.w))m.set(c.w,c)});return[...m.values()]}
 function cardsFor(f){const a=all();
-  if(f==="all")return a; if(f==="saved")return a.filter(c=>S.saved.includes(c.w));
+  if(f==="all")return a; if(f.startsWith("lv:"))return uniq(a.filter(c=>levelOf(c)===f.slice(3))); if(f==="saved")return a.filter(c=>S.saved.includes(c.w));
   if(f==="fav")return a.filter(c=>S.fav.includes(c.w)); return a.filter(c=>c.deck===f)}
 function status(c){const s=S.st[c.w];if(!s)return"new";return s.b<=1?"learning":s.b<=3?"familiar":"confident"}
 function sceneHTML(theme,em){
@@ -1248,7 +1259,7 @@ function header(){
   $("lvl").textContent=1+Math.floor(S.xp/XP_PER_LVL);
   $("lvlRing").style.setProperty("--p",(S.xp%XP_PER_LVL)/XP_PER_LVL*100)}
 function fillFilter(){const sel=$("filter");sel.innerHTML="";
-  const opts=[["all","All Decks"],...DECKS.map(d=>[d.id,d.name]),["saved","My Decks"],["fav","Favourites"]];
+  const opts=[["all","All Decks"],...DECKS.map(d=>[d.lv?"lv:"+d.lv:d.id,d.lv?"All "+d.lv+" words":d.name]),["saved","My Decks"],["fav","Favourites"]];
   opts.forEach(([v,n])=>{const o=document.createElement("option");o.value=v;o.textContent=n;sel.append(o)});
   if(!opts.some(o=>o[0]===S.filter))S.filter="all";sel.value=S.filter}
 function addXP(n){S.xp+=n;header();checkAch()}
@@ -1464,15 +1475,16 @@ document.querySelectorAll(".nav button[data-v]").forEach(b=>b.onclick=()=>go(b.d
 
 function statusBar(cs){const n={new:0,learning:0,familiar:0,confident:0};cs.forEach(c=>n[status(c)]++);
   const tot=cs.length||1;return{n,html:`<div class="bar">${["confident","familiar","learning"].map(k=>`<span style="width:${n[k]/tot*100}%;background:${ST_COLOR[k]}"></span>`).join("")}</div>`}}
-function deckEl(d){const cs=cardsFor(d.id),sb=statusBar(cs),f=cs[0]||{t:"dusk",e:["✨","🎯","📚"]};
+function deckEl(d){const key=d.lv?"lv:"+d.lv:d.id,cs=cardsFor(key),sb=statusBar(cs),f=cs[0]||{t:"dusk",e:["✨","🎯","📚"]};
   const el=document.createElement("div");el.className="deck";
   const canGen=d.lv||d.made||d.ielts;
   el.innerHTML=`<div class="thumb">${d.lv?`<span class="lv">${d.lv}</span>`:""}${sceneHTML(f.t,f.e)}</div><div style="min-width:0"><h3>${esc(d.name)}</h3><p>${esc(d.desc)}${d.band?` · ${esc(d.band)}`:""}</p>${sb.html}
     <div class="meta"><span>Confident ${sb.n.confident}/${cs.length}</span><span class="btns">${canGen?`<button class="gen">✨ +10 words</button>`:""}${cs.length?`<button class="go">Study</button>`:""}</span></div></div>`;
-  el.querySelector(".go")?.addEventListener("click",()=>startDeck(d.id));
+  el.querySelector(".go")?.addEventListener("click",()=>startDeck(key));
   const g=el.querySelector(".gen");if(g)g.onclick=()=>genWords(d,g);
   return el}
 function renderExplore(){const L=$("deckList");L.innerHTML="";
+  const pw=document.createElement("div");pw.style.cssText="display:flex;flex-direction:column;gap:10px";pw.innerHTML=progressHTML();wireProgress(pw);L.append(pw);
   const h1=document.createElement("h3");h1.className="sech";h1.textContent="CEFR levels";L.append(h1);
   DECKS.filter(d=>d.lv).forEach(d=>L.append(deckEl(d)));
   const n=document.createElement("p");n.className="note";n.style.margin="0";n.textContent="Tap ✨ +10 words to let AI add new words at that level.";L.append(n);
@@ -1525,16 +1537,12 @@ function renderMine(){const L=$("mineList");L.innerHTML="";
 function renderProfile(){const P=$("profile");const lvl=1+Math.floor(S.xp/XP_PER_LVL),into=S.xp%XP_PER_LVL;
   const a=all(),sb=statusBar(a),log=S.log||[];
   const avg=log.length?Math.round(log.reduce((t,x)=>t+x.s,0)/log.length):null;
-  const lvRows=[...DECKS.filter(d=>d.lv),{id:"__ielts",lv:"IELTS"}].map(d=>{const cs=d.id==="__ielts"?all().filter(c=>deckOf(c.deck).ielts):cardsFor(d.id),b=statusBar(cs);
-    return `<div class="rowb" style="gap:12px"><span style="font:700 14px var(--display);width:44px">${d.lv}</span><div style="flex:1">${b.html}</div><span class="note" style="width:52px;text-align:right">${b.n.confident}/${cs.length}</span></div>`}).join("");
-  P.innerHTML=`<div class="lvlcard"><div class="bigring" style="--p:${into/XP_PER_LVL*100}"><div>${lvl}</div></div>
+  P.innerHTML=`${progressHTML()}<div class="lvlcard"><div class="bigring" style="--p:${into/XP_PER_LVL*100}"><div>${lvl}</div></div>
     <div><div style="font:800 20px var(--display)">Level ${lvl}</div><div class="note">${S.xp} XP · ${XP_PER_LVL-into} XP to next level</div>
     <div class="note">Correct quiz +10 · Review +5 · Writing = score ÷ 10</div></div></div>
     <div class="tiles"><div class="tile"><b>🔥 ${S.streak}</b><span>Day streak</span></div><div class="tile"><b>${a.length-sb.n.new}</b><span>Words studied</span></div><div class="tile"><b>${avg??"–"}</b><span>Avg writing score</span></div></div>
     <div class="panel"><div class="rowb"><h3>Badges</h3><span class="note">${ACH.filter(a=>S.ach[a.id]).length}/${ACH.length}</span></div>
       <div class="achs">${ACH.map(a=>`<div class="achb${S.ach[a.id]?" on":""}" title="${esc(a.how)}"><b>${a.ic}</b>${esc(a.name)}</div>`).join("")}</div></div>
-    <div class="panel"><h3>Progress by level</h3>${lvRows}
-      <div class="legend">${["confident","familiar","learning"].map(k=>`<span style="--sc:${ST_COLOR[k]}"><i></i>${ST_LABEL[k]}</span>`).join("")}</div></div>
     <div class="panel"><div class="rowb"><h3>Daily goal</h3><select id="goalSel" aria-label="Daily goal">${[6,12,20,30,50].map(n=>`<option value="${n}"${n===S.goal?" selected":""}>${n} cards</option>`).join("")}</select></div>
       <div class="rowb"><h3>Mix in writing tasks</h3><select id="mixSel" aria-label="Writing practice frequency">${[["off","Off"],["some","Sometimes"],["often","Often"]].map(([v,n])=>`<option value="${v}"${v===S.mix?" selected":""}>${n}</option>`).join("")}</select></div>
       <span class="note">Sentence and meaning tasks only appear for words you've seen before</span>
@@ -1553,6 +1561,7 @@ function renderProfile(){const P=$("profile");const lvl=1+Math.floor(S.xp/XP_PER
       <div class="trow"><button class="ghost" id="expBtn">Export file</button><label class="ghost" style="cursor:pointer">Import file<input type="file" id="impIn" accept=".json,application/json" hidden></label></div></div>
     <div class="panel"><div class="rowb"><h3>Start over</h3><button class="danger" id="reset">Reset</button></div><div id="resetQ" hidden class="rowb"><span class="note">Delete all progress, XP, saved words and AI words?</span><button class="danger" id="resetYes">Confirm</button></div></div>
     <p class="note">Progress is stored on this device only.</p>`;
+  wireProgress(P);
   $("goalSel").onchange=e=>{S.goal=+e.target.value;save();header()};
   $("mixSel").onchange=e=>{S.mix=e.target.value;save()};
   $("accSel").onchange=e=>{S.accent=e.target.value;save();speak("Hello, let's learn some new words.",null,true)};
@@ -1727,6 +1736,15 @@ function refreshBack(c){if(c!==cur)return;
   const stem=c.w.split(" ")[0],s2=stem.length>4?stem.slice(0,-2):stem;
   const re=new RegExp("(\\b"+s2.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"[\\w'-]*)","i");
   $("bEx").innerHTML=esc(c.ex).replace(re,"<b>$1</b>");$("bExTh").textContent=c.exth||"";$("bEx").parentElement.hidden=false;$("thEx").hidden=!c.exth}
+
+/* ---------- overall progress: one total, split by level ---------- */
+const isLearned=c=>{const s=status(c);return s==="familiar"||s==="confident"};
+function progressHTML(){const a=uniq(all()),T=a.length,L=a.filter(isLearned).length,lr=a.filter(c=>status(c)==="learning").length,pct=T?Math.round(L/T*100):0;
+  const rows=[...LEVELS,"Other"].map(lv=>{const cs=a.filter(c=>(levelOf(c)||"Other")===lv);if(!cs.length)return"";const l=cs.filter(isLearned).length;
+    return `<button class="lvrow" data-lv="${lv}"><b>${lv}</b><div class="bar"><span style="width:${l/cs.length*100}%;background:var(--confident)"></span><span style="width:${cs.filter(c=>status(c)==="learning").length/cs.length*100}%;background:var(--learning)"></span></div><span class="note">${l}/${cs.length}</span></button>`}).join("");
+  return `<div class="wl"><div><b class="wlnum">${L} / ${T}</b><span>WORDS LEARNED</span><div class="note" style="margin-top:6px">Learning ${lr} · New ${T-L-lr}</div></div><div class="pring" style="--p:${pct}"><div>${pct}%</div></div></div>
+    <div class="panel"><h3>By level</h3>${rows}<div class="legend"><span style="--sc:var(--confident)"><i></i>Learned</span><span style="--sc:var(--learning)"><i></i>Learning</span></div><span class="note">Tap a level to study all its words</span></div>`}
+function wireProgress(root){root.querySelectorAll(".lvrow").forEach(b=>b.onclick=()=>{if(b.dataset.lv!=="Other")startDeck("lv:"+b.dataset.lv)})}
 
 /* ---------- achievements ---------- */
 const lvConf=id=>cardsFor(id).filter(c=>status(c)==="confident").length;
