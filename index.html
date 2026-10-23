@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ศัพท์ภาพสวย</title>
-<meta name="description" content="ฝึกศัพท์อังกฤษสำหรับ IELTS ด้วยการ์ดภาพ ควิซ และ AI ตรวจประโยค">
+<title>Picture Vocab</title>
+<meta name="description" content="IELTS vocabulary with picture cards, quizzes and AI sentence checking">
 <meta name="theme-color" content="#101312">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -93,7 +93,8 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .choice.wrong{background:var(--bad);color:#2a0b08}
 .tip{text-align:center;font-style:italic;font-size:14px;opacity:.65;margin-top:2px}
 
-.qimg{width:100%;max-width:280px;aspect-ratio:4/3;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.qimg{height:clamp(100px,22vh,180px);aspect-ratio:4/3;max-width:100%;flex:none;border-radius:18px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.front{overflow-y:auto}.fmid{min-height:0}
 .qdef{font:500 17px/1.5 var(--body);max-width:32ch}
 .qdef small{display:block;color:rgba(255,255,255,.72);font-size:14px;margin-top:4px}
 .word.hiddenw{letter-spacing:.22em;opacity:.55}
@@ -302,38 +303,38 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 <div class="app">
   <div class="top">
     <div class="stats">
-      <span class="stat" title="วันต่อเนื่อง">🔥 <span id="streak">0</span></span>
-      <span class="stat" title="ทบทวนวันนี้"><i class="ring" id="goalRing" style="--c:var(--familiar)"></i><span id="today">0</span><small>/<span id="goal">12</span></small></span>
-      <span class="stat" title="เลเวล"><i class="ring" id="lvlRing" style="--c:var(--ai-a)"></i>Lvl <span id="lvl">1</span></span>
+      <span class="stat" title="Day streak">🔥 <span id="streak">0</span></span>
+      <span class="stat" title="Reviewed today"><i class="ring" id="goalRing" style="--c:var(--familiar)"></i><span id="today">0</span><small>/<span id="goal">12</span></small></span>
+      <span class="stat" title="Level"><i class="ring" id="lvlRing" style="--c:var(--ai-a)"></i>Lvl <span id="lvl">1</span></span>
     </div>
-    <label class="picker"><select id="filter" aria-label="เลือกชุดคำศัพท์"></select></label>
+    <label class="picker"><select id="filter" aria-label="Choose deck"></select></label>
   </div>
 
   <!-- REVIEW -->
   <section class="view" id="v-review">
     <div class="stage" id="stage">
       <div class="swipe" id="swipe">
-        <span class="sl ok" id="okL">จำได้ ✓</span>
-        <span class="sl again" id="againL">↺ ทวนอีก</span>
-        <div class="card" id="card" tabindex="0" role="button" aria-label="แตะเพื่อพลิกการ์ด ปัดขวาถ้าจำได้ ปัดซ้ายเพื่อทวนอีก">
+        <span class="sl ok" id="okL">Got it ✓</span>
+        <span class="sl again" id="againL">↺ Again</span>
+        <div class="card" id="card" tabindex="0" role="button" aria-label="Tap to flip. Swipe right if you know it, left to review again">
           <div class="face front" id="front">
             <div class="frow">
-              <button class="ib" id="undo" aria-label="ย้อนกลับการ์ดก่อนหน้า"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
-              <button class="ib" id="sayF" aria-label="ฟังเสียง">🔊</button>
+              <button class="ib" id="undo" aria-label="Previous card"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg></button>
+              <button class="ib" id="sayF" aria-label="Play sound">🔊</button>
               <span class="chip" id="typeChip" hidden></span>
               <span class="badge" id="badgeF">NEW</span>
             </div>
             <div class="fmid">
               <div class="qimg" id="qImg" hidden></div>
               <div class="word" id="fWord"></div>
-              <div class="pron" id="fPronBox"><span id="fPron"></span><button id="sayP" aria-label="ฟังเสียง">🔊</button></div>
+              <div class="pron" id="fPronBox"><span id="fPron"></span><button id="sayP" aria-label="Play sound">🔊</button></div>
               <div class="pos" id="fPos"></div>
               <div class="qdef" id="qDef" hidden></div>
             </div>
             <div class="quiz">
               <div class="ql">⚡ Quiz</div>
-              <div class="qbox"><div class="qhead"><p id="qText">คำไหนความหมายใกล้ที่สุด?</p><button type="button" class="mic" id="qMic" hidden aria-label="พูดคำตอบ">🎤</button></div><div class="choices" id="choices"></div>
-                <form class="spell" id="spell" hidden><input id="spIn" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="พิมพ์คำที่ได้ยิน" placeholder="พิมพ์คำที่ได้ยิน"><button class="primary" type="submit">ตรวจ</button></form>
+              <div class="qbox"><div class="qhead"><p id="qText">What's the closest word?</p><button type="button" class="mic" id="qMic" hidden aria-label="Answer by voice">🎤</button></div><div class="choices" id="choices"></div>
+                <form class="spell" id="spell" hidden><input id="spIn" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Type the word you hear" placeholder="Type the word you hear"><button class="primary" type="submit">Check</button></form>
               </div>
               <div class="tip">tap to flip the card</div>
             </div>
@@ -341,7 +342,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
           <div class="face back">
             <div class="pic" id="bPic"></div>
             <div class="info">
-              <div class="whead"><h2 id="bWord"></h2><button class="ib" id="sayB" aria-label="ฟังเสียง">🔊</button></div>
+              <div class="whead"><h2 id="bWord"></h2><button class="ib" id="sayB" aria-label="Play sound">🔊</button></div>
               <div class="mean">
                 <span class="posc" id="bPos"></span>
                 <div class="mrow"><span class="lang">EN</span><span id="bDef"></span></div>
@@ -349,12 +350,12 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
               </div>
               <div class="ex"><span id="bEx"></span><button class="thbtn" id="thEx" aria-pressed="false">TH</button><span class="thtxt" id="bExTh" hidden></span></div>
               <div class="acts">
-                <button class="act" id="saveBtn" aria-pressed="false" aria-label="บันทึกเข้า My Decks"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg></button>
-                <button class="act fav" id="favBtn" aria-pressed="false" aria-label="ถูกใจ">♡</button>
-                <button class="act" id="knownBtn" aria-pressed="false" aria-label="รู้แล้ว ไม่ต้องทวน">✓</button>
-                <button class="act" id="thesBtn" aria-label="แผนผังคำพ้อง">🕸️</button>
-                <button class="act" id="pronBtn" hidden aria-label="ฝึกออกเสียง">🎤</button>
-                <button class="act" id="shareBtn" aria-label="แชร์การ์ดเป็นรูป"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+                <button class="act" id="saveBtn" aria-pressed="false" aria-label="Save to My Decks"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg></button>
+                <button class="act fav" id="favBtn" aria-pressed="false" aria-label="Favourite">♡</button>
+                <button class="act" id="knownBtn" aria-pressed="false" aria-label="I know this — stop reviewing">✓</button>
+                <button class="act" id="thesBtn" aria-label="Word map">🕸️</button>
+                <button class="act" id="pronBtn" hidden aria-label="Practise pronunciation">🎤</button>
+                <button class="act" id="shareBtn" aria-label="Share card as image"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></button>
                 <button class="more" id="moreBtn">Tell Me More</button>
               </div>
             </div>
@@ -364,52 +365,52 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
     </div>
     <div class="task" id="task" hidden>
       <h3 id="taskQ"></h3>
-      <textarea id="ans" aria-label="คำตอบของคุณ"></textarea>
-      <div class="trow"><span class="note">แตะการ์ดเพื่อดูใบ้ได้</span><button class="primary" id="checkBtn">ตรวจคำตอบ</button></div>
+      <textarea id="ans" aria-label="Your answer"></textarea>
+      <div class="trow"><span class="note">Tap the card for a hint</span><button class="primary" id="checkBtn">Check answer</button></div>
       <div class="result" id="result" hidden></div>
     </div>
     <div class="done" id="done" hidden>
       <div style="font-size:54px">🎉</div>
-      <h2>ทบทวนครบแล้ว!</h2>
-      <p id="doneTxt">ไม่มีคำที่ถึงรอบทบทวนในชุดนี้</p>
-      <button class="primary" id="practice">ฝึกต่อ ทวนคำที่ยังไม่แม่น</button>
-      <button class="ghost" id="goExplore">เลือกชุดคำใหม่</button>
+      <h2>All caught up!</h2>
+      <p id="doneTxt">No words are due in this deck</p>
+      <button class="primary" id="practice">Keep practising weak words</button>
+      <button class="ghost" id="goExplore">Choose another deck</button>
     </div>
     <div class="dock" id="dock">
-      <div class="hint" id="hint">ปัดขวา = จำได้ · ปัดซ้าย = ขอทวนอีก · แตะการ์ดเพื่อพลิก</div>
+      <div class="hint" id="hint">Swipe right = got it · Swipe left = again · Tap to flip</div>
       <div class="rate">
-        <button class="r0" id="btnAgain">← ทวนอีก<small id="i0">อีก 1 นาที</small></button>
-        <button class="r1" id="btnOk">จำได้ →<small id="i1"></small></button>
+        <button class="r0" id="btnAgain">← Again<small id="i0">in 1 min</small></button>
+        <button class="r1" id="btnOk">Got it →<small id="i1"></small></button>
       </div>
     </div>
   </section>
 
   <!-- EXPLORE -->
   <section class="view" id="v-explore" hidden>
-    <h2 class="vh">สำรวจคลังคำศัพท์</h2>
-    <p class="sub">เรียงตามระดับ CEFR เพื่อเตรียมสอบ IELTS</p>
-    <div class="quick"><button id="surprise">🎲 Surprise Me</button><button id="matchBtn">🧩 เกมจับคู่คำ</button></div>
+    <h2 class="vh">Explore word banks</h2>
+    <p class="sub">Organised by CEFR level and IELTS topic</p>
+    <div class="quick"><button id="surprise">🎲 Surprise Me</button><button id="matchBtn">🧩 Word Match</button></div>
     <div class="scroll" id="deckList"></div>
   </section>
 
   <!-- MY DECKS -->
   <section class="view" id="v-mine" hidden>
     <h2 class="vh">My Decks</h2>
-    <p class="sub">คำที่บันทึกไว้และคำที่ค้นด้วย AI</p>
+    <p class="sub">Saved words and words found with AI</p>
     <div class="scroll" id="mineList"></div>
   </section>
 
   <!-- PROFILE -->
   <section class="view" id="v-profile" hidden>
-    <h2 class="vh">โปรไฟล์</h2>
+    <h2 class="vh">Profile</h2>
     <div class="scroll" id="profile"></div>
   </section>
 </div>
 
-<nav class="nav" aria-label="เมนูหลัก"><div>
+<nav class="nav" aria-label="Main menu"><div>
   <button data-v="review" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 7v10M6.5 5v14"/><rect x="10" y="3" width="11" height="18" rx="2.5"/></svg>Review</button>
   <button data-v="explore"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>Explore</button>
-  <button class="magic" id="magic" aria-label="ค้นหาคำด้วย AI"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M17 3.5v3M15.5 5h3" stroke-width="1.6"/></svg></span></button>
+  <button class="magic" id="magic" aria-label="Search words with AI"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/><path d="M17 3.5v3M15.5 5h3" stroke-width="1.6"/></svg></span></button>
   <button data-v="mine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M5 16H4.5A1.5 1.5 0 0 1 3 14.5v-10A1.5 1.5 0 0 1 4.5 3h10A1.5 1.5 0 0 1 16 4.5V5"/></svg>My Decks</button>
   <button data-v="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4.5"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Profile</button>
 </div></nav>
@@ -418,7 +419,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sTitle">
   <div class="in">
     <div class="grab"></div>
-    <div class="shead"><h3 id="sTitle"></h3><button class="ib" id="sClose" aria-label="ปิด">✕</button></div>
+    <div class="shead"><h3 id="sTitle"></h3><button class="ib" id="sClose" aria-label="Close">✕</button></div>
     <div class="sbody" id="sBody"></div>
   </div>
 </div>
@@ -428,7 +429,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 /* ---------- data ---------- */
 // [word, pronunciation, pos, thai, definition, example, example-thai, closest word, scene theme, scene emoji (main first)]
 const DECKS=[
- {id:"a1",lv:"A1",name:"A1 · เริ่มต้น",desc:"คำพื้นฐานในชีวิตประจำวัน",band:"IELTS ~3",c:["#4f8a4a","#22401f"],w:[
+ {id:"a1",lv:"A1",name:"A1 · Beginner",desc:"Everyday basics",band:"IELTS ~3",c:["#4f8a4a","#22401f"],w:[
   ["happy","HAP-ee","adj.","มีความสุข","Feeling good and pleased.","The children were happy at the beach.","เด็กๆ มีความสุขที่ชายหาด","glad","sea",["😄","🏖️","🌞"]],
   ["big","BIG","adj.","ใหญ่","Large in size.","An elephant is a very big animal.","ช้างเป็นสัตว์ที่ตัวใหญ่มาก","large","day",["🐘","🌳","🐦"]],
   ["fast","FAST","adj.","เร็ว","Moving quickly.","The fast train arrived in two hours.","รถไฟความเร็วสูงมาถึงในสองชั่วโมง","quick","city",["🚄","💨","🏙️"]],
@@ -450,7 +451,7 @@ const DECKS=[
   ["quiet","KWY-ut","adj.","เงียบ","Making very little noise.","The library is a quiet place to study.","ห้องสมุดเป็นที่เงียบเหมาะกับการอ่านหนังสือ","silent","room",["🤫","📚","🕯️"]],
   ["favorite","FAY-vuh-rit","adj.","ที่ชอบที่สุด","Liked more than all the others.","Pizza is my favorite food.","พิซซ่าคืออาหารที่ฉันชอบที่สุด","preferred","room",["🍕","❤️","😋"]]
  ]},
- {id:"a2",lv:"A2",name:"A2 · พื้นฐาน",desc:"คำที่ใช้เล่าเรื่องและให้ความเห็นง่ายๆ",band:"IELTS ~3.5–4",c:["#3f7a6a","#1b3a31"],w:[
+ {id:"a2",lv:"A2",name:"A2 · Elementary",desc:"Simple stories and opinions",band:"IELTS ~3.5–4",c:["#3f7a6a","#1b3a31"],w:[
   ["borrow","BOR-oh","verb","ยืม","To take something and give it back later.","Can I borrow your pen for a minute?","ขอยืมปากกาแป๊บหนึ่งได้ไหม","loan","room",["🖊️","🤲","📒"]],
   ["decide","dih-SYD","verb","ตัดสินใจ","To choose what to do after thinking.","She decided to study abroad.","เธอตัดสินใจไปเรียนต่อต่างประเทศ","choose","dusk",["🤔","🪧","🛣️"]],
   ["environment","en-VY-run-ment","noun","สิ่งแวดล้อม","The air, water and land around us.","Plastic bags are bad for the environment.","ถุงพลาสติกไม่ดีต่อสิ่งแวดล้อม","nature","day",["🌍","🌳","♻️"]],
@@ -472,7 +473,7 @@ const DECKS=[
   ["enough","ih-NUF","adj.","เพียงพอ","As much as you need.","I don't have enough time to finish.","ฉันมีเวลาไม่พอที่จะทำให้เสร็จ","adequate","room",["⏳","📄","🙅"]],
   ["rule","ROOL","noun","กฎ","Something that tells you what you must or must not do.","The school has a rule about phones in class.","โรงเรียนมีกฎเรื่องการใช้โทรศัพท์ในห้องเรียน","regulation","room",["📵","🏫","📏"]]
  ]},
- {id:"b1",lv:"B1",name:"B1 · กลาง",desc:"คำที่ใช้บ่อยใน IELTS Speaking",band:"IELTS ~4–5",c:["#3d6b72","#1b3236"],w:[
+ {id:"b1",lv:"B1",name:"B1 · Intermediate",desc:"Common in IELTS Speaking",band:"IELTS ~4–5",c:["#3d6b72","#1b3236"],w:[
   ["imagination","i-ma-juh-NAY-shun","noun","จินตนาการ","The ability to create new ideas, pictures, or stories in your mind.","Using her imagination, a young girl saw a friendly dragon among the clouds.","เด็กหญิงใช้จินตนาการ มองเห็นมังกรใจดีบินอยู่ท่ามกลางก้อนเมฆ","conceptualization","day",["👧","🐉","☁️","🌼"]],
   ["determined","dih-TUR-mind","adj.","มุ่งมั่น","Having decided firmly to do something, even when it is hard.","He was determined to reach the top of the mountain.","เขามุ่งมั่นที่จะไปให้ถึงยอดเขา","resolute","day",["🧗","⛰️","🚩"]],
   ["reliable","rih-LY-uh-bul","adj.","ไว้ใจได้","Able to be trusted to do what is expected.","Public transport should be cheap and reliable.","ระบบขนส่งสาธารณะควรราคาถูกและไว้ใจได้","dependable","city",["🚌","⏰","✅"]],
@@ -494,7 +495,7 @@ const DECKS=[
   ["affect","uh-FEKT","verb","ส่งผลกระทบ","To cause a change in someone or something.","Heavy rain can affect the rice harvest.","ฝนตกหนักอาจส่งผลต่อการเก็บเกี่ยวข้าว","influence","rain",["🌾","👨‍🌾","🌧️"]],
   ["communicate","kuh-MYOO-nih-kayt","verb","สื่อสาร","To share information or ideas with others.","Smartphones help people communicate easily.","สมาร์ตโฟนช่วยให้คนสื่อสารกันได้ง่าย","interact","city",["📱","🗣️","🌐"]]
  ]},
- {id:"b2",lv:"B2",name:"B2 · กลางค่อนสูง",desc:"คำวิชาการที่ช่วยดันคะแนน Writing",band:"IELTS ~5.5–6.5",c:["#3d5d8f","#1a2945"],w:[
+ {id:"b2",lv:"B2",name:"B2 · Upper-intermediate",desc:"Academic words to lift your Writing score",band:"IELTS ~5.5–6.5",c:["#3d5d8f","#1a2945"],w:[
   ["significant","sig-NIF-ih-kunt","adj.","สำคัญ, มีนัยสำคัญ","Large or important enough to notice.","There was a significant rise in online shopping.","การซื้อของออนไลน์เพิ่มขึ้นอย่างมีนัยสำคัญ","considerable","city",["📈","🛒","📱"]],
   ["consequence","KON-sih-kwens","noun","ผลที่ตามมา","A result of an action, often a bad one.","Climate change has serious consequences for farmers.","การเปลี่ยนแปลงสภาพภูมิอากาศส่งผลร้ายแรงต่อเกษตรกร","outcome","dusk",["🌵","👨‍🌾","☀️"]],
   ["contribute","kun-TRIB-yoot","verb","มีส่วนช่วย","To help cause something or to give something.","Volunteers contribute a lot to the local community.","อาสาสมัครมีส่วนช่วยชุมชนท้องถิ่นอย่างมาก","donate","day",["🙌","🧺","🏘️"]],
@@ -516,7 +517,7 @@ const DECKS=[
   ["assess","uh-SES","verb","ประเมิน","To judge the quality or value of something.","Examiners assess your fluency and vocabulary.","ผู้คุมสอบประเมินความคล่องและคำศัพท์ของคุณ","evaluate","room",["📝","🧑‍⚖️","✅"]],
   ["widespread","WYD-spred","adj.","แพร่หลาย","Happening in many places or among many people.","Smartphone use is widespread among teenagers.","การใช้สมาร์ตโฟนแพร่หลายในหมู่วัยรุ่น","prevalent","city",["📱","🧑‍🤝‍🧑","🌐"]]
  ]},
- {id:"c1",lv:"C1",name:"C1 · สูง",desc:"คำที่ทำให้งานเขียนดูเป็นผู้ใหญ่",band:"IELTS ~7–8",c:["#5a4a95","#271f47"],w:[
+ {id:"c1",lv:"C1",name:"C1 · Advanced",desc:"Words for mature, precise writing",band:"IELTS ~7–8",c:["#5a4a95","#271f47"],w:[
   ["detrimental","det-rih-MEN-tul","adj.","เป็นผลเสีย","Causing harm or damage.","Too much screen time is detrimental to sleep.","การจ้องจอมากเกินไปส่งผลเสียต่อการนอน","harmful","night",["📱","😵","🛏️"]],
   ["inevitable","in-EV-ih-tuh-bul","adj.","หลีกเลี่ยงไม่ได้","Certain to happen.","Some job losses are inevitable as technology develops.","การตกงานบางส่วนเป็นสิ่งหลีกเลี่ยงไม่ได้เมื่อเทคโนโลยีพัฒนา","unavoidable","city",["🤖","🏭","👷"]],
   ["mitigate","MIT-ih-gayt","verb","บรรเทา, ลดความรุนแรง","To make something bad less serious.","Planting trees can mitigate the effects of flooding.","การปลูกต้นไม้ช่วยบรรเทาผลกระทบจากน้ำท่วม","alleviate","rain",["🌳","🌊","🏘️"]],
@@ -538,7 +539,7 @@ const DECKS=[
   ["consensus","kun-SEN-sus","noun","ฉันทามติ","General agreement among a group.","There is a scientific consensus on global warming.","นักวิทยาศาสตร์มีฉันทามติเรื่องภาวะโลกร้อน","agreement","room",["👥","🤝","🌡️"]],
   ["unprecedented","un-PRES-ih-den-tid","adj.","ไม่เคยเกิดขึ้นมาก่อน","Never having happened before.","The pandemic caused unprecedented changes to work.","โรคระบาดทำให้การทำงานเปลี่ยนแปลงอย่างที่ไม่เคยเกิดขึ้นมาก่อน","unparalleled","city",["💻","🏠","🦠"]]
  ]},
- {id:"c2",lv:"C2",name:"C2 · เชี่ยวชาญ",desc:"คำระดับสูงสุดสำหรับ band 8 ขึ้นไป",band:"IELTS ~8.5–9",c:["#874070","#3a1932"],w:[
+ {id:"c2",lv:"C2",name:"C2 · Proficient",desc:"Top-level words for band 8+",band:"IELTS ~8.5–9",c:["#874070","#3a1932"],w:[
   ["ubiquitous","yoo-BIK-wih-tus","adj.","มีอยู่ทุกหนแห่ง","Seeming to be everywhere.","Smartphones have become ubiquitous in modern life.","สมาร์ตโฟนกลายเป็นสิ่งที่มีอยู่ทุกหนแห่งในชีวิตสมัยใหม่","omnipresent","city",["📱","🌐","👥"]],
   ["paradigm","PAIR-uh-dym","noun","กระบวนทัศน์, แบบแผนความคิด","A model or typical way of thinking about something.","Remote work represents a paradigm shift in employment.","การทำงานทางไกลคือการเปลี่ยนกระบวนทัศน์ของการจ้างงาน","model","room",["💻","🔄","🏠"]],
   ["pragmatic","prag-MAT-ik","adj.","ใช้ได้จริง, มองตามความเป็นจริง","Dealing with problems in a practical way.","We need a pragmatic solution, not an ideal one.","เราต้องการทางแก้ที่ใช้ได้จริง ไม่ใช่ทางแก้ในอุดมคติ","practical","site",["🛠️","📐","✅"]],
@@ -560,8 +561,8 @@ const DECKS=[
   ["equitable","EK-wih-tuh-bul","adj.","เป็นธรรม","Fair and equal to everyone.","Healthcare should be equitable for all citizens.","การรักษาพยาบาลควรเป็นธรรมกับประชาชนทุกคน","fair","day",["⚖️","🏥","👨‍👩‍👧"]],
   ["burgeoning","BUR-juh-ning","adj.","เติบโตอย่างรวดเร็ว","Growing quickly.","Thailand has a burgeoning tech industry.","ประเทศไทยมีอุตสาหกรรมเทคโนโลยีที่เติบโตอย่างรวดเร็ว","flourishing","city",["🚀","🏢","💻"]]
  ]},
- {id:"made",lv:"",made:1,name:"Made for You",desc:"คำที่ AI เลือกให้ตามความสนใจของคุณ",c:["#8a5a2b","#3d2610"],w:[]},
- {id:"work",lv:"",name:"ที่ทำงาน & ไซต์งาน",desc:"ศัพท์งานโปรเจกต์และงานก่อสร้าง",c:["#7a5a32","#3a2914"],w:[
+ {id:"made",lv:"",made:1,name:"Made for You",desc:"Words AI picks from your interests",c:["#8a5a2b","#3d2610"],w:[]},
+ {id:"work",lv:"",name:"Work & Construction Site",desc:"Project and construction vocabulary",c:["#7a5a32","#3a2914"],w:[
   ["deadline","DED-lyn","noun","กำหนดส่ง","The time or date by which something must be done.","The deadline for the report is Friday at five.","กำหนดส่งรายงานคือวันศุกร์ห้าโมงเย็น","due date","room",["⏰","📄","🏃"]],
   ["schedule","SKEJ-ool","noun","ตารางเวลา","A plan of when things will happen.","The project is two weeks behind schedule.","โปรเจกต์ล่าช้ากว่ากำหนดสองสัปดาห์","timetable","room",["🗓️","📌","⏱️"]],
   ["estimate","ES-tih-mayt","verb","ประเมิน, กะคร่าวๆ","To guess the size, cost, or amount of something.","Can you estimate the cost of the bricks?","ช่วยประเมินค่าอิฐคร่าวๆ ได้ไหม","approximate","site",["🧮","🧱","💰"]],
@@ -572,7 +573,7 @@ const DECKS=[
   ["confirm","kun-FURM","verb","ยืนยัน","To say that something is true or will happen.","Please confirm the meeting time by email.","โปรดยืนยันเวลาประชุมทางอีเมล","verify","room",["✅","📅","📞"]],
   ["require","rih-KWYR","verb","ต้องการ, จำเป็นต้องมี","To need something.","This building work requires a safety permit.","งานก่อสร้างนี้จำเป็นต้องมีใบอนุญาตด้านความปลอดภัย","demand","site",["🦺","📋","🏗️"]]
  ]},
- {id:"pv",lv:"",name:"Phrasal Verbs",desc:"กริยาวลีที่ใช้ได้ใน IELTS Speaking",c:["#2f6b8a","#163447"],w:[
+ {id:"pv",lv:"",name:"Phrasal Verbs",desc:"Phrasal verbs for IELTS Speaking",c:["#2f6b8a","#163447"],w:[
   ["give up","giv-UP","phrasal v.","ยอมแพ้, เลิก","To stop trying to do something.","Don't give up, you are almost at the finish line.","อย่ายอมแพ้ เธอใกล้ถึงเส้นชัยแล้ว","quit","dusk",["🏃","🏁","💦"]],
   ["look forward to","look-FOR-werd-too","phrasal v.","ตั้งตารอ","To feel happy about something that is going to happen.","I look forward to opening my birthday present.","ฉันตั้งตารอที่จะได้แกะของขวัญวันเกิด","anticipate","room",["🎁","😊","🎈"]],
   ["figure out","FIG-yer-OWT","phrasal v.","คิดออก, หาทางได้","To understand or solve something after thinking.","It took me an hour to figure out the puzzle.","ฉันใช้เวลาหนึ่งชั่วโมงกว่าจะคิดปริศนานี้ออก","solve","room",["🧩","💡","🤔"]],
@@ -582,7 +583,7 @@ const DECKS=[
   ["turn down","turn-DOWN","phrasal v.","ปฏิเสธ","To say no to an offer or request.","He turned down the job because it was too far.","เขาปฏิเสธงานนั้นเพราะไกลเกินไป","reject","city",["🙅","📨","✋"]],
   ["set up","set-UP","phrasal v.","ตั้ง, จัดเตรียม","To build, prepare, or start something.","We set up the tent before it got dark.","เรากางเต็นท์ก่อนฟ้ามืด","establish","dusk",["⛺","🔦","🌲"]]
  ]},
- {id:"hero",lv:"",name:"ฮีโร่ & แอ็กชัน",desc:"ศัพท์จากหนังฮีโร่และซีรีส์แปลงร่าง",c:["#7a3550","#341424"],w:[
+ {id:"hero",lv:"",name:"Heroes & Action",desc:"Words from hero movies and tokusatsu",c:["#7a3550","#341424"],w:[
   ["transform","trans-FORM","verb","แปลงร่าง, เปลี่ยนรูป","To change completely in form or appearance.","With one press of his belt, he transformed into a hero.","กดเข็มขัดครั้งเดียว เขาก็แปลงร่างเป็นฮีโร่","convert","night",["🦸","⚡","🌀"]],
   ["defeat","dih-FEET","verb","เอาชนะ","To win against someone in a fight or game.","The hero finally defeated the monster.","ในที่สุดฮีโร่ก็เอาชนะสัตว์ประหลาดได้","beat","dusk",["👾","💥","🥊"]],
   ["villain","VIL-un","noun","ตัวร้าย","The bad character in a story.","The villain laughed as storm clouds covered the city.","ตัวร้ายหัวเราะขณะเมฆพายุปกคลุมเมือง","antagonist","night",["🦹","🌩️","🏙️"]],
@@ -593,6 +594,589 @@ const DECKS=[
   ["protect","pruh-TEKT","verb","ปกป้อง","To keep someone or something safe from harm.","Heroes protect people from danger.","ฮีโร่ปกป้องผู้คนจากอันตราย","guard","rain",["🛡️","👨‍👩‍👧","☔"]]
  ]}
 ];
+/* IELTS topic word bank (B1–C1): word|pos|level|thai|definition|closest word
+   Pronunciation, example sentence and picture are filled in by AI the first time a card is studied */
+const IELTS_RAW=`#i-env|🌍 Environment & Climate|Climate change, pollution, energy, waste|day|🌍,🌱,♻️,🌡️,🏭,🌊|#3f7a52,#1b3a26
+emission|n|B2|การปล่อย (ก๊าซ/มลพิษ)|Gas or substance sent into the air|discharge
+greenhouse gas|n|B2|ก๊าซเรือนกระจก|A gas that traps heat in the atmosphere|heat-trapping gas
+carbon footprint|n|B2|รอยเท้าคาร์บอน|The amount of carbon a person or activity produces|carbon output
+renewable|adj|B2|หมุนเวียนได้|Able to be replaced naturally|inexhaustible
+fossil fuel|n|B2|เชื้อเพลิงฟอสซิล|Fuel like coal or oil formed from ancient remains|coal
+deforestation|n|B2|การตัดไม้ทำลายป่า|Cutting down large areas of forest|logging
+contaminate|v|B2|ทำให้ปนเปื้อน|To make something dirty or poisonous|pollute
+conserve|v|B2|อนุรักษ์, ประหยัด|To protect something from being wasted or damaged|save
+preserve|v|B1|รักษา, สงวนไว้|To keep something as it is|protect
+eco-friendly|adj|B1|เป็นมิตรต่อสิ่งแวดล้อม|Not harmful to the environment|green
+recyclable|adj|B1|รีไซเคิลได้|Able to be processed and used again|reusable
+dispose of|phr|B2|กำจัด, ทิ้ง|To get rid of something|discard
+landfill|n|B2|หลุมฝังกลบขยะ|A place where waste is buried|dump
+drought|n|B2|ภัยแล้ง|A long period without rain|dry spell
+flooding|n|B1|น้ำท่วม|Water covering land that is usually dry|inundation
+erosion|n|C1|การกัดเซาะ|Gradual wearing away of land by water or wind|wearing away
+global warming|n|B1|ภาวะโลกร้อน|The rise in Earth's average temperature|climate change
+extinct|adj|B2|สูญพันธุ์แล้ว|No longer existing|died out
+endangered|adj|B2|ใกล้สูญพันธุ์|At risk of disappearing completely|threatened
+biodiversity|n|C1|ความหลากหลายทางชีวภาพ|The variety of plants and animals in an area|variety of life
+ecosystem|n|B2|ระบบนิเวศ|All living things in an area and their environment|habitat
+toxic|adj|B2|เป็นพิษ|Poisonous and harmful|poisonous
+waste|n|B1|ขยะ, ของเสีย|Material that is no longer wanted|rubbish
+pesticide|n|B2|ยาฆ่าแมลง|A chemical used to kill insects on crops|insecticide
+harness|v|C1|นำ (พลังงาน) มาใช้|To control and use natural energy|utilise
+solar power|n|B1|พลังงานแสงอาทิตย์|Energy from the sun|solar energy
+wind farm|n|B2|ฟาร์มกังหันลม|A group of wind turbines producing electricity|wind park
+depletion|n|C1|การร่อยหรอ|Reduction of a resource until little is left|exhaustion
+scarce|adj|B2|ขาดแคลน|Not enough for what is needed|limited
+natural resources|n|B2|ทรัพยากรธรรมชาติ|Materials from nature that people use|raw materials
+acid rain|n|B2|ฝนกรด|Rain made acidic by air pollution|polluted rain
+desertification|n|C1|การกลายเป็นทะเลทราย|The process of land becoming desert|land degradation
+irreversible|adj|C1|ย้อนกลับไม่ได้|Impossible to change back|permanent
+curb|v|C1|ควบคุม, จำกัด|To limit something bad|restrain
+offset|v|C1|ชดเชย|To balance one effect with an opposite one|counterbalance
+disposable|adj|B2|ใช้แล้วทิ้ง|Made to be thrown away after use|single-use
+biodegradable|adj|C1|ย่อยสลายได้ทางชีวภาพ|Able to decay naturally|compostable
+tackle|v|B2|จัดการ (ปัญหา)|To deal with a difficult problem|address
+devastating|adj|B2|ร้ายแรงมาก|Causing great damage|destructive
+emit|v|B2|ปล่อย (ก๊าซ, แสง)|To send out gas, heat or light|release
+#i-eco|🦁 Nature & Animals|Habitats, food chains, animal behaviour|day|🦁,🐝,🦋,🐢,🌿,🦉|#5a7a2e,#27380f
+habitat|n|B2|ถิ่นที่อยู่อาศัย|The natural home of an animal or plant|natural home
+species|n|B2|สายพันธุ์|A group of similar animals or plants|kind
+predator|n|B2|ผู้ล่า|An animal that hunts others|hunter
+prey|n|B2|เหยื่อ|An animal hunted by another|quarry
+migrate|v|B2|อพยพ|To move to another place for a season|relocate
+hibernate|v|B2|จำศีล|To sleep through the winter|overwinter
+nocturnal|adj|C1|หากินกลางคืน|Active at night|night-active
+herbivore|n|B2|สัตว์กินพืช|An animal that eats only plants|plant-eater
+carnivore|n|B2|สัตว์กินเนื้อ|An animal that eats meat|meat-eater
+breed|v|B2|ผสมพันธุ์, เพาะพันธุ์|To produce young animals|reproduce
+offspring|n|C1|ลูกหลาน|The young of an animal or person|young
+forage|v|C1|หาอาหาร|To search for food|search
+thrive|v|B2|เจริญเติบโต, รุ่งเรือง|To grow strongly and healthily|prosper
+flourish|v|C1|เจริญงอกงาม|To grow or develop very well|thrive
+adapt|v|B1|ปรับตัว|To change to suit new conditions|adjust
+camouflage|n|B2|การพรางตัว|Colours that help an animal hide|disguise
+venomous|adj|C1|มีพิษ (จากการกัด)|Able to inject poison by biting|poisonous
+invasive|adj|C1|รุกราน (ชนิดพันธุ์ต่างถิ่น)|Spreading and harming other species|intrusive
+parasite|n|B2|ปรสิต|A living thing that feeds on another|leech
+swarm|n|B2|ฝูง (แมลง)|A large moving group of insects|cloud
+herd|n|B1|ฝูง (สัตว์กินหญ้า)|A large group of animals like cows|flock
+colony|n|B2|อาณานิคม (ของสัตว์)|A group of animals living together|community
+burrow|n|C1|โพรง|A hole an animal digs to live in|den
+captivity|n|B2|การถูกกักขัง|Being kept in a cage or zoo|confinement
+wildlife|n|B1|สัตว์ป่า|Animals living in nature|fauna
+vegetation|n|B2|พืชพรรณ|Plants in general in an area|plant life
+aquatic|adj|C1|ที่อยู่ในน้ำ|Living in water|water-dwelling
+marine|adj|B2|เกี่ยวกับทะเล|Relating to the sea|oceanic
+lifespan|n|B2|อายุขัย|How long something lives|life expectancy
+instinct|n|B2|สัญชาตญาณ|A natural behaviour that is not learned|intuition
+mammal|n|B1|สัตว์เลี้ยงลูกด้วยนม|An animal that feeds its babies milk|warm-blooded animal
+reptile|n|B1|สัตว์เลื้อยคลาน|A cold-blooded animal like a snake|lizard
+fungus|n|B2|เชื้อรา, เห็ด|A living thing like a mushroom or mould|mould
+pollinate|v|C1|ผสมเกสร|To carry pollen between flowers|fertilise
+food chain|n|B2|ห่วงโซ่อาหาร|The order in which living things eat each other|food web
+extinction|n|B2|การสูญพันธุ์|When a species stops existing|dying out
+dense|adj|B2|หนาแน่น|Closely packed together|thick
+vast|adj|B2|กว้างใหญ่|Extremely large|immense
+fertile|adj|B2|อุดมสมบูรณ์|Able to produce many plants or young|productive
+poach|v|C1|ลักลอบล่าสัตว์|To hunt animals illegally|hunt illegally
+#i-city|🏙️ Cities & Housing|Urban life, transport, housing|city|🏙️,🚇,🏘️,🚦,🏗️,🚌|#4a5f7a,#202c3d
+urbanisation|n|C1|การขยายตัวของเมือง|The growth of towns and cities|city growth
+overpopulated|adj|B2|ประชากรล้น|Having too many people|overcrowded
+congestion|n|C1|ความแออัด (การจราจร)|Too many vehicles on the roads|traffic jam
+infrastructure|n|C1|โครงสร้างพื้นฐาน|Basic systems like roads, water and power|facilities
+suburb|n|B2|ชานเมือง|A residential area outside a city centre|outskirts
+outskirts|n|C1|รอบนอกเมือง|The outer edges of a town|suburbs
+residential|adj|B2|เกี่ยวกับที่อยู่อาศัย|Used for people to live in|housing
+high-rise|adj|B2|ตึกสูง|Very tall with many floors|multi-storey
+skyscraper|n|B1|ตึกระฟ้า|A very tall building|tower block
+housing estate|n|B2|หมู่บ้านจัดสรร|A planned area of many houses|housing development
+slum|n|B2|สลัม, ชุมชนแออัด|A poor, crowded area of a city|shanty town
+amenities|n|C1|สิ่งอำนวยความสะดวก|Useful public services and facilities|facilities
+commute|v|B2|เดินทางไปทำงานประจำ|To travel regularly to work|travel to work
+pedestrian|n|B2|คนเดินเท้า|A person walking in the street|walker
+public transport|n|B1|ขนส่งสาธารณะ|Buses and trains that everyone can use|mass transit
+noise pollution|n|B2|มลพิษทางเสียง|Harmful or annoying levels of noise|noise
+urban sprawl|n|C1|การขยายตัวของเมืองอย่างไร้ระเบียบ|The uncontrolled spread of a city|sprawl
+rural|adj|B1|ชนบท|Relating to the countryside|countryside
+isolated|adj|B2|โดดเดี่ยว, ห่างไกล|Far away from other places|remote
+remote|adj|B2|ห่างไกล|Far from towns or people|distant
+vibrant|adj|C1|มีชีวิตชีวา|Full of energy and life|lively
+bustling|adj|C1|คึกคัก|Full of busy activity|hectic
+tranquil|adj|C1|สงบ|Calm and quiet|peaceful
+affordable|adj|B2|ราคาที่จ่ายไหว|Cheap enough for people to buy|reasonably priced
+landlord|n|B1|เจ้าของที่ให้เช่า|A person who rents out property|property owner
+tenant|n|B2|ผู้เช่า|A person who rents a home|renter
+renovate|v|B2|ปรับปรุง (อาคาร)|To repair and improve a building|refurbish
+demolish|v|B2|รื้อถอน|To knock down a building|tear down
+construct|v|B2|ก่อสร้าง|To build something|build
+district|n|B1|เขต, ย่าน|An area of a town|area
+neighbourhood|n|B1|ละแวกบ้าน|The area around where you live|vicinity
+derelict|adj|C1|ถูกทิ้งร้าง|Empty and in bad condition|abandoned
+sewage|n|C1|น้ำเสีย|Waste water from toilets and drains|wastewater
+landmark|n|B2|สถานที่สำคัญ|A famous building or place|monument
+cosmopolitan|adj|C1|มีผู้คนหลายชาติ|Full of people from many countries|multicultural
+relocate|v|B2|ย้ายที่อยู่|To move to a new place|move
+concrete jungle|idm|C1|ป่าคอนกรีต|A city with many buildings and no nature|built-up area
+facilities|n|B1|สิ่งอำนวยความสะดวก|Buildings or equipment for a purpose|amenities
+inner city|n|C1|ย่านใจกลางเมือง (ที่มักทรุดโทรม)|The old central part of a city, often poor|city centre
+#i-edu|🎓 Education|School, university, learning|room|🎓,📚,✏️,🏫,🧑‍🏫,💡|#4f5a8f,#222844
+curriculum|n|B2|หลักสูตร|The subjects taught in a school|syllabus
+tuition|n|B2|การสอน, ค่าเล่าเรียน|Teaching, or the fees paid for it|fees
+literacy|n|B2|ความสามารถในการอ่านเขียน|The ability to read and write|reading skill
+numeracy|n|C1|ทักษะการคำนวณ|The ability to work with numbers|maths skills
+compulsory|adj|B2|ภาคบังคับ|Required by law or rules|mandatory
+optional|adj|B1|ไม่บังคับ, เลือกได้|Possible to choose but not required|elective
+academic|adj|B2|ทางวิชาการ|Related to study and learning|scholarly
+vocational|adj|C1|สายอาชีพ|Teaching skills for a particular job|career-focused
+undergraduate|n|B2|นักศึกษาปริญญาตรี|A university student studying for a first degree|student
+graduate|v|B1|สำเร็จการศึกษา|To finish a degree or school|complete
+scholarship|n|B2|ทุนการศึกษา|Money given to pay for someone's study|grant
+enrol|v|B2|ลงทะเบียนเรียน|To officially join a course|register
+assignment|n|B1|งานที่ได้รับมอบหมาย|A piece of work given as part of a course|task
+dissertation|n|C1|วิทยานิพนธ์|A long piece of academic writing|thesis
+lecture|n|B1|การบรรยาย|A talk given to students|talk
+seminar|n|B2|สัมมนา|A small class for discussion|workshop
+tutor|n|B1|ครูสอนพิเศษ|A teacher for one person or a small group|instructor
+discipline|n|B2|ระเบียบวินัย|Training people to follow rules|self-control
+motivate|v|B2|จูงใจ|To make someone want to do something|inspire
+concentrate|v|B1|ตั้งใจ, มีสมาธิ|To give all your attention to something|focus
+memorise|v|B2|ท่องจำ|To learn something so you remember it|learn by heart
+plagiarism|n|C1|การลอกผลงาน|Copying someone else's work as your own|copying
+critical thinking|n|C1|การคิดเชิงวิพากษ์|Careful analysis before forming a judgement|analysis
+rote learning|n|C1|การเรียนแบบท่องจำ|Learning by repetition without understanding|memorisation
+distance learning|n|B2|การเรียนทางไกล|Studying from home through online courses|online learning
+qualification|n|B2|วุฒิการศึกษา|An official result of passing a course|certificate
+expertise|n|C1|ความเชี่ยวชาญ|Special skill or knowledge|know-how
+acquire|v|B2|ได้มา, เรียนรู้|To get knowledge or skills|gain
+proficient|adj|C1|เชี่ยวชาญ, คล่อง|Very good at something|skilled
+fluent|adj|B1|คล่องแคล่ว (ภาษา)|Able to speak a language easily|articulate
+mentor|n|C1|พี่เลี้ยง, ที่ปรึกษา|An experienced adviser|guide
+peer|n|B2|เพื่อนรุ่นเดียวกัน|A person of the same age or level|classmate
+truant|n|C1|เด็กหนีเรียน|A child who misses school without permission|absentee
+dropout|n|C1|คนเลิกเรียนกลางคัน|Someone who leaves school or college early|quitter
+interactive|adj|B2|ที่มีปฏิสัมพันธ์|Involving communication in both directions|participatory
+theoretical|adj|C1|เชิงทฤษฎี|Based on ideas rather than practice|abstract
+practical|adj|B1|ภาคปฏิบัติ, ใช้ได้จริง|Related to doing rather than theory|hands-on
+hands-on|adj|B2|ลงมือทำจริง|Learning by doing things yourself|practical
+inspiration|n|B2|แรงบันดาลใจ|Something that gives you new ideas|stimulus
+apprenticeship|n|C1|การฝึกงานสายอาชีพ|Training for a job under a skilled worker|traineeship
+#i-biz|💼 Work & Economy|Jobs, business, money|city|💼,📈,💰,🏢,🤝,🧾|#7a5a32,#3a2914
+employment|n|B2|การจ้างงาน|Having a paid job|work
+unemployment|n|B2|การว่างงาน|Not having a job|joblessness
+recruit|v|B2|รับสมัคร (พนักงาน)|To find new people for a job|hire
+promotion|n|B1|การเลื่อนตำแหน่ง|A move to a higher job|advancement
+resign|v|B2|ลาออก|To leave a job officially|quit
+redundant|adj|C1|ถูกเลิกจ้าง|Losing a job because it is no longer needed|laid off
+workforce|n|B2|แรงงาน|All the workers in a company or country|labour force
+salary|n|B1|เงินเดือน|A fixed amount of money paid for work|pay
+wage|n|B2|ค่าจ้าง|Money paid per hour or day|pay
+income|n|B2|รายได้|Money you receive|earnings
+revenue|n|C1|รายได้ (ของบริษัท)|Money a business receives|turnover
+profit|n|B1|กำไร|Money made after costs are paid|gain
+expenditure|n|C1|รายจ่าย|The amount of money spent|spending
+investment|n|B2|การลงทุน|Putting money in to make more money|funding
+bankrupt|adj|C1|ล้มละลาย|Unable to pay your debts|insolvent
+debt|n|B2|หนี้|Money that you owe|liability
+loan|n|B1|เงินกู้|Money borrowed to be paid back later|credit
+inflation|n|C1|เงินเฟ้อ|A general rise in prices|price rise
+recession|n|C1|ภาวะเศรษฐกิจถดถอย|A period when the economy shrinks|downturn
+economy|n|B1|เศรษฐกิจ|The system of money, trade and industry|market
+entrepreneur|n|C1|ผู้ประกอบการ|A person who starts a business|business founder
+competitor|n|B2|คู่แข่ง|A rival company or person|rival
+productivity|n|C1|ผลิตภาพ|How much work is produced|output
+efficient|adj|B2|มีประสิทธิภาพ|Working well without waste|effective
+manufacture|v|B2|ผลิต (ในโรงงาน)|To make goods in large numbers|produce
+retail|n|B2|การค้าปลีก|Selling goods to the public|selling
+consumer|n|B2|ผู้บริโภค|A person who buys goods|buyer
+demand|n|B2|อุปสงค์, ความต้องการ|How much people want something|need
+supply|n|B2|อุปทาน|The amount of something available|stock
+export|v|B1|ส่งออก|To sell goods to another country|ship abroad
+negotiate|v|B2|เจรจาต่อรอง|To discuss in order to reach an agreement|bargain
+colleague|n|B1|เพื่อนร่วมงาน|A person you work with|co-worker
+flexible|adj|B2|ยืดหยุ่น|Able to change easily|adaptable
+workload|n|C1|ปริมาณงาน|The amount of work to do|burden
+work-life balance|n|B2|สมดุลชีวิตกับงาน|A healthy split between job and personal life|balance
+self-employed|adj|B2|ประกอบอาชีพอิสระ|Working for yourself|freelance
+blue-collar|adj|C1|แรงงาน (ใช้แรงกาย)|Doing manual or factory work|manual
+white-collar|adj|C1|พนักงานออฟฟิศ|Doing office or professional work|professional
+pension|n|B2|เงินบำนาญ|Money paid regularly after you retire|retirement income
+retire|v|B1|เกษียณ|To stop working because of age|stop working
+#i-tech|💻 Technology & Science|Innovation, data, experiments, space|night|💻,🔬,🚀,🤖,🛰️,🧪|#3a4f8a,#161f3d
+innovation|n|B2|นวัตกรรม|A new idea, method or invention|novelty
+innovative|adj|B2|สร้างสรรค์สิ่งใหม่|Using new methods or ideas|inventive
+cutting-edge|adj|C1|ล้ำสมัย|The most advanced|state-of-the-art
+obsolete|adj|C1|ล้าสมัย|No longer used because it is out of date|outdated
+device|n|B1|อุปกรณ์|A machine or tool made for a purpose|gadget
+gadget|n|B2|อุปกรณ์เล็กๆ|A small useful machine|device
+artificial intelligence|n|B2|ปัญญาประดิษฐ์|Computers that can think like humans|AI
+automation|n|C1|ระบบอัตโนมัติ|Using machines instead of people|mechanisation
+virtual|adj|B2|เสมือนจริง|Existing on computers, not physically|simulated
+digital|adj|B1|ดิจิทัล|Using computer technology|electronic
+privacy|n|B2|ความเป็นส่วนตัว|Keeping personal things secret|confidentiality
+cyberspace|n|C1|โลกไซเบอร์|The online world of the internet|internet
+hacker|n|B2|แฮกเกอร์|A person who breaks into computer systems|intruder
+surveillance|n|C1|การสอดส่อง|Watching people closely|monitoring
+breakthrough|n|C1|การค้นพบครั้งสำคัญ|An important new discovery|discovery
+experiment|n|B1|การทดลอง|A test done to find something out|trial
+hypothesis|n|C1|สมมติฐาน|An idea that needs to be tested|theory
+analyse|v|B2|วิเคราะห์|To examine something in detail|examine
+laboratory|n|B1|ห้องปฏิบัติการ|A room for scientific work|lab
+invention|n|B1|สิ่งประดิษฐ์|Something newly created|creation
+patent|n|C1|สิทธิบัตร|The legal right to an invention|exclusive right
+prototype|n|C1|ต้นแบบ|The first model of a new product|model
+gravity|n|B2|แรงโน้มถ่วง|The force that pulls things down|pull
+atmosphere|n|B2|ชั้นบรรยากาศ|The gases around the Earth|air
+orbit|v|B2|โคจร|To move around a planet or star|circle
+satellite|n|B2|ดาวเทียม|A machine that circles the Earth in space|spacecraft
+astronomy|n|C1|ดาราศาสตร์|The study of stars and planets|space science
+evaporation|n|C1|การระเหย|A liquid turning into gas|vaporisation
+dissolve|v|B2|ละลาย|To mix into a liquid completely|melt
+compound|n|C1|สารประกอบ|A substance made of two or more elements|mixture
+genetic|adj|C1|ทางพันธุกรรม|Related to genes|hereditary
+cloning|n|C1|การโคลน|Making an exact genetic copy|replication
+genetically modified|adj|C1|ดัดแปลงพันธุกรรม|Changed by scientists at gene level|GM
+addictive|adj|B2|ทำให้เสพติด|Hard to stop using|habit-forming
+user-friendly|adj|B2|ใช้งานง่าย|Easy for people to use|easy to use
+upgrade|v|B2|อัปเกรด|To improve to a newer version|update
+storage|n|B2|การจัดเก็บ|Space for keeping things or data|memory
+transmit|v|C1|ส่ง (สัญญาณ)|To send signals or information|broadcast
+mechanism|n|C1|กลไก|Parts that work together in a machine or system|system
+data|n|B1|ข้อมูล|Facts and numbers that are collected|information
+#i-health|🩺 Health|Diet, illness, treatment, lifestyle|day|🩺,🍎,🏃,💊,🧘,🏥|#3f7a6a,#1b3a31
+nutrition|n|B2|โภชนาการ|The food needed for good health|nourishment
+nutritious|adj|C1|มีคุณค่าทางอาหาร|Full of what the body needs|wholesome
+balanced diet|n|B1|อาหารที่สมดุล|A healthy mix of different foods|healthy eating
+obesity|n|C1|โรคอ้วน|Being very overweight|overweight
+sedentary|adj|C1|นั่งอยู่กับที่มาก|Involving little exercise|inactive
+lifestyle|n|B1|วิถีชีวิต|The way someone lives|way of life
+symptom|n|B2|อาการ|A sign of an illness|sign
+diagnose|v|C1|วินิจฉัย|To identify an illness|identify
+prescription|n|B2|ใบสั่งยา|A doctor's written order for medicine|medicine order
+treatment|n|B1|การรักษา|Medical care for an illness|therapy
+recover|v|B1|ฟื้นตัว|To get better after an illness|heal
+infection|n|B2|การติดเชื้อ|A disease caused by germs|contamination
+contagious|adj|C1|ติดต่อได้|Spreading from person to person|infectious
+epidemic|n|C1|โรคระบาด|A disease spreading among many people|outbreak
+vaccine|n|B2|วัคซีน|A substance that protects from a disease|immunisation
+immune|adj|C1|มีภูมิคุ้มกัน|Protected from a disease|resistant
+chronic|adj|C1|เรื้อรัง|Lasting a long time|long-term
+fatal|adj|C1|ถึงแก่ชีวิต|Causing death|deadly
+side effect|n|B2|ผลข้างเคียง|An unwanted result of a medicine|adverse effect
+dose|n|B2|ปริมาณ (ยา)|The amount of medicine taken at one time|measure
+healthcare|n|B2|การดูแลสุขภาพ|Medical services for people|medical care
+life expectancy|n|C1|อายุขัยเฉลี่ย|How long people usually live|average lifespan
+stress|n|B1|ความเครียด|Worry caused by pressure|tension
+mental health|n|B2|สุขภาพจิต|The condition of the mind|psychological health
+wellbeing|n|C1|สุขภาวะ|Being healthy and happy|welfare
+fitness|n|B1|ความฟิต|Being physically strong and healthy|condition
+injury|n|B1|การบาดเจ็บ|Physical damage to the body|wound
+surgery|n|B2|การผ่าตัด|A medical operation|operation
+therapy|n|B2|การบำบัด|Treatment for an illness or problem|treatment
+addiction|n|C1|การเสพติด|Not being able to stop something harmful|dependency
+hygiene|n|C1|สุขอนามัย|Keeping clean to stay healthy|cleanliness
+processed food|n|B2|อาหารแปรรูป|Food changed by factories|packaged food
+junk food|n|B1|อาหารขยะ|Unhealthy fast food|fast food
+organic|adj|B2|ออร์แกนิก|Grown without chemicals|natural
+deficiency|n|C1|การขาด (สารอาหาร)|A lack of something needed|shortage
+vulnerable|adj|C1|เปราะบาง, เสี่ยง|Easily harmed|at risk
+outbreak|n|C1|การระบาด|The sudden start of a disease|epidemic
+sanitation|n|C1|การสุขาภิบาล|Systems for clean water and waste removal|hygiene
+prevention|n|B2|การป้องกัน|Stopping something before it happens|avoidance
+exhaustion|n|C1|ความเหนื่อยล้า|Extreme tiredness|fatigue
+#i-soc|🏛️ Society & Government|Policy, law, inequality, culture|city|🏛️,👥,⚖️,🗳️,🤝,🏘️|#6a4a7a,#2e1f38
+policy|n|B2|นโยบาย|A plan of action by a government|strategy
+legislation|n|C1|กฎหมาย (ที่ตราขึ้น)|Laws made by a government|law
+regulation|n|B2|ข้อบังคับ|An official rule|rule
+enforce|v|C1|บังคับใช้|To make people obey a rule|impose
+authorities|n|B2|เจ้าหน้าที่, ทางการ|People with official power|officials
+citizen|n|B1|พลเมือง|A member of a country|national
+welfare|n|C1|สวัสดิการ|Help given to people in need|social security
+taxation|n|C1|การเก็บภาษี|The system of taxes|tax
+subsidise|v|C1|อุดหนุน|To pay part of the cost of something|fund
+funding|n|B2|เงินทุน|Money given for a purpose|finance
+poverty|n|B2|ความยากจน|Being very poor|hardship
+inequality|n|C1|ความไม่เท่าเทียม|An unfair difference between groups|imbalance
+discrimination|n|C1|การเลือกปฏิบัติ|Treating people unfairly|unfair treatment
+prejudice|n|C1|อคติ|An unfair opinion not based on facts|bias
+minority|n|B2|ชนกลุ่มน้อย|A smaller group in society|small group
+ethnic|adj|B2|ทางเชื้อชาติ|Related to race or culture|cultural
+immigrant|n|B2|ผู้อพยพเข้าเมือง|A person who moves to a new country|migrant
+multicultural|adj|B2|พหุวัฒนธรรม|Including many cultures|diverse
+tradition|n|B1|ประเพณี|A custom passed down over time|custom
+generation gap|n|B2|ช่องว่างระหว่างวัย|Differences between young and old people|age gap
+elderly|adj|B2|สูงอายุ|Old|aged
+ageing population|n|C1|สังคมผู้สูงอายุ|A rising share of old people in society|greying society
+volunteer|n|B1|อาสาสมัคร|A person who works without pay|helper
+charity|n|B2|องค์กรการกุศล|An organisation that helps people|foundation
+community|n|B1|ชุมชน|People living in one area|society
+crime|n|B1|อาชญากรรม|An illegal action|offence
+offender|n|C1|ผู้กระทำผิด|A person who commits a crime|criminal
+punishment|n|B2|การลงโทษ|A penalty for doing wrong|penalty
+deter|v|C1|ยับยั้ง|To stop someone from doing something|discourage
+rehabilitate|v|C1|ฟื้นฟู (ผู้กระทำผิด)|To help someone return to normal life|reform
+justice|n|B2|ความยุติธรรม|Fair treatment|fairness
+democracy|n|B2|ประชาธิปไตย|Government chosen by the people|self-government
+bureaucracy|n|C1|ระบบราชการ|Complicated official rules and processes|red tape
+civil servant|n|B2|ข้าราชการ|A person who works for the government|official
+conform|v|C1|ทำตามแบบแผน|To follow accepted rules or behaviour|comply
+norm|n|C1|บรรทัดฐาน|Usual accepted behaviour|standard
+status|n|B2|สถานะ|A position in society|standing
+government|n|B1|รัฐบาล|The group that runs a country|administration
+vote|v|B1|ลงคะแนนเสียง|To choose in an election|elect
+safety net|n|C1|ระบบรองรับ (ทางสังคม)|Help that protects people from falling into poverty|support system
+#i-media|📺 Media & Advertising|Ads, consumerism, news, entertainment|room|📺,🛍️,📢,📰,🎬,📱|#8a3f5a,#3d1a28
+advertisement|n|B1|โฆษณา|A notice that promotes a product|advert
+commercial|n|B2|โฆษณาทางทีวี|A TV or radio advert|ad
+slogan|n|B2|สโลแกน|A short, catchy phrase|motto
+brand|n|B1|ยี่ห้อ, แบรนด์|The name of a company's products|label
+target audience|n|C1|กลุ่มเป้าหมาย|The people an advert is aimed at|market
+persuade|v|B1|โน้มน้าว|To make someone agree or do something|convince
+persuasive|adj|B2|มีพลังโน้มน้าว|Able to convince people|convincing
+gimmick|n|C1|ลูกเล่นเรียกความสนใจ|A trick to attract attention|ploy
+catchy|adj|B2|ติดหู|Easy to remember|memorable
+endorse|v|C1|รับรอง, สนับสนุน|To publicly approve a product|recommend
+celebrity|n|B2|คนดัง|A famous person|star
+consumerism|n|C1|บริโภคนิยม|A focus on buying more goods|materialism
+materialistic|adj|C1|วัตถุนิยม|Caring too much about possessions|acquisitive
+impulse buy|n|C1|การซื้อแบบไม่ได้วางแผน|Something bought without planning|spur purchase
+bargain|n|B1|ของราคาถูก|Something bought cheaply|deal
+discount|n|B1|ส่วนลด|A reduced price|reduction
+luxury|n|B2|ความหรูหรา|Expensive and comfortable things|extravagance
+disposable income|n|C1|รายได้ที่ใช้จ่ายได้|Money left to spend after bills|spare money
+broadcast|v|B2|ออกอากาศ|To send out on TV or radio|air
+journalist|n|B1|นักข่าว|A person who writes the news|reporter
+headline|n|B1|พาดหัวข่าว|The title of a news story|title
+coverage|n|C1|การรายงานข่าว|The reporting of news|reporting
+biased|adj|C1|ลำเอียง|Unfairly favouring one side|partial
+censorship|n|C1|การเซ็นเซอร์|Removing parts of media or art|suppression
+misleading|adj|C1|ชวนให้เข้าใจผิด|Giving the wrong idea|deceptive
+mislead|v|C1|ทำให้เข้าใจผิด|To make someone believe something false|deceive
+influence|v|B1|มีอิทธิพลต่อ|To change how people think or act|sway
+influential|adj|C1|มีอิทธิพล|Having great influence|powerful
+viral|adj|B2|แพร่กระจายรวดเร็ว (ออนไลน์)|Spreading fast online|trending
+subscribe|v|B2|สมัครสมาชิก|To pay or sign up regularly|sign up
+entertainment|n|B1|ความบันเทิง|Things that amuse people|amusement
+documentary|n|B1|สารคดี|A factual film or show|factual film
+fiction|n|B1|เรื่องแต่ง|Stories that are not true|novels
+genre|n|B2|ประเภท (งานศิลปะ)|A type of film, book or music|category
+plot|n|B2|โครงเรื่อง|The story of a book or film|storyline
+gripping|adj|C1|น่าติดตาม|Very exciting and interesting|thrilling
+thought-provoking|adj|C1|ชวนคิด|Making people think deeply|stimulating
+in vogue|idm|C1|กำลังเป็นที่นิยม|Fashionable at the moment|fashionable
+all the rage|idm|C1|ฮิตมาก|Very popular for a short time|trendy
+social media|n|B1|โซเชียลมีเดีย|Websites for sharing and networking|social networks
+#i-hist|🏺 History & Heritage|Archaeology, civilisations, evolution|dusk|🏺,🏛️,📜,🦕,🗿,⚱️|#7a6a3a,#3a3018
+ancient|adj|B1|โบราณ|Very old|old
+archaeologist|n|C1|นักโบราณคดี|A person who studies ancient remains|excavator
+excavate|v|C1|ขุดค้น|To dig to find old objects|dig up
+artefact|n|C1|โบราณวัตถุ|An old object made by people|relic
+remains|n|B2|ซาก|Parts left after something is gone|traces
+ruins|n|B2|ซากปรักหักพัง|The remains of old buildings|remains
+heritage|n|B2|มรดก (วัฒนธรรม)|Culture and history passed down|legacy
+civilisation|n|B2|อารยธรรม|An advanced human society|culture
+empire|n|B2|จักรวรรดิ|A group of countries ruled by one leader|kingdom
+dynasty|n|C1|ราชวงศ์|Rulers from one family|royal line
+era|n|B2|ยุค|A period of history|age
+prehistoric|adj|C1|ยุคก่อนประวัติศาสตร์|Before written history|primitive
+medieval|adj|C1|ยุคกลาง|From the Middle Ages|feudal
+bygone|adj|C1|ในอดีต|From a time long ago|past
+vestige|n|C1|ร่องรอย|A small remaining part of something|trace
+remnant|n|C1|ส่วนที่เหลือ|A small piece left over|remainder
+monument|n|B2|อนุสาวรีย์|A structure built to remember a person or event|memorial
+preservation|n|C1|การอนุรักษ์|Keeping something safe from damage|conservation
+restore|v|B2|บูรณะ|To return something to its original condition|repair
+legacy|n|C1|มรดกตกทอด|Something left from the past|inheritance
+descendant|n|C1|ผู้สืบเชื้อสาย|A person related to someone who lived long ago|offspring
+ancestor|n|B2|บรรพบุรุษ|A family member from long ago|forebear
+settlement|n|B2|ถิ่นฐาน|A place where people come to live|village
+nomadic|adj|C1|เร่ร่อน|Moving from place to place|wandering
+colonise|v|C1|ล่าอาณานิคม|To take control of another land|occupy
+conquer|v|B2|พิชิต|To take control by force|overcome
+revolution|n|B2|การปฏิวัติ|A big sudden change|uprising
+evolve|v|B2|วิวัฒนาการ|To develop gradually|develop
+evolution|n|B2|วิวัฒนาการ|Gradual development over time|development
+pioneer|n|C1|ผู้บุกเบิก|The first person to do something|trailblazer
+status quo|n|C1|สถานะเดิม|The existing situation|current state
+manuscript|n|C1|ต้นฉบับเขียนมือ|An old handwritten document|document
+chronological|adj|C1|ตามลำดับเวลา|In the order in which things happened|sequential
+ceremony|n|B1|พิธี|A formal event|occasion
+ritual|n|C1|พิธีกรรม|Actions done the same way each time|rite
+exhibit|n|B2|สิ่งที่จัดแสดง|An object shown in a museum|display
+fossil|n|B2|ฟอสซิล|Remains of an ancient plant or animal in rock|remains
+inscription|n|C1|คำจารึก|Words cut into stone or metal|engraving
+decipher|v|C1|ถอดความ|To work out the meaning of something unclear|decode
+contemporary|adj|C1|ร่วมสมัย|Belonging to the present time|modern
+#i-travel|✈️ Travel & Tourism|Places, scenery, cultures abroad|sea|✈️,🧳,🗺️,🏝️,⛰️,📸|#2f6b8a,#163447
+destination|n|B1|จุดหมายปลายทาง|The place you are travelling to|endpoint
+itinerary|n|C1|กำหนดการเดินทาง|A plan of a journey|schedule
+accommodation|n|B2|ที่พัก|A place to stay|lodging
+sightseeing|n|B1|การเที่ยวชมสถานที่|Visiting interesting places|touring
+tourist attraction|n|B1|สถานที่ท่องเที่ยว|A place that tourists visit|sight
+ecotourism|n|C1|การท่องเที่ยวเชิงนิเวศ|Travel that protects nature|green tourism
+mass tourism|n|C1|การท่องเที่ยวแบบมวลชน|Huge numbers of tourists in one place|tourism boom
+off the beaten track|idm|C1|ห่างไกล ไม่ค่อยมีคนไป|Far from popular places|out of the way
+breathtaking|adj|B2|สวยจนตะลึง|Extremely beautiful|awe-inspiring
+picturesque|adj|C1|งดงามราวภาพวาด|Pretty, like a painting|scenic
+stunning|adj|B2|งดงามมาก|Extremely beautiful|gorgeous
+spectacular|adj|B2|ตระการตา|Very impressive|magnificent
+scenery|n|B1|ทิวทัศน์|The natural views of a place|view
+landscape|n|B2|ภูมิทัศน์|Everything you see in an area of land|scenery
+mountainous|adj|B2|เป็นภูเขา|Having many mountains|hilly
+coastal|adj|B2|ริมชายฝั่ง|Near the sea|seaside
+tropical|adj|B1|เขตร้อน|Hot and humid|humid
+souvenir|n|B1|ของที่ระลึก|Something bought to remember a trip|memento
+backpacker|n|B2|นักท่องเที่ยวแบกเป้|A traveller on a low budget|budget traveller
+jet lag|n|B2|อาการเพลียจากการเปลี่ยนเวลา|Tiredness after a long flight across time zones|travel fatigue
+departure|n|B1|การออกเดินทาง|Leaving a place|leaving
+fare|n|B1|ค่าโดยสาร|The price of a ticket|ticket price
+commuter|n|B2|คนเดินทางไปทำงานทุกวัน|A person who travels to work daily|daily traveller
+vehicle|n|B1|ยานพาหนะ|A car, bus or truck|transport
+route|n|B1|เส้นทาง|The way from one place to another|path
+reservation|n|B1|การจอง|A booking made in advance|booking
+excursion|n|C1|ทริปสั้นๆ|A short trip for pleasure|outing
+expedition|n|C1|การเดินทางสำรวจ|A long organised journey|voyage
+explore|v|B1|สำรวจ|To travel around a place to learn about it|discover
+hospitality|n|C1|การต้อนรับขับสู้|Friendly treatment of guests|welcome
+exotic|adj|B2|แปลกใหม่ (จากต่างแดน)|Unusual and from far away|foreign
+culture shock|n|B2|ความตกใจทางวัฒนธรรม|Confusion when living in a new culture|disorientation
+local cuisine|n|B2|อาหารท้องถิ่น|Food typical of an area|local food
+overcrowded|adj|B2|แออัดเกินไป|Too full of people|packed
+peak season|n|B2|ช่วงท่องเที่ยวสูงสุด|The busiest time of year|high season
+turbulent|adj|C1|ปั่นป่วน|Moving roughly and violently|rough
+harbour|n|B2|ท่าเรือ|A sheltered place for boats|port
+resort|n|B1|รีสอร์ต|A place for holidays|holiday spot
+wanderlust|n|C1|ความอยากท่องเที่ยว|A strong desire to travel|itchy feet
+scenic|adj|B2|ทิวทัศน์สวย|Having beautiful natural views|picturesque
+#i-people|🙂 Personality & Feelings|Character, relationships, emotions|room|🙂,🤝,💭,😤,🥰,🧑‍🤝‍🧑|#8a6a2b,#3d2d10
+ambitious|adj|B2|ทะเยอทะยาน|Wanting great success|driven
+assertive|adj|C1|กล้าแสดงออก|Confident in saying what you want|self-assured
+arrogant|adj|B2|หยิ่งยโส|Thinking you are better than others|conceited
+modest|adj|B2|ถ่อมตัว|Not talking proudly about yourself|humble
+generous|adj|B1|ใจกว้าง|Happy to give to others|giving
+stubborn|adj|B2|ดื้อ, หัวรั้น|Refusing to change your mind|obstinate
+sociable|adj|B2|ชอบเข้าสังคม|Enjoying being with people|gregarious
+introverted|adj|C1|เก็บตัว|Quiet and focused inward|reserved
+outgoing|adj|B2|เปิดเผย, เข้ากับคนง่าย|Friendly and confident with people|extroverted
+cautious|adj|B2|ระมัดระวัง|Careful to avoid risks|careful
+impulsive|adj|C1|หุนหันพลันแล่น|Acting without thinking|rash
+indecisive|adj|C1|ไม่เด็ดขาด|Unable to make decisions|hesitant
+gullible|adj|C1|หลงเชื่อง่าย|Easily tricked|naive
+cynical|adj|C1|ไม่เชื่อในความดีของคน|Believing people are only selfish|sceptical
+eccentric|adj|C1|แปลก, ประหลาด|Strange in an interesting way|quirky
+tactful|adj|C1|รู้จักพูด|Careful not to upset others|diplomatic
+considerate|adj|B2|ใส่ใจผู้อื่น|Thinking about others' feelings|thoughtful
+self-centred|adj|C1|เห็นแก่ตัว|Thinking only of yourself|selfish
+resilient|adj|C1|ฟื้นตัวเร็ว, อึด|Able to recover from difficulties|tough
+optimistic|adj|B2|มองโลกในแง่ดี|Hopeful about the future|positive
+pessimistic|adj|B2|มองโลกในแง่ร้าย|Expecting bad things to happen|negative
+anxious|adj|B2|กังวล|Worried and nervous|nervous
+apprehensive|adj|C1|หวั่นใจ|Worried about something in the future|uneasy
+frustrated|adj|B2|หงุดหงิด|Annoyed because you cannot succeed|exasperated
+overwhelmed|adj|C1|รับมือไม่ไหว|Feeling too much at once|swamped
+content|adj|B2|พอใจ|Happy and satisfied|satisfied
+nostalgic|adj|C1|คิดถึงอดีต|Thinking fondly about the past|sentimental
+grateful|adj|B1|ซาบซึ้งใจ|Feeling thankful|thankful
+empathy|n|C1|ความเข้าอกเข้าใจ|Understanding other people's feelings|compassion
+trait|n|C1|ลักษณะนิสัย|A quality of someone's character|characteristic
+temperament|n|C1|อุปนิสัย|A person's usual mood and nature|disposition
+adolescent|n|C1|วัยรุ่น|A young person becoming an adult|teenager
+upbringing|n|C1|การเลี้ยงดู|The way a child is raised|nurture
+sibling|n|B2|พี่น้อง|A brother or sister|brother or sister
+bond|n|B2|ความผูกพัน|A close connection between people|connection
+rivalry|n|C1|การแข่งขันกัน|Competition between people or groups|competition
+peer pressure|n|B2|แรงกดดันจากเพื่อน|Influence from people your own age|social pressure
+role model|n|B2|แบบอย่าง|A person others want to copy|example
+independent|adj|B1|เป็นอิสระ|Not needing help from others|self-reliant
+mature|adj|B2|เป็นผู้ใหญ่|Behaving like an adult|grown-up
+#i-acad|📊 Academic Writing|Graph language, linking words, argument|room|📊,📝,🔗,📈,📉,🧠|#4a6a8a,#1f2f3d
+fluctuate|v|C1|ขึ้นๆ ลงๆ|To go up and down|vary
+plummet|v|C1|ดิ่งลงอย่างรวดเร็ว|To fall very quickly|plunge
+soar|v|C1|พุ่งสูงขึ้น|To rise very quickly|rocket
+surge|n|C1|การพุ่งขึ้นอย่างฉับพลัน|A sudden large increase|upswing
+plateau|v|C1|ทรงตัว|To stay at the same level after rising|level off
+peak|v|B2|ถึงจุดสูงสุด|To reach the highest point|top out
+steady|adj|B2|สม่ำเสมอ|Changing gradually and evenly|constant
+sharp|adj|B2|รวดเร็ว (การเปลี่ยนแปลง)|Sudden and large|steep
+marginal|adj|C1|เล็กน้อย|Very small|slight
+proportion|n|B2|สัดส่วน|A part of a whole|share
+majority|n|B2|ส่วนใหญ่|More than half|most
+approximately|adv|B1|ประมาณ|Close to an exact number|roughly
+respectively|adv|C1|ตามลำดับ|In the order already mentioned|in turn
+whereas|conj|B2|ในขณะที่ (เปรียบเทียบ)|Used to show a contrast|while
+nevertheless|adv|B2|อย่างไรก็ตาม|In spite of that|nonetheless
+furthermore|adv|B2|ยิ่งไปกว่านั้น|In addition|moreover
+consequently|adv|B2|ดังนั้น|As a result|therefore
+thus|adv|C1|ดังนั้น|As a result; in this way|hence
+albeit|conj|C1|แม้ว่า|Although|though
+in contrast|phr|B2|ในทางตรงกันข้าม|Used to show a difference|conversely
+to some extent|phr|B2|ในระดับหนึ่ง|Partly|partly
+outweigh|v|C1|มีน้ำหนักมากกว่า|To be more important than something else|exceed
+drawback|n|B2|ข้อเสีย|A disadvantage|downside
+merit|n|C1|ข้อดี|A good quality|advantage
+justify|v|B2|ให้เหตุผลสนับสนุน|To show that something is right|defend
+controversial|adj|B2|เป็นที่ถกเถียง|Causing strong disagreement|debatable
+crucial|adj|B2|สำคัญยิ่ง|Extremely important|vital
+fundamental|adj|C1|พื้นฐานและสำคัญ|Basic and very important|basic
+implement|v|C1|นำไปปฏิบัติ|To put a plan into action|carry out
+illustrate|v|B2|แสดงให้เห็น|To show something clearly|demonstrate
+indicate|v|B2|ชี้ให้เห็น|To show or point to something|suggest
+attribute|v|C1|ระบุว่าเป็นสาเหตุ|To say something is caused by something|ascribe
+derive|v|C1|ได้มาจาก|To get something from a source|originate
+underlying|adj|C1|ที่แฝงอยู่ (สาเหตุ)|Real but not immediately obvious|root
+prominent|adj|C1|โดดเด่น|Important and well known|notable
+prior to|phr|C1|ก่อน|Before|before
+subsequent|adj|C1|ที่ตามมา|Coming after something else|following
+in terms of|phr|B2|ในแง่ของ|Regarding|regarding
+whereby|adv|C1|ซึ่งโดยวิธีนั้น|By which|through which
+argue|v|B1|โต้แย้ง|To give reasons for an opinion|claim
+#i-idiom|💬 Idioms & Collocations|Natural phrases for IELTS Speaking|dusk|💬,✨,🗣️,⏰,🌦️,🎯|#5a4a95,#271f47
+a piece of cake|idm|B1|ง่ายมาก|Very easy|easy
+once in a blue moon|idm|B2|นานๆ ครั้ง|Very rarely|rarely
+in the blink of an eye|idm|B2|ในพริบตา|Very quickly|instantly
+pressed for time|idm|C1|มีเวลาน้อย|Not having enough time|rushed
+have time on your hands|idm|C1|มีเวลาว่างมาก|To have lots of free time|be free
+a storm in a teacup|idm|C1|เรื่องเล็กทำเป็นเรื่องใหญ่|A big fuss about something small|fuss
+every cloud has a silver lining|idm|C1|ในร้ายมีดี|Bad situations have some good side|bright side
+under the weather|idm|B2|ไม่ค่อยสบาย|Feeling slightly ill|unwell
+hit the books|idm|B2|ตั้งใจอ่านหนังสือ|To study hard|study
+learn the ropes|idm|C1|เรียนรู้วิธีทำงาน|To learn how to do a job|get trained
+on the same page|idm|B2|เข้าใจตรงกัน|Agreeing about something|in agreement
+break the ice|idm|B2|ทำให้บรรยากาศผ่อนคลาย|To make people feel relaxed when they first meet|warm up
+cost an arm and a leg|idm|B2|แพงมาก|To be very expensive|be pricey
+over the moon|idm|B2|ดีใจมาก|Extremely happy|delighted
+get the hang of|idm|B2|เริ่มทำเป็น|To learn how to do something|master
+keep in touch|phr|B1|ติดต่อกันไว้|To continue communicating|stay in contact
+make ends meet|idm|C1|หาเงินพอใช้|To have just enough money to live|get by
+the tip of the iceberg|idm|C1|แค่ส่วนเล็กๆ ของปัญหา|A small visible part of a big problem|small part
+go the extra mile|idm|C1|ทำเกินกว่าที่ต้องทำ|To make an extra effort|try harder
+take for granted|idm|C1|มองข้ามความสำคัญ|Not to value something properly|undervalue
+take into account|phr|B2|นำมาพิจารณา|To consider something|factor in
+play a vital role|phr|C1|มีบทบาทสำคัญ|To be very important|be key
+raise awareness|phr|C1|สร้างความตระหนัก|To make people know about something|inform
+pose a threat|phr|C1|เป็นภัยคุกคาม|To be a danger|endanger
+meet the needs of|phr|C1|ตอบสนองความต้องการ|To provide what is needed|satisfy
+bridge the gap|idm|C1|ลดช่องว่าง|To reduce a difference between groups|close the gap
+a double-edged sword|idm|C1|ดาบสองคม|Something with both good and bad results|mixed blessing
+ups and downs|idm|B2|ช่วงดีและร้ายในชีวิต|Good and bad times|highs and lows
+the pros and cons|idm|B2|ข้อดีและข้อเสีย|Advantages and disadvantages|merits and drawbacks
+at the end of the day|idm|B2|ท้ายที่สุดแล้ว|When everything is considered|ultimately
+it goes without saying|idm|C1|ไม่ต้องพูดก็รู้|It is obvious|obviously
+weather the storm|idm|C1|ผ่านพ้นช่วงยากลำบาก|To survive a difficult time|survive
+not my cup of tea|idm|B2|ไม่ใช่สไตล์ฉัน|Not something I like|not my thing
+a passing trend|phr|C1|กระแสชั่วคราว|Something popular only for a short time|fad
+in the long run|idm|B2|ในระยะยาว|Over a long period of time|eventually
+on the other hand|phr|B1|ในอีกแง่หนึ่ง|Used to show another side|alternatively
+by and large|idm|C1|โดยรวม|Generally|mostly
+make a concerted effort|idm|C1|ร่วมกันพยายามอย่างจริงจัง|To try very hard together|work together
+trial and error|idm|B2|การลองผิดลองถูก|Learning by trying and making mistakes|experimentation
+in no time|idm|B2|ในเวลาไม่นาน|Very soon|quickly`;
+(function(){const POSF={n:"noun",v:"verb",adj:"adj.",adv:"adv.",phr:"phrase",idm:"idiom",conj:"conj."};
+  const have=new Set(DECKS.flatMap(d=>d.w.map(a=>a[0])));let d=null;
+  const hash=w=>{let h=0;for(const ch of w)h=(h*31+ch.charCodeAt(0))>>>0;return h};
+  for(const line of IELTS_RAW.split("\n")){if(!line.trim())continue;const f=line.split("|");
+    if(line[0]==="#"){const c=f[5].split(",");d={id:f[0].slice(1),lv:"",ielts:1,name:f[1],desc:f[2],theme:f[3],em:f[4].split(","),c,w:[]};DECKS.push(d);continue}
+    const[w,pos,lv,th,def,syn]=f;if(have.has(w))continue;have.add(w);
+    const h=hash(w),E=d.em,e=[E[h%E.length],E[(h+1)%E.length],E[(h+2)%E.length]];
+    d.w.push([w,"",POSF[pos]||pos,th,def,"","",syn,d.theme,e,lv])}})();
 const THEMES={
  day:{s:["#5fa8e6","#f6dcae"],g:["#78b85a","#3f8a3a"],sun:"",cloud:1},
  dusk:{s:["#584a9e","#f39c6c"],g:["#435f4a","#22372a"],sun:"low",cloud:1},
@@ -609,12 +1193,12 @@ const ST_LABEL={new:"NEW",learning:"LEARNING",familiar:"FAMILIAR",confident:"CON
 const ST_COLOR={new:"var(--new)",learning:"var(--learning)",familiar:"var(--familiar)",confident:"var(--confident)"};
 const INT=[60e3,864e5,3*864e5,7*864e5,16*864e5,35*864e5,70*864e5];
 const XP_PER_LVL=120;
-const POS_TH={"noun":"คำนาม","verb":"คำกริยา","adj.":"คำคุณศัพท์","adv.":"คำกริยาวิเศษณ์","phrasal v.":"กริยาวลี","prep.":"คำบุพบท","conj.":"คำสันธาน"};
-const posLabel=p=>{p=String(p||"").trim();if(!p)return"";const k=p.toLowerCase().replace(/^adjective$/,"adj.").replace(/^adverb$/,"adv.");return POS_TH[k]?`${p} · ${POS_TH[k]}`:p};
+const POS_TH={"phrase":"phrase","idiom":"idiom","noun":"noun","verb":"verb","adj.":"adjective","adv.":"adverb","phrasal v.":"phrasal verb","prep.":"preposition","conj.":"conjunction"};
+const posLabel=p=>{p=String(p||"").trim();if(!p)return"";const k=p.toLowerCase().replace(/^adjective$/,"adj.").replace(/^adverb$/,"adv.");return POS_TH[k]||p};
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const $=id=>document.getElementById(id);
-const mk=(a,deck)=>({w:a[0],p:a[1],pos:a[2],th:a[3],def:a[4],ex:a[5],exth:a[6],syn:a[7],t:a[8],e:a[9],deck});
+const mk=(a,deck)=>({w:a[0],p:a[1],pos:a[2],th:a[3],def:a[4],ex:a[5],exth:a[6],syn:a[7],t:a[8],e:a[9],lv:a[10]||"",deck});
 const BASE=DECKS.flatMap(d=>d.w.map(a=>mk(a,d.id)));
 
 /* ---------- state ---------- */
@@ -625,12 +1209,16 @@ let S=DEFAULTS();
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==="object")S=Object.assign(S,s)}catch(e){}
 for(const[k,v]of Object.entries(DEFAULTS()))if(S[k]==null||typeof S[k]!==typeof v)S[k]=v;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+if(!S.enr||typeof S.enr!=="object")S.enr={};
+function applyEnr(c){const x=S.enr[c.w];if(!x)return c;if(!c.p&&x.p)c.p=x.p;if(!c.ex&&x.ex){c.ex=x.ex;c.exth=x.exth||""}
+  if(x.e&&x.e.length&&!c.enrE){c.e=x.e;c.enrE=1}if(x.t&&THEMES[x.t])c.t=x.t;return c}
+BASE.forEach(applyEnr);
 const todayStr=new Date().toDateString();
 if(S.day!==todayStr){S.day=todayStr;S.today=0;save()}
 
 function all(){const ex=Object.entries(S.extra).flatMap(([d,arr])=>(arr||[]).map(c=>({...c,deck:d})));
   return BASE.concat(ex,S.mine.map(c=>({...c,deck:"mine"})))}
-const deckOf=id=>DECKS.find(d=>d.id===id)||{name:"คำที่ฉันเพิ่ม",c:["#4b3f7a","#211b3d"]};
+const deckOf=id=>DECKS.find(d=>d.id===id)||{name:"My added words",c:["#4b3f7a","#211b3d"]};
 function cardsFor(f){const a=all();
   if(f==="all")return a; if(f==="saved")return a.filter(c=>S.saved.includes(c.w));
   if(f==="fav")return a.filter(c=>S.fav.includes(c.w)); return a.filter(c=>c.deck===f)}
@@ -660,7 +1248,7 @@ function header(){
   $("lvl").textContent=1+Math.floor(S.xp/XP_PER_LVL);
   $("lvlRing").style.setProperty("--p",(S.xp%XP_PER_LVL)/XP_PER_LVL*100)}
 function fillFilter(){const sel=$("filter");sel.innerHTML="";
-  const opts=[["all","All Decks"],...DECKS.map(d=>[d.id,d.name]),["saved","My Decks"],["fav","ที่กดถูกใจ"]];
+  const opts=[["all","All Decks"],...DECKS.map(d=>[d.id,d.name]),["saved","My Decks"],["fav","Favourites"]];
   opts.forEach(([v,n])=>{const o=document.createElement("option");o.value=v;o.textContent=n;sel.append(o)});
   if(!opts.some(o=>o[0]===S.filter))S.filter="all";sel.value=S.filter}
 function addXP(n){S.xp+=n;header();checkAch()}
@@ -676,50 +1264,51 @@ function next(){if(!queue.length)buildQueue();
   if(!queue.length){showDone();return} if(cur)hist.push(cur); show(queue.shift())}
 function showDone(){cur=null;checkCtl?.abort();$("stage").hidden=true;$("task").hidden=true;$("dock").hidden=true;$("done").hidden=false;
   const cs=cardsFor(S.filter),ds=cs.map(c=>S.st[c.w]?.due).filter(Boolean);
-  if(!cs.length||!ds.length){$("doneTxt").textContent="ชุดนี้ยังไม่มีคำ ลองบันทึกคำ หรือค้นคำใหม่ด้วยปุ่มค้นหาตรงกลาง";$("practice").hidden=true;return}
+  if(!cs.length||!ds.length){$("doneTxt").textContent="This deck has no words yet. Save some words or find new ones with the search button.";$("practice").hidden=true;return}
   $("practice").hidden=false;
   const mins=Math.max(1,Math.round((Math.min(...ds)-Date.now())/6e4));
-  $("doneTxt").textContent="รอบทบทวนถัดไปอีก "+(mins<60?mins+" นาที":mins<1440?Math.round(mins/60)+" ชั่วโมง":Math.round(mins/1440)+" วัน")+" ระหว่างนี้ฝึกต่อได้"}
-function fmtInt(ms){return ms<36e5?Math.round(ms/6e4)+" นาที":Math.round(ms/864e5)+" วัน"}
+  $("doneTxt").textContent="Next review in "+(mins<60?mins+" min":mins<1440?Math.round(mins/60)+" h":Math.round(mins/1440)+" days")+". Keep practising meanwhile."}
+function fmtInt(ms){return ms<36e5?Math.round(ms/6e4)+" min":Math.round(ms/864e5)+" days"}
 // new words start as flashcards; words you've met get mixed with writing tasks
 function pickType(c){if(S.mix==="off"||!S.st[c.w])return"card";const p=S.mix==="often"?.6:.35,r=Math.random();return r<p/2?"write":r<p?"mean":"card"}
 function okBox(c){const s=S.st[c.w];return s?Math.min(INT.length-1,s.b+1):2}
 function show(c,type){cur=c;ctype=type||pickType(c);answered=false;checkCtl?.abort();
   $("stage").hidden=false;$("dock").hidden=false;$("done").hidden=true;
   $("card").classList.remove("flipped");resetSwipe();
-  $("hint").textContent="ปัดขวา = จำได้ · ปัดซ้าย = ขอทวนอีก · แตะการ์ดเพื่อพลิก";
+  $("hint").textContent="Swipe right = got it · Swipe left = again · Tap to flip";
   const d=deckOf(c.deck),st=status(c);
   $("front").style.setProperty("--d1",d.c[0]);$("front").style.setProperty("--d2",d.c[1]);
   $("badgeF").textContent=ST_LABEL[st];$("badgeF").style.setProperty("--sc",ST_COLOR[st]);
-  $("fWord").textContent=c.w.toUpperCase();$("fPron").textContent=c.p||"—";$("fPos").textContent=posLabel(c.pos);
+  $("fWord").textContent=c.w.toUpperCase();$("fPron").textContent=c.p||"—";$("fPos").textContent=posLabel(c.pos)+(c.lv?" · "+c.lv:"");
   if(ctype==="card")renderQuiz(c);
   else{qtype="syn";$("fWord").classList.remove("hiddenw");$("fPronBox").hidden=false;$("qImg").hidden=true;$("qDef").hidden=true}
   $("knownBtn").setAttribute("aria-pressed",S.known.includes(c.w));
   // back
-  $("bPic").innerHTML=sceneHTML(c.t,c.e)+`<span class="badge" style="--sc:${ST_COLOR[st]}">${ST_LABEL[st]}</span><button class="play" id="sayEx" aria-label="ฟังประโยคตัวอย่าง">▶</button>`;
+  $("bPic").innerHTML=sceneHTML(c.t,c.e)+`<span class="badge" style="--sc:${ST_COLOR[st]}">${ST_LABEL[st]}</span><button class="play" id="sayEx" aria-label="Play example sentence">▶</button>`;
   $("sayEx").onclick=e=>{e.stopPropagation();speak(c.ex||c.w)};
   $("bWord").textContent=c.w;$("bPos").textContent=posLabel(c.pos);
   $("bDef").textContent=c.def||"—";$("bTh").textContent=c.th||"—";
   const stem=c.w.split(" ")[0],s=stem.length>4?stem.slice(0,-2):stem;
   const re=new RegExp("(\\b"+s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"[\\w'-]*)","i");
-  $("bEx").innerHTML=esc(c.ex||"").replace(re,"<b>$1</b>");$("bExTh").textContent=c.exth||"";
+  $("bEx").innerHTML=esc(c.ex||"").replace(re,"<b>$1</b>");$("bExTh").textContent=c.exth||"";$("bEx").parentElement.hidden=!c.ex;
+  if(!c.ex)enrichSoon(c);
   $("thEx").setAttribute("aria-pressed","false");$("bExTh").hidden=true;
   $("thEx").hidden=!c.exth;
   $("saveBtn").setAttribute("aria-pressed",S.saved.includes(c.w));
   const f=S.fav.includes(c.w);$("favBtn").setAttribute("aria-pressed",f);$("favBtn").textContent=f?"♥":"♡";
-  $("i1").textContent="กลับมาอีกใน "+fmtInt(INT[okBox(c)]);
+  $("i1").textContent="Back in "+fmtInt(INT[okBox(c)]);
   $("undo").style.visibility=hist.length?"visible":"hidden";
   // writing tasks mixed into the flow
   const w=ctype!=="card";$("stage").classList.toggle("compact",w);$("task").hidden=!w;
-  $("typeChip").hidden=!w;$("typeChip").textContent=ctype==="write"?"✍️ แต่งประโยค":"💭 ความหมาย";
+  $("typeChip").hidden=!w;$("typeChip").textContent=ctype==="write"?"✍️ Sentence":"💭 Meaning";
   if(w){$("result").hidden=true;$("result").innerHTML="";$("checkBtn").disabled=false;$("ans").value="";
-    $("taskQ").innerHTML=ctype==="write"?`แต่งประโยคภาษาอังกฤษโดยใช้คำว่า <b>${esc(c.w)}</b>`:`คำว่า <b>${esc(c.w)}</b> หมายความว่าอะไร? อธิบายด้วยคำพูดของตัวเอง ภาษาไทยหรืออังกฤษก็ได้`;
-    $("ans").placeholder=ctype==="write"?"พิมพ์ประโยคของคุณที่นี่":"เช่น หมายถึง… ใช้ตอนที่…";
-    $("hint").textContent="ตอบแล้วกดตรวจ จากนั้นปัดการ์ดเพื่อไปคำถัดไป"}}
+    $("taskQ").innerHTML=ctype==="write"?`Write an English sentence using <b>${esc(c.w)}</b>`:`What does <b>${esc(c.w)}</b> mean? Explain in your own words (Thai or English).`;
+    $("ans").placeholder=ctype==="write"?"Write your sentence here":"e.g. It means… You use it when…";
+    $("hint").textContent="Answer, tap Check, then swipe for the next word"}}
 /* quiz types: syn = closest word, def = word from meaning, img = word from picture, spell = type what you hear */
-const QT={syn:"คำไหนความหมายใกล้ที่สุด?",def:"ความหมายนี้คือคำไหน?",img:"ภาพนี้คือคำไหน?",spell:"ฟังแล้วพิมพ์คำให้ถูก"};
+const QT={syn:"What's the closest word?",def:"Which word matches this meaning?",img:"Which word is this picture?",spell:"Listen and type the word"};
 let qtype="syn",answer="";
-function pickQType(c){let on=Object.keys(QT).filter(k=>S.qtypes[k]);if(!c.syn||c.syn==="—")on=on.filter(k=>k!=="syn");if(!HAS_TTS)on=on.filter(k=>k!=="spell");
+function pickQType(c){let on=Object.keys(QT).filter(k=>S.qtypes[k]);if(!c.syn||c.syn==="—")on=on.filter(k=>k!=="syn");if(!HAS_TTS)on=on.filter(k=>k!=="spell");if(!c.ex)on=on.filter(k=>k!=="img");
   if(!on.length)on=["def"];return on[Math.floor(Math.random()*on.length)]}
 function distractors(c,field,n){const same=all().filter(x=>x.w!==c.w&&x.deck===c.deck).map(x=>x[field]);
   const any=all().filter(x=>x.w!==c.w).flatMap(x=>field==="w"?[x.w]:[x.syn,x.w]);
@@ -733,7 +1322,7 @@ function renderQuiz(c){qtype=pickQType(c);answer=qtype==="syn"?c.syn:c.w;
   $("fPronBox").hidden=hide;$("qImg").hidden=qtype!=="img";$("qDef").hidden=!(qtype==="def"||qtype==="spell");
   if(qtype==="img")$("qImg").innerHTML=sceneHTML(c.t,c.e);
   if(qtype==="def")$("qDef").innerHTML=`${esc(c.def)}<small>${esc(c.th)}</small>`;
-  if(qtype==="spell")$("qDef").innerHTML=`${esc(c.th)}<small>กด 🔊 ด้านบนเพื่อฟังอีกครั้ง</small>`;
+  if(qtype==="spell")$("qDef").innerHTML=`${esc(c.th)}<small>Tap 🔊 above to hear it again</small>`;
   $("qText").textContent=QT[qtype];$("qMic").hidden=!SR||qtype==="spell";
   const box=$("choices");box.innerHTML="";box.hidden=qtype==="spell";$("spell").hidden=qtype!=="spell";
   if(qtype==="spell"){const i=$("spIn");i.value="";i.className="";i.disabled=false;setTimeout(()=>speak(c.w,null,true),350);return}
@@ -741,11 +1330,11 @@ function renderQuiz(c){qtype=pickQType(c);answer=qtype==="syn"?c.syn:c.w;
   opts.forEach(o=>{const b=document.createElement("button");b.className="choice";b.type="button";b.textContent=o;
     b.onclick=e=>{e.stopPropagation();answered?lookup(o):pick(b,o===answer)};box.append(b)})}
 function lookup(w){const f=all().find(x=>x.w===w)||all().find(x=>x.syn===w);
-  toast(f?(f.w===w?`${w} = ${f.th}`:`${w} ≈ ${f.w} (${f.th})`):`${w} ยังไม่มีในคลัง ลองค้นด้วยปุ่มค้นหา`)}
+  toast(f?(f.w===w?`${w} = ${f.th}`:`${w} ≈ ${f.w} (${f.th})`):`${w} isn't in your word bank yet — try the search button`)}
 function revealWord(){if(!cur)return;$("fWord").classList.remove("hiddenw");$("fWord").textContent=cur.w.toUpperCase();$("fPronBox").hidden=false}
 function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
 function afterAnswer(ok){addXP(ok?10:2);save();vib(ok?20:[30,40,30]);revealWord();
-  $("hint").textContent=ok?"ถูกต้อง! +10 XP · แตะตัวเลือกอื่นเพื่อดูความหมายได้":`ยังไม่ใช่ คำตอบคือ ${answer} · ลองปัดซ้ายเพื่อทวนอีก`;
+  $("hint").textContent=ok?"Correct! +10 XP · Tap other options to see their meanings":`Not quite — the answer is ${answer} · Swipe left to see it again`;
   const c=cur,n=S.total;setTimeout(()=>{if(cur===c&&S.total===n&&answered&&!$("card").classList.contains("flipped"))flip()},ok?900:1500)}
 function pick(btn,ok){if(answered)return;answered=true;
   btn.classList.add(ok?"right":"wrong");
@@ -759,17 +1348,17 @@ function rate(r){if(!cur)return;const now=Date.now(),old=S.st[cur.w],st=old?{...
   if(r===0){st.b=0;st.due=now+INT[0];queue.splice(Math.min(3,queue.length),0,cur)}
   else{st.b=okBox(cur);st.due=now+INT[st.b]}
   S.st[cur.w]=st;S.today++;S.total++;touchStreak();addXP(5);vib(12);
-  if(S.today===S.goal){S.goalHit++;toast("ครบเป้าวันนี้แล้ว 🎯")}
+  if(S.today===S.goal){S.goalHit++;toast("Daily goal reached 🎯")}
   save();header();checkAch();next()}
 /* Some in-app web views (e.g. the Claude Android app) have no text-to-speech; fall back to a dictionary link */
 let HAS_TTS=false;try{HAS_TTS=!!window.speechSynthesis&&typeof window.SpeechSynthesisUtterance==="function"}catch(e){}
 function noTTS(t){t=String(t||"").trim();if(!t)return;const single=!/\s/.test(t)||t.split(/\s+/).length<=3;
   const url=single?`https://dictionary.cambridge.org/dictionary/english/${encodeURIComponent(t.toLowerCase().replace(/\s+/g,"-"))}`:`https://translate.google.com/?sl=en&tl=th&text=${encodeURIComponent(t)}&op=translate`;
   const w=document.createElement("div");w.style.cssText="display:flex;flex-direction:column;gap:12px";
-  w.innerHTML=`<p style="margin:0">เบราว์เซอร์นี้ไม่มีระบบอ่านออกเสียงในตัว เลยเล่นเสียงในหน้านี้ไม่ได้</p>
-    <a class="primary" style="text-align:center;text-decoration:none" href="${url}" target="_blank" rel="noopener">${single?"ฟังเสียงใน Cambridge Dictionary":"ฟังประโยคใน Google Translate"}</a>
-    <p class="note" style="margin:0">ถ้าเปิดแอปนี้ผ่าน Chrome จะเล่นเสียงได้ปกติทุกปุ่ม รวมถึงควิซฟังแล้วสะกด</p>`;
-  openSheet("🔊 "+(single?t:"ฟังประโยค"),w)}
+  w.innerHTML=`<p style="margin:0">This app has no built-in text-to-speech on this phone, so sound can't play here.</p>
+    <a class="primary" style="text-align:center;text-decoration:none" href="${url}" target="_blank" rel="noopener">${single?"Listen in Cambridge Dictionary":"Listen in Google Translate"}</a>
+    <p class="note" style="margin:0">Open this app in Chrome to get sound on every button, including the listening quiz.</p>`;
+  openSheet("🔊 "+(single?t:"Sentence"),w)}
 function speak(t,lang,quiet){if(!HAS_TTS){if(!quiet)noTTS(t);return}
   try{speechSynthesis.cancel();lang=lang||(S.accent==="uk"?"en-GB":"en-US");
   const u=new SpeechSynthesisUtterance(t);u.lang=lang;u.rate=lang.startsWith("th")?1:.88;
@@ -802,13 +1391,13 @@ $("btnOk").onclick=()=>swipeOut(1);$("btnAgain").onclick=()=>swipeOut(0);
 $("sayF").onclick=$("sayP").onclick=$("sayB").onclick=e=>{e.stopPropagation();speak(cur.w)};
 $("undo").onclick=e=>{e.stopPropagation();if(!hist.length)return;queue.unshift(cur);show(hist.pop())};
 $("thEx").onclick=e=>{e.stopPropagation();const on=$("bExTh").hidden;$("bExTh").hidden=!on;e.currentTarget.setAttribute("aria-pressed",on)};
-$("saveBtn").onclick=e=>{e.stopPropagation();toggle("saved",cur.w);const on=S.saved.includes(cur.w);e.currentTarget.setAttribute("aria-pressed",on);toast(on?"บันทึกเข้า My Decks แล้ว":"นำออกจาก My Decks แล้ว")};
+$("saveBtn").onclick=e=>{e.stopPropagation();toggle("saved",cur.w);const on=S.saved.includes(cur.w);e.currentTarget.setAttribute("aria-pressed",on);toast(on?"Saved to My Decks":"Removed from My Decks")};
 $("favBtn").onclick=e=>{e.stopPropagation();toggle("fav",cur.w);const on=S.fav.includes(cur.w);e.currentTarget.setAttribute("aria-pressed",on);e.currentTarget.textContent=on?"♥":"♡"};
 $("shareBtn").onclick=e=>{e.stopPropagation();shareCard(cur)};
 $("thesBtn").onclick=e=>{e.stopPropagation();openThes(cur)};
 $("knownBtn").onclick=e=>{e.stopPropagation();const w=cur.w;toggle("known",w);
-  if(S.known.includes(w)){toast("เก็บคำนี้แล้ว จะไม่วนมาให้ทวนอีก (ดูได้ใน My Decks)");queue=queue.filter(c=>c.w!==w);next()}
-  else{e.currentTarget.setAttribute("aria-pressed","false");toast("นำกลับมาทวนแล้ว")}};
+  if(S.known.includes(w)){toast("Marked as known — it won't come back (see My Decks)");queue=queue.filter(c=>c.w!==w);next()}
+  else{e.currentTarget.setAttribute("aria-pressed","false");toast("Back in your reviews")}};
 $("moreBtn").onclick=e=>{e.stopPropagation();tellMore(cur)};
 $("practice").onclick=()=>{const now=Date.now();
   cardsFor(S.filter).forEach(c=>{if(S.st[c.w])S.st[c.w].due=Math.min(S.st[c.w].due,now)});
@@ -832,8 +1421,8 @@ function promptFor(c,a){
 ให้คะแนน 0-100 ตามความเข้าใจความหมาย ไม่ต้องหักคะแนนเรื่องไวยากรณ์หรือภาษาที่ใช้ ถ้าเข้าใจถูกแม้อธิบายสั้นๆ ควรได้ 85 ขึ้นไป
 ตอบเป็น JSON object เท่านั้น:
 {"score":number,"correct":boolean,"feedback":"ภาษาไทย 1-2 ประโยค บอกว่าเข้าใจถูกหรือคลาดเคลื่อนตรงไหน","model_answer":"คำอธิบายความหมายแบบสั้นเป็นภาษาไทย พร้อมบอกว่าใช้ในสถานการณ์แบบไหน"}`}
-async function check(){const a=$("ans").value.trim();if(!a){toast("พิมพ์คำตอบก่อนนะ");$("ans").focus();return}
-  const c=cur,out=$("result");out.hidden=false;out.innerHTML=`<div class="thinking">กำลังตรวจ…</div>`;$("checkBtn").disabled=true;
+async function check(){const a=$("ans").value.trim();if(!a){toast("Type your answer first");$("ans").focus();return}
+  const c=cur,out=$("result");out.hidden=false;out.innerHTML=`<div class="thinking">Checking…</div>`;$("checkBtn").disabled=true;
   const sample=getSample();
   if(c!==cur)return;
   if(!sample){selfCheck(c);return}
@@ -844,25 +1433,25 @@ async function check(){const a=$("ans").value.trim();if(!a){toast("พิมพ�
 function markDiff(orig,fixed){const seen=new Set(orig.toLowerCase().match(/[a-z']+/g)||[]);
   return esc(fixed).replace(/[A-Za-z']+/g,w=>seen.has(w.toLowerCase())?w:`<mark>${w}</mark>`)}
 function renderResult(r,a,c){const s=Math.max(0,Math.min(100,Math.round(Number(r.score)||0)));
-  const col=s>=85?"var(--confident)":s>=60?"var(--learning)":"var(--bad)",verdict=s>=85?"เยี่ยมมาก!":s>=60?"เกือบแล้ว":"ลองอีกครั้งนะ";
-  const chk=(ctype==="write"?[["ใช้คำนี้",r.uses_word],["ความหมายถูก",r.meaning_ok],["ไวยากรณ์",r.grammar_ok]]:[["เข้าใจถูก",r.correct]])
+  const col=s>=85?"var(--confident)":s>=60?"var(--learning)":"var(--bad)",verdict=s>=85?"Excellent!":s>=60?"Almost":"Try again";
+  const chk=(ctype==="write"?[["Uses the word",r.uses_word],["Meaning",r.meaning_ok],["Grammar",r.grammar_ok]]:[["Understood",r.correct]])
     .map(([l,v])=>`<span class="chk ${v?"ok":"no"}">${v?"✓":"✗"} ${l}</span>`).join("");
   let h=`<div class="score"><div class="sring" style="--p:${s};--sc:${col}"><div>${s}</div></div><div><div style="font:700 17px var(--display)">${verdict}</div><div class="checks">${chk}</div></div></div>`;
   if(r.feedback)h+=`<p style="margin:0">${esc(r.feedback)}</p>`;
   if(ctype==="write"){const fx=String(r.corrected||"").trim();
-    if(fx&&fx.replace(/\s+/g," ")!==a.replace(/\s+/g," "))h+=`<div><div class="lab">ประโยคที่แก้แล้ว</div><div class="fix"><span>${markDiff(a,fx)}</span><button class="ib" data-say="${esc(fx)}" aria-label="ฟังเสียง">🔊</button></div></div>`;
-    if(r.better)h+=`<div><div class="lab">ตัวอย่างที่เป็นธรรมชาติ</div><div class="fix"><span>${esc(r.better)}<span class="thtxt">${esc(r.better_th||"")}</span></span><button class="ib" data-say="${esc(r.better)}" aria-label="ฟังเสียง">🔊</button></div></div>`}
-  else if(r.model_answer)h+=`<div><div class="lab">คำตอบตัวอย่าง</div><div class="fix"><span>${esc(r.model_answer)}</span></div></div>`;
-  h+=`<div class="trow"><button class="ghost" id="retry">แก้แล้วส่งใหม่</button><span class="note">${s>=85?"ปัดขวาไปคำถัดไปได้เลย":"ลองแก้ใหม่ หรือปัดซ้ายเพื่อทวนคำนี้อีก"}</span></div>`;
+    if(fx&&fx.replace(/\s+/g," ")!==a.replace(/\s+/g," "))h+=`<div><div class="lab">Corrected sentence</div><div class="fix"><span>${markDiff(a,fx)}</span><button class="ib" data-say="${esc(fx)}" aria-label="Play sound">🔊</button></div></div>`;
+    if(r.better)h+=`<div><div class="lab">More natural example</div><div class="fix"><span>${esc(r.better)}<span class="thtxt">${esc(r.better_th||"")}</span></span><button class="ib" data-say="${esc(r.better)}" aria-label="Play sound">🔊</button></div></div>`}
+  else if(r.model_answer)h+=`<div><div class="lab">Model answer</div><div class="fix"><span>${esc(r.model_answer)}</span></div></div>`;
+  h+=`<div class="trow"><button class="ghost" id="retry">Resubmit</button><span class="note">${s>=85?"Swipe right for the next word":"Edit and resubmit, or swipe left to review this word again"}</span></div>`;
   const out=$("result");out.innerHTML=h;
   out.querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>speak(b.dataset.say));
   $("retry").onclick=()=>{$("checkBtn").disabled=false;$("ans").focus()};
   addXP(Math.round(s/10));S.log=(S.log||[]).slice(-49).concat({w:c.w,m:ctype,a,s,d:Date.now()});
   S.writes=(S.writes||0)+1;if(s===100)S.perfect=1;save();checkAch()}
 function selfCheck(c){
-  $("result").innerHTML=`<p class="note" style="margin:0">${NOAI} ระหว่างนี้ลองเทียบคำตอบกับตัวอย่างด้านล่าง แล้วปัดการ์ดตามที่ตัวเองคิด</p>
-    <div><div class="lab">ความหมาย</div><div class="fix"><span>${esc(c.th)} — ${esc(c.def)}</span></div></div>
-    <div><div class="lab">ประโยคตัวอย่าง</div><div class="fix"><span>${esc(c.ex)}<span class="thtxt">${esc(c.exth)}</span></span></div></div>`;
+  $("result").innerHTML=`<p class="note" style="margin:0">${NOAI} Meanwhile, compare your answer with the example below, then swipe the card.</p>
+    <div><div class="lab">Meaning</div><div class="fix"><span>${esc(c.th)} — ${esc(c.def)}</span></div></div>
+    <div><div class="lab">Example sentence</div><div class="fix"><span>${esc(c.ex)}<span class="thtxt">${esc(c.exth)}</span></span></div></div>`;
   $("checkBtn").disabled=false}
 $("checkBtn").onclick=check;
 $("ans").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)){e.preventDefault();check()}});
@@ -877,24 +1466,30 @@ function statusBar(cs){const n={new:0,learning:0,familiar:0,confident:0};cs.forE
   const tot=cs.length||1;return{n,html:`<div class="bar">${["confident","familiar","learning"].map(k=>`<span style="width:${n[k]/tot*100}%;background:${ST_COLOR[k]}"></span>`).join("")}</div>`}}
 function deckEl(d){const cs=cardsFor(d.id),sb=statusBar(cs),f=cs[0]||{t:"dusk",e:["✨","🎯","📚"]};
   const el=document.createElement("div");el.className="deck";
-  const canGen=d.lv||d.made;
+  const canGen=d.lv||d.made||d.ielts;
   el.innerHTML=`<div class="thumb">${d.lv?`<span class="lv">${d.lv}</span>`:""}${sceneHTML(f.t,f.e)}</div><div style="min-width:0"><h3>${esc(d.name)}</h3><p>${esc(d.desc)}${d.band?` · ${esc(d.band)}`:""}</p>${sb.html}
-    <div class="meta"><span>มั่นใจ ${sb.n.confident}/${cs.length} คำ</span><span class="btns">${canGen?`<button class="gen">✨ +10 คำ</button>`:""}${cs.length?`<button class="go">เรียน</button>`:""}</span></div></div>`;
+    <div class="meta"><span>Confident ${sb.n.confident}/${cs.length}</span><span class="btns">${canGen?`<button class="gen">✨ +10 words</button>`:""}${cs.length?`<button class="go">Study</button>`:""}</span></div></div>`;
   el.querySelector(".go")?.addEventListener("click",()=>startDeck(d.id));
   const g=el.querySelector(".gen");if(g)g.onclick=()=>genWords(d,g);
   return el}
 function renderExplore(){const L=$("deckList");L.innerHTML="";
-  const h1=document.createElement("h3");h1.className="sech";h1.textContent="ระดับคำศัพท์ CEFR";L.append(h1);
+  const h1=document.createElement("h3");h1.className="sech";h1.textContent="CEFR levels";L.append(h1);
   DECKS.filter(d=>d.lv).forEach(d=>L.append(deckEl(d)));
-  const n=document.createElement("p");n.className="note";n.style.margin="0";n.textContent="กด ✨ +10 คำ เพื่อให้ AI สร้างคำใหม่ในระดับนั้นเพิ่มเข้าคลัง";L.append(n);
-  const h2=document.createElement("h3");h2.className="sech";h2.textContent="หัวข้อพิเศษ";L.append(h2);
-  DECKS.filter(d=>!d.lv).forEach(d=>L.append(deckEl(d)))}
+  const n=document.createElement("p");n.className="note";n.style.margin="0";n.textContent="Tap ✨ +10 words to let AI add new words at that level.";L.append(n);
+  const h3=document.createElement("h3");h3.className="sech";h3.textContent="IELTS by topic · B1–C1";L.append(h3);
+  const n3=document.createElement("p");n3.className="note";n3.style.margin="0";n3.textContent=`${DECKS.filter(d=>d.ielts).reduce((t,d)=>t+cardsFor(d.id).length,0)} words grouped by common exam topics. Pictures and example sentences are created the first time you open a card.`;L.append(n3);
+  DECKS.filter(d=>d.ielts).forEach(d=>L.append(deckEl(d)));
+  const h2=document.createElement("h3");h2.className="sech";h2.textContent="Special topics";L.append(h2);
+  DECKS.filter(d=>!d.lv&&!d.ielts).forEach(d=>L.append(deckEl(d)))}
 async function genWords(d,btn){
-  if(d.made&&!S.interests.trim()){toast("ใส่ความสนใจของคุณในหน้าโปรไฟล์ก่อนนะ");go("profile");setTimeout(()=>$("intIn")?.focus(),100);return}
+  if(d.made&&!S.interests.trim()){toast("Add your interests in Profile first");go("profile");setTimeout(()=>$("intIn")?.focus(),100);return}
   const sample=getSample();if(!sample){toast(NOAI);return}
-  btn.disabled=true;btn.textContent="กำลังสร้าง…";
+  btn.disabled=true;btn.textContent="Creating…";
   const have=(d.made?all():cardsFor(d.id)).map(c=>c.w).slice(-400).join(", ");
-  const prompt=d.made?`ผู้เรียนคนไทยกำลังเตรียมสอบ IELTS และสนใจเรื่องเหล่านี้: """${S.interests.slice(0,300)}"""
+  const prompt=d.ielts?`สร้างคำศัพท์ภาษาอังกฤษระดับ B1-C1 จำนวน 10 คำ ในหัวข้อ "${d.name.replace(/^\S+\s/,"")}" (${d.desc}) ที่ออกสอบ IELTS บ่อย สำหรับผู้เรียนคนไทย
+ห้ามซ้ำกับคำเหล่านี้: ${have}
+ตอบเป็น JSON array ของ 10 object เท่านั้น แต่ละ object มีรูปแบบ:
+${SCHEMA}`:d.made?`ผู้เรียนคนไทยกำลังเตรียมสอบ IELTS และสนใจเรื่องเหล่านี้: """${S.interests.slice(0,300)}"""
 เลือกคำศัพท์ภาษาอังกฤษ 10 คำที่เกี่ยวกับความสนใจนั้นและนำไปใช้ใน IELTS Speaking หรือ Writing ได้จริง ระดับ B1-C1 ปนกัน
 ห้ามซ้ำกับคำเหล่านี้: ${have}
 ประโยคตัวอย่างให้เชื่อมความสนใจของผู้เรียนเข้ากับหัวข้อ IELTS
@@ -908,70 +1503,70 @@ ${SCHEMA}`;
     const exist=new Set(all().map(c=>c.w));
     const add=(Array.isArray(arr)?arr:[]).map(r=>toCard(r,d.id)).filter(c=>c&&!exist.has(c.w)&&exist.add(c.w)).map(({deck,...rest})=>rest);
     if(!add.length)throw{code:"invalid_json"};
-    S.extra[d.id]=(S.extra[d.id]||[]).concat(add);save();toast(`เพิ่ม ${add.length} คำใหม่ใน ${d.name} แล้ว`);
+    S.extra[d.id]=(S.extra[d.id]||[]).concat(add);save();toast(`Added ${add.length} new words to ${d.name}`);
     if(S.filter===d.id||S.filter==="all")queue.push(...add.map(c=>({...c,deck:d.id})));
     renderExplore()}
-  catch(e){btn.disabled=false;btn.textContent="✨ +10 คำ";if(e?.code!=="cancelled")toast(errMsg(e))}}
+  catch(e){btn.disabled=false;btn.textContent="✨ +10 words";if(e?.code!=="cancelled")toast(errMsg(e))}}
 function itemEl(c){const st=status(c),b=document.createElement("button");b.className="item";
   b.innerHTML=`<span class="thumb">${sceneHTML(c.t,(c.e||[]).slice(0,1))}</span><span style="min-width:0"><b>${esc(c.w)}</b><span>${esc(c.th)}</span></span><span class="pill" style="--sc:${ST_COLOR[st]}">${ST_LABEL[st]}</span>`;
   b.onclick=()=>{go("review");if(cur)queue.unshift(cur);show(c,"card")};return b}
 function renderMine(){const L=$("mineList");L.innerHTML="";
   const sv=cardsFor("saved"),sb=statusBar(sv);
   const head=document.createElement("div");head.className="tiles";
-  head.innerHTML=`<div class="tile"><b>${sv.length}</b><span>คำที่บันทึก</span></div><div class="tile"><b>${S.mine.length}</b><span>คำจาก AI</span></div><div class="tile"><b>${sb.n.confident}</b><span>มั่นใจแล้ว</span></div>`;
+  head.innerHTML=`<div class="tile"><b>${sv.length}</b><span>Saved</span></div><div class="tile"><b>${S.mine.length}</b><span>From AI</span></div><div class="tile"><b>${sb.n.confident}</b><span>Confident</span></div>`;
   L.append(head);
-  if(!sv.length){const e=document.createElement("div");e.className="empty";e.innerHTML="ยังไม่มีคำที่บันทึก<br>กดปุ่ม ＋ หลังการ์ด หรือค้นคำใหม่ด้วยปุ่มค้นหาตรงกลาง";L.append(e)}
-  else{const btn=document.createElement("button");btn.className="primary";btn.textContent="ทบทวน My Decks";btn.onclick=()=>startDeck("saved");L.append(btn);
+  if(!sv.length){const e=document.createElement("div");e.className="empty";e.innerHTML="No saved words yet<br>Tap ＋ on the back of a card, or find new words with the search button";L.append(e)}
+  else{const btn=document.createElement("button");btn.className="primary";btn.textContent="Review My Decks";btn.onclick=()=>startDeck("saved");L.append(btn);
     sv.forEach(c=>L.append(itemEl(c)))}
   const kn=all().filter(c=>S.known.includes(c.w));
-  if(kn.length){const h=document.createElement("h3");h.className="sech";h.textContent=`คำที่รู้แล้ว ไม่ต้องทวน (${kn.length})`;L.append(h);
-    const n=document.createElement("p");n.className="note";n.style.margin="0";n.textContent="แตะคำเพื่อเปิดการ์ด แล้วกด ✓ อีกครั้งถ้าอยากนำกลับมาทวน";L.append(n);
+  if(kn.length){const h=document.createElement("h3");h.className="sech";h.textContent=`Known words · not reviewed (${kn.length})`;L.append(h);
+    const n=document.createElement("p");n.className="note";n.style.margin="0";n.textContent="Tap a word to open it, then tap ✓ again to bring it back";L.append(n);
     kn.forEach(c=>L.append(itemEl(c)))}}
 function renderProfile(){const P=$("profile");const lvl=1+Math.floor(S.xp/XP_PER_LVL),into=S.xp%XP_PER_LVL;
   const a=all(),sb=statusBar(a),log=S.log||[];
   const avg=log.length?Math.round(log.reduce((t,x)=>t+x.s,0)/log.length):null;
-  const lvRows=DECKS.filter(d=>d.lv).map(d=>{const cs=cardsFor(d.id),b=statusBar(cs);
-    return `<div class="rowb" style="gap:12px"><span style="font:700 14px var(--display);width:28px">${d.lv}</span><div style="flex:1">${b.html}</div><span class="note" style="width:52px;text-align:right">${b.n.confident}/${cs.length}</span></div>`}).join("");
+  const lvRows=[...DECKS.filter(d=>d.lv),{id:"__ielts",lv:"IELTS"}].map(d=>{const cs=d.id==="__ielts"?all().filter(c=>deckOf(c.deck).ielts):cardsFor(d.id),b=statusBar(cs);
+    return `<div class="rowb" style="gap:12px"><span style="font:700 14px var(--display);width:44px">${d.lv}</span><div style="flex:1">${b.html}</div><span class="note" style="width:52px;text-align:right">${b.n.confident}/${cs.length}</span></div>`}).join("");
   P.innerHTML=`<div class="lvlcard"><div class="bigring" style="--p:${into/XP_PER_LVL*100}"><div>${lvl}</div></div>
-    <div><div style="font:800 20px var(--display)">Level ${lvl}</div><div class="note">${S.xp} XP · อีก ${XP_PER_LVL-into} XP ถึงเลเวลถัดไป</div>
-    <div class="note">ตอบควิซถูก +10 · ทบทวน +5 · แบบฝึกเขียนได้ตามคะแนน</div></div></div>
-    <div class="tiles"><div class="tile"><b>🔥 ${S.streak}</b><span>วันต่อเนื่อง</span></div><div class="tile"><b>${a.length-sb.n.new}</b><span>คำที่เรียนแล้ว</span></div><div class="tile"><b>${avg??"–"}</b><span>คะแนนเขียนเฉลี่ย</span></div></div>
-    <div class="panel"><div class="rowb"><h3>ตราสะสม</h3><span class="note">${ACH.filter(a=>S.ach[a.id]).length}/${ACH.length}</span></div>
+    <div><div style="font:800 20px var(--display)">Level ${lvl}</div><div class="note">${S.xp} XP · ${XP_PER_LVL-into} XP to next level</div>
+    <div class="note">Correct quiz +10 · Review +5 · Writing = score ÷ 10</div></div></div>
+    <div class="tiles"><div class="tile"><b>🔥 ${S.streak}</b><span>Day streak</span></div><div class="tile"><b>${a.length-sb.n.new}</b><span>Words studied</span></div><div class="tile"><b>${avg??"–"}</b><span>Avg writing score</span></div></div>
+    <div class="panel"><div class="rowb"><h3>Badges</h3><span class="note">${ACH.filter(a=>S.ach[a.id]).length}/${ACH.length}</span></div>
       <div class="achs">${ACH.map(a=>`<div class="achb${S.ach[a.id]?" on":""}" title="${esc(a.how)}"><b>${a.ic}</b>${esc(a.name)}</div>`).join("")}</div></div>
-    <div class="panel"><h3>ความคืบหน้าตามระดับ</h3>${lvRows}
+    <div class="panel"><h3>Progress by level</h3>${lvRows}
       <div class="legend">${["confident","familiar","learning"].map(k=>`<span style="--sc:${ST_COLOR[k]}"><i></i>${ST_LABEL[k]}</span>`).join("")}</div></div>
-    <div class="panel"><div class="rowb"><h3>เป้าหมายต่อวัน</h3><select id="goalSel" aria-label="เป้าหมายต่อวัน">${[6,12,20,30,50].map(n=>`<option value="${n}"${n===S.goal?" selected":""}>${n} การ์ด</option>`).join("")}</select></div>
-      <div class="rowb"><h3>แบบฝึกเขียนผสมในการ์ด</h3><select id="mixSel" aria-label="ความถี่แบบฝึกเขียน">${[["off","ปิด"],["some","บางครั้ง"],["often","บ่อย"]].map(([v,n])=>`<option value="${v}"${v===S.mix?" selected":""}>${n}</option>`).join("")}</select></div>
-      <span class="note">แบบฝึกแต่งประโยคและอธิบายความหมายจะสลับมาเฉพาะคำที่เคยเห็นแล้ว</span>
-      <h3>ควิซที่เปิดใช้</h3>
-      <div class="tg">${[["syn","คำความหมายใกล้"],["def","ทายจากความหมาย"],["img","ทายจากภาพ"],["spell","ฟังแล้วสะกด"]].map(([k,n])=>`<label><input type="checkbox" id="qt-${k}" data-k="${k}"${S.qtypes[k]?" checked":""}>${n}</label>`).join("")}</div>
-      <div class="rowb"><h3>สำเนียงเสียงอ่าน</h3><select id="accSel" aria-label="สำเนียง"><option value="us"${S.accent==="us"?" selected":""}>อเมริกัน 🇺🇸</option><option value="uk"${S.accent==="uk"?" selected":""}>อังกฤษ 🇬🇧</option></select></div>${HAS_TTS?"":`<span class="note">เบราว์เซอร์นี้ไม่มีเสียงอ่าน ปุ่ม 🔊 จะพาไปฟังใน Cambridge Dictionary แทน และควิซฟังแล้วสะกดจะถูกข้ามไป</span>`}</div>
-    <div class="panel"><h3>ความสนใจของคุณ</h3><span class="note">ใช้เลือกคำในชุด Made for You เช่น ภาพยนตร์, ฟุตบอล, การทำอาหาร</span>
-      <form class="ifield" id="intForm"><input id="intIn" value="${esc(S.interests)}" placeholder="พิมพ์สิ่งที่สนใจ คั่นด้วยจุลภาค"><button type="submit">บันทึก</button></form></div>
-    <div class="panel"><h3>ตั้งค่า AI</h3>
-      <div class="rowb"><span class="note">ผู้ให้บริการ</span><select id="aiProv" aria-label="ผู้ให้บริการ AI"><option value="gemini"${(S.aiProv||"gemini")==="gemini"?" selected":""}>Google Gemini</option><option value="claude"${S.aiProv==="claude"?" selected":""}>Anthropic Claude</option></select></div>
-      <form class="ifield" id="keyForm"><input id="keyIn" type="password" autocomplete="off" value="${esc(S.aiKey||"")}" placeholder="วาง API key ที่นี่"><button type="submit">บันทึก</button></form>
-      <div class="keyrow"><button class="ghost" id="keyTest" type="button" style="padding:8px 14px">ทดสอบ</button><span class="note" id="keyMsg">${S.aiKey?"ใส่ key แล้ว":"ยังไม่ได้ใส่ key"}</span></div>
-      <span class="note">key เก็บไว้ในเครื่องนี้เท่านั้น ไม่ถูกส่งไปที่อื่นนอกจากผู้ให้บริการ AI · ขอ key ฟรีได้ที่ <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--familiar)">Google AI Studio</a></span></div>
-    <div class="panel" id="installPanel" hidden><div class="rowb"><h3>ติดตั้งเป็นแอป</h3><button class="primary" id="installBtn" style="padding:8px 14px">ติดตั้ง</button></div></div>
-    <div class="panel"><h3>สำรองข้อมูล</h3><span class="note">ส่งออกความคืบหน้าเป็นไฟล์ แล้วนำเข้าในเครื่องอื่นหรือในแอป PWA</span>
-      <div class="trow"><button class="ghost" id="expBtn">ส่งออกไฟล์</button><label class="ghost" style="cursor:pointer">นำเข้าไฟล์<input type="file" id="impIn" accept=".json,application/json" hidden></label></div></div>
-    <div class="panel"><div class="rowb"><h3>เริ่มนับใหม่ทั้งหมด</h3><button class="danger" id="reset">รีเซ็ต</button></div><div id="resetQ" hidden class="rowb"><span class="note">ลบความคืบหน้า XP คำที่บันทึก และคำที่ AI สร้างทั้งหมด?</span><button class="danger" id="resetYes">ยืนยัน</button></div></div>
-    <p class="note">ความคืบหน้าเก็บไว้ในเครื่องนี้เท่านั้น</p>`;
+    <div class="panel"><div class="rowb"><h3>Daily goal</h3><select id="goalSel" aria-label="Daily goal">${[6,12,20,30,50].map(n=>`<option value="${n}"${n===S.goal?" selected":""}>${n} cards</option>`).join("")}</select></div>
+      <div class="rowb"><h3>Mix in writing tasks</h3><select id="mixSel" aria-label="Writing practice frequency">${[["off","Off"],["some","Sometimes"],["often","Often"]].map(([v,n])=>`<option value="${v}"${v===S.mix?" selected":""}>${n}</option>`).join("")}</select></div>
+      <span class="note">Sentence and meaning tasks only appear for words you've seen before</span>
+      <h3>Quiz types</h3>
+      <div class="tg">${[["syn","Closest word"],["def","Word from meaning"],["img","Word from picture"],["spell","Listen & spell"]].map(([k,n])=>`<label><input type="checkbox" id="qt-${k}" data-k="${k}"${S.qtypes[k]?" checked":""}>${n}</label>`).join("")}</div>
+      <div class="rowb"><h3>Voice accent</h3><select id="accSel" aria-label="Accent"><option value="us"${S.accent==="us"?" selected":""}>American 🇺🇸</option><option value="uk"${S.accent==="uk"?" selected":""}>British 🇬🇧</option></select></div>${HAS_TTS?"":`<span class="note">No text-to-speech here: 🔊 opens Cambridge Dictionary instead, and the listening quiz is skipped.</span>`}</div>
+    <div class="panel"><h3>Your interests</h3><span class="note">Used to pick words for Made for You, e.g. movies, football, cooking</span>
+      <form class="ifield" id="intForm"><input id="intIn" value="${esc(S.interests)}" placeholder="Type your interests, separated by commas"><button type="submit">Save</button></form></div>
+    <div class="panel"><h3>AI settings</h3>
+      <div class="rowb"><span class="note">Provider</span><select id="aiProv" aria-label="AI provider"><option value="gemini"${(S.aiProv||"gemini")==="gemini"?" selected":""}>Google Gemini</option><option value="claude"${S.aiProv==="claude"?" selected":""}>Anthropic Claude</option></select></div>
+      <form class="ifield" id="keyForm"><input id="keyIn" type="password" autocomplete="off" value="${esc(S.aiKey||"")}" placeholder="Paste API key here"><button type="submit">Save</button></form>
+      <div class="keyrow"><button class="ghost" id="keyTest" type="button" style="padding:8px 14px">Test</button><span class="note" id="keyMsg">${S.aiKey?"Key saved":"No key yet"}</span></div>
+      <span class="note">Your key stays on this device and is only sent to the AI provider · Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--familiar)">Google AI Studio</a></span></div>
+    <div class="panel" id="installPanel" hidden><div class="rowb"><h3>Install as app</h3><button class="primary" id="installBtn" style="padding:8px 14px">Install</button></div></div>
+    <div class="panel"><h3>Backup</h3><span class="note">Export your progress to a file, then import it on another device or in the app.</span>
+      <div class="trow"><button class="ghost" id="expBtn">Export file</button><label class="ghost" style="cursor:pointer">Import file<input type="file" id="impIn" accept=".json,application/json" hidden></label></div></div>
+    <div class="panel"><div class="rowb"><h3>Start over</h3><button class="danger" id="reset">Reset</button></div><div id="resetQ" hidden class="rowb"><span class="note">Delete all progress, XP, saved words and AI words?</span><button class="danger" id="resetYes">Confirm</button></div></div>
+    <p class="note">Progress is stored on this device only.</p>`;
   $("goalSel").onchange=e=>{S.goal=+e.target.value;save();header()};
   $("mixSel").onchange=e=>{S.mix=e.target.value;save()};
   $("accSel").onchange=e=>{S.accent=e.target.value;save();speak("Hello, let's learn some new words.",null,true)};
   P.querySelectorAll(".tg input").forEach(i=>i.onchange=()=>{S.qtypes[i.dataset.k]=i.checked?1:0;
-    if(!Object.values(S.qtypes).some(Boolean)){S.qtypes[i.dataset.k]=1;i.checked=true;toast("ต้องเปิดไว้อย่างน้อย 1 แบบ")}save()});
-  $("intForm").onsubmit=e=>{e.preventDefault();S.interests=$("intIn").value.trim().slice(0,300);save();toast("บันทึกแล้ว ไปกด ✨ +10 คำ ในชุด Made for You ได้เลย")};
+    if(!Object.values(S.qtypes).some(Boolean)){S.qtypes[i.dataset.k]=1;i.checked=true;toast("Keep at least one quiz type on")}save()});
+  $("intForm").onsubmit=e=>{e.preventDefault();S.interests=$("intIn").value.trim().slice(0,300);save();toast("Saved. Now tap ✨ +10 words on Made for You")};
   $("expBtn").onclick=exportData;$("impIn").onchange=importData;
-  $("aiProv").onchange=e=>{S.aiProv=e.target.value;save();$("keyMsg").textContent="เปลี่ยนผู้ให้บริการแล้ว ใส่ key ของเจ้านั้น"};
-  $("keyForm").onsubmit=e=>{e.preventDefault();S.aiKey=$("keyIn").value.trim();save();$("keyMsg").textContent=S.aiKey?"บันทึกแล้ว กดทดสอบได้เลย":"ลบ key แล้ว"};
-  $("keyTest").onclick=async()=>{S.aiKey=$("keyIn").value.trim();save();const sm=getSample(),m=$("keyMsg");if(!sm){m.textContent="ใส่ key ก่อน";return}
-    m.textContent="กำลังทดสอบ…";try{const{text}=await sm("Reply with exactly: OK",{modelTier:"quick"});m.textContent="ใช้งานได้ ✓ ("+text.trim().slice(0,20)+")"}catch(e){m.textContent=errMsg(e)+(e?.message?" · "+String(e.message).slice(0,90):"")}};
+  $("aiProv").onchange=e=>{S.aiProv=e.target.value;save();$("keyMsg").textContent="Provider changed — paste a key for it"};
+  $("keyForm").onsubmit=e=>{e.preventDefault();S.aiKey=$("keyIn").value.trim();save();$("keyMsg").textContent=S.aiKey?"Saved — tap Test":"Key removed"};
+  $("keyTest").onclick=async()=>{S.aiKey=$("keyIn").value.trim();save();const sm=getSample(),m=$("keyMsg");if(!sm){m.textContent="Add a key first";return}
+    m.textContent="Testing…";try{const{text}=await sm("Reply with exactly: OK",{modelTier:"quick"});m.textContent="Working ✓ ("+text.trim().slice(0,20)+")"}catch(e){m.textContent=errMsg(e)+(e?.message?" · "+String(e.message).slice(0,90):"")}};
   $("installPanel").hidden=!installEvt;$("installBtn").onclick=async()=>{if(!installEvt)return;installEvt.prompt();await installEvt.userChoice.catch(()=>{});installEvt=null;$("installPanel").hidden=true};
   $("reset").onclick=()=>{$("resetQ").hidden=false};
-  $("resetYes").onclick=()=>{S=DEFAULTS();S.day=todayStr;save();header();fillFilter();hist=[];cur=null;buildQueue();next();renderProfile();toast("รีเซ็ตแล้ว")}}
+  $("resetYes").onclick=()=>{S=DEFAULTS();S.day=todayStr;save();header();fillFilter();hist=[];cur=null;buildQueue();next();renderProfile();toast("Reset done")}}
 
 /* ---------- sheet + toast ---------- */
 let sheetCtl=null;
@@ -1041,9 +1636,9 @@ function getSample(){if(!(S.aiKey||"").trim())return null;
   f.json=(prompt,opts={})=>aiCall(prompt,opts,true);
   return f}
 
-const ERR={bad_key:"API key ใช้ไม่ได้ ตรวจสอบในหน้าโปรไฟล์",network:"ต่ออินเทอร์เน็ตไม่ได้ ลองใหม่อีกครั้ง",quota:"โควตา API หมดแล้ว รอสักพักหรือเปลี่ยนรุ่นโมเดล",not_granted:"ยังไม่ได้อนุญาตให้หน้านี้ใช้ Claude",sampling_disabled:"บัญชีนี้ใช้ Claude ในหน้านี้ไม่ได้",rate_limited:"ใช้งานถี่เกินไป รอสักครู่แล้วลองใหม่",session_expired:"กรุณาเข้าสู่ระบบ Claude ใหม่",invalid_json:"AI ตอบกลับมาไม่ครบ ลองใหม่อีกครั้ง",refused:"ทำรายการนี้ไม่ได้ ลองเปลี่ยนคำถาม"};
-const errMsg=e=>ERR[e?.code]||"เชื่อมต่อไม่สำเร็จ ลองใหม่อีกครั้ง";
-const NOAI="ยังไม่ได้ใส่ API key ไปที่ Profile > ตั้งค่า AI";
+const ERR={bad_key:"API key not accepted — check it in Profile",network:"No internet connection. Try again.",quota:"API quota used up. Wait a while and try again.",not_granted:"This page hasn't been allowed to use Claude",sampling_disabled:"Claude isn't available for this account here",rate_limited:"Too many requests. Wait a moment and try again.",session_expired:"Please sign in to Claude again",invalid_json:"The AI reply was incomplete. Try again.",refused:"Can't do that one. Try rephrasing."};
+const errMsg=e=>ERR[e?.code]||"Connection failed. Try again.";
+const NOAI="No API key yet — go to Profile > AI settings";
 function md(t){const lines=esc(t).split("\n");let h="",inUl=false;
   const inl=s=>s.replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
   for(const l of lines){const x=l.trim();
@@ -1052,7 +1647,7 @@ function md(t){const lines=esc(t).split("\n");let h="",inUl=false;
     if(/^#{1,4}\s/.test(x))h+="<h4>"+inl(x.replace(/^#+\s*/,""))+"</h4>";else if(x)h+="<p>"+inl(x)+"</p>"}
   return h+(inUl?"</ul>":"")}
 async function tellMore(c){const box=document.createElement("div");box.className="md";
-  box.innerHTML=`<div class="thinking">กำลังเตรียมคำอธิบาย…</div>`;openSheet(c.w+" · "+c.th,box);
+  box.innerHTML=`<div class="thinking">Preparing explanation…</div>`;openSheet(c.w+" · "+c.th,box);
   const sample=getSample();if(!sample){box.innerHTML=`<p class="note">${NOAI}</p>`;return}
   sheetCtl=new AbortController();
   const prompt=`คุณเป็นครูสอนภาษาอังกฤษให้คนไทยที่เตรียมสอบ IELTS อธิบายคำว่า "${c.w}" (${c.pos}, แปลว่า ${c.th}) เป็นภาษาไทย กระชับ อ่านง่ายบนมือถือ ใช้หัวข้อ markdown "###" ตามนี้เท่านั้น:
@@ -1068,19 +1663,19 @@ bullet ของคำรูปอื่น (ถ้ามี) พร้อมช
 1 ประโยคสนุกๆ ที่ช่วยให้จำคำนี้ได้
 ไม่ต้องมีคำทักทายหรือสรุปท้าย`;
   try{const{text}=await sample(prompt,{modelTier:"quick",signal:sheetCtl.signal,cache:{gcTime:864e5},onText:({text})=>{box.innerHTML=md(text)}});
-    const b=document.createElement("button");b.className="ghost";b.textContent="🔊 อ่านให้ฟัง";let on=false;
-    b.onclick=()=>{if(on){speechSynthesis.cancel();on=false;b.textContent="🔊 อ่านให้ฟัง";return}
-      on=true;b.textContent="⏹ หยุดอ่าน";speak(text.replace(/[#*>`_-]+/g," ").replace(/\s+/g," "),"th-TH")};
+    const b=document.createElement("button");b.className="ghost";b.textContent="🔊 Read aloud";let on=false;
+    b.onclick=()=>{if(on){speechSynthesis.cancel();on=false;b.textContent="🔊 Read aloud";return}
+      on=true;b.textContent="⏹ Stop";speak(text.replace(/[#*>`_-]+/g," ").replace(/\s+/g," "),"th-TH")};
     if(HAS_TTS)box.prepend(b)}
   catch(e){if(e?.code==="cancelled")return;box.innerHTML=(e?.text?md(e.text):"")+`<p class="note">${errMsg(e)}</p>`}}
 
 function magic(initial){const wrap=document.createElement("div");wrap.style.cssText="display:flex;flex-direction:column;gap:12px";
-  wrap.innerHTML=`<p class="note" style="margin:0">อธิบายคำที่นึกไม่ออกเป็นภาษาไทยหรืออังกฤษก็ได้ AI จะสร้างการ์ดพร้อมภาพให้</p>
-   <form class="sform" id="sForm"><input id="sq" placeholder="เช่น คนที่ชอบผัดวันประกันพรุ่ง" autocomplete="off">${SR?`<button type="button" class="mic" id="sMic" aria-label="ค้นหาด้วยเสียง">🎤</button>`:""}<button class="primary" type="submit">ค้นหา</button></form>
-   <div class="chips">${["ตื่นเต้นก่อนขึ้นเวที","คนที่ไม่ยอมแพ้ง่ายๆ","ทำให้ปัญหาแย่ลง","resilient"].map(x=>`<button type="button">${x}</button>`).join("")}</div>
+  wrap.innerHTML=`<p class="note" style="margin:0">Describe a word you can't remember, in Thai or English. AI will make a picture card for it.</p>
+   <form class="sform" id="sForm"><input id="sq" placeholder="e.g. someone who always puts things off" autocomplete="off">${SR?`<button type="button" class="mic" id="sMic" aria-label="Voice search">🎤</button>`:""}<button class="primary" type="submit">Search</button></form>
+   <div class="chips">${["nervous before going on stage","someone who never gives up","to make a problem worse","resilient"].map(x=>`<button type="button">${x}</button>`).join("")}</div>
    <div id="sOut"></div>`;
-  openSheet("ค้นหาคำศัพท์ด้วย AI",wrap);
-  const run=async q=>{q=q.trim();if(!q)return;const out=$("sOut");out.innerHTML=`<div class="thinking">กำลังหาคำที่ใช่…</div>`;
+  openSheet("AI word search",wrap);
+  const run=async q=>{q=q.trim();if(!q)return;const out=$("sOut");out.innerHTML=`<div class="thinking">Finding the right word…</div>`;
     const sample=getSample();if(!sample){out.innerHTML=`<p class="note">${NOAI}</p>`;return}
     sheetCtl?.abort();sheetCtl=new AbortController();
     const prompt=`ผู้ใช้เป็นคนไทยที่เตรียมสอบ IELTS กำลังหาคำศัพท์ภาษาอังกฤษจากคำอธิบายนี้: """${q.slice(0,300)}"""
@@ -1090,14 +1685,14 @@ ${SCHEMA}`;
       if(!c)throw{code:"invalid_json"};
       const exist=all().find(x=>x.w===c.w),card=exist||c;
       out.innerHTML=`<div class="res"><div class="rpic">${sceneHTML(card.t,card.e)}</div><div class="rin">
-        <div class="whead"><h2 style="font:800 24px var(--display);margin:0;text-transform:uppercase">${esc(card.w)}</h2><button class="ib" id="rSay" aria-label="ฟังเสียง">🔊</button></div>
+        <div class="whead"><h2 style="font:800 24px var(--display);margin:0;text-transform:uppercase">${esc(card.w)}</h2><button class="ib" id="rSay" aria-label="Play sound">🔊</button></div>
         <div class="note">${esc(card.p)} · ${esc(posLabel(card.pos))}</div>
         <div><b style="color:var(--familiar)">${esc(card.th)}</b> — ${esc(card.def)}</div>
         <div class="ex" style="background:var(--surface-3)">${esc(card.ex)}<span class="thtxt">${esc(card.exth)}</span></div>
-        <div class="rbtn"><button class="primary" id="rAdd">${S.saved.includes(card.w)?"อยู่ใน My Decks แล้ว":"เพิ่มเข้า My Decks"}</button><button class="ghost" id="rLearn">เรียนเลย</button></div></div></div>`;
+        <div class="rbtn"><button class="primary" id="rAdd">${S.saved.includes(card.w)?"In My Decks":"Add to My Decks"}</button><button class="ghost" id="rLearn">Study now</button></div></div></div>`;
       $("rSay").onclick=()=>speak(card.w);
       const add=()=>{if(!exist&&!S.mine.some(x=>x.w===c.w)){const{deck,...rest}=c;S.mine.push(rest)}if(!S.saved.includes(card.w))S.saved.push(card.w);save()};
-      $("rAdd").onclick=e=>{add();e.currentTarget.textContent="อยู่ใน My Decks แล้ว";toast("เพิ่ม "+card.w+" แล้ว")};
+      $("rAdd").onclick=e=>{add();e.currentTarget.textContent="In My Decks";toast("Added "+card.w)};
       $("rLearn").onclick=()=>{add();closeSheet();go("review");if(cur)queue.unshift(cur);show(card,"card")};
     }catch(e){if(e?.code==="cancelled")return;out.innerHTML=`<p class="note">${errMsg(e)}</p>`}};
   $("sForm").onsubmit=e=>{e.preventDefault();run($("sq").value)};
@@ -1106,34 +1701,61 @@ ${SCHEMA}`;
   if(initial){$("sq").value=initial;run(initial)}else setTimeout(()=>$("sq").focus(),50)}
 $("magic").onclick=()=>magic();
 
+/* ---------- AI enrichment: pronunciation, example and picture for list-only words ---------- */
+let enrBusy=false,enrFailAt=0;
+async function enrichSoon(c){if(enrBusy||Date.now()-enrFailAt<6e4)return;const sample=getSampleSafe();if(!sample)return;
+  const batch=[c,...queue.filter(x=>!x.ex&&x.w!==c.w)].filter((x,i,a)=>a.findIndex(y=>y.w===x.w)===i).slice(0,10);
+  enrBusy=true;
+  const list=batch.map(x=>`${x.w} | ${x.pos} | ${x.th} — ${x.def}`).join("\n");
+  const prompt=`สร้างข้อมูลการ์ดคำศัพท์สำหรับผู้เรียนคนไทยที่เตรียมสอบ IELTS สำหรับคำต่อไปนี้ (คำ | ชนิดคำ | ความหมาย):
+${list}
+ตอบเป็น JSON array เท่านั้น 1 object ต่อ 1 คำ เรียงตามลำดับเดิม รูปแบบ:
+{"word":"คำเดิมตรงตัว","pron":"syllables with stress in caps e.g. i-ma-juh-NAY-shun","ex":"one natural example sentence using the word in the given meaning, IELTS-style topic, B1-B2 grammar","exth":"คำแปลไทยของประโยค","theme":"one of day|dusk|night|room|sea|site|city|rain that fits the example","emoji":["3 emoji that picture the example sentence, main subject first"]}`;
+  try{const arr=await sample.json(prompt,{modelTier:"quick"});
+    for(const r of Array.isArray(arr)?arr:[]){const w=String(r?.word||"").trim().toLowerCase();if(!w||!r.ex)continue;
+      S.enr[w]={p:String(r.pron||"").slice(0,60),ex:String(r.ex).slice(0,300),exth:String(r.exth||"").slice(0,300),t:THEMES[r.theme]?r.theme:"",
+        e:(Array.isArray(r.emoji)?r.emoji:[]).map(String).slice(0,4).map(x=>x.slice(0,8)).filter(Boolean)};
+      all().concat(queue,cur?[cur]:[]).filter(x=>x.w===w).forEach(applyEnr);BASE.filter(x=>x.w===w).forEach(applyEnr)}
+    save();if(cur&&batch.some(x=>x.w===cur.w)&&cur.ex)refreshBack(cur)}
+  catch(e){enrFailAt=Date.now()}finally{enrBusy=false}}
+function getSampleSafe(){try{return typeof getSample==="function"?getSample():null}catch(e){return null}}
+function refreshBack(c){if(c!==cur)return;
+  if(!$("fWord").classList.contains("hiddenw"))$("fPron").textContent=c.p||"—";
+  const st=status(c);
+  $("bPic").innerHTML=sceneHTML(c.t,c.e)+`<span class="badge" style="--sc:${ST_COLOR[st]}">${ST_LABEL[st]}</span><button class="play" id="sayEx" aria-label="Play example sentence">▶</button>`;
+  $("sayEx").onclick=e=>{e.stopPropagation();speak(c.ex||c.w)};
+  const stem=c.w.split(" ")[0],s2=stem.length>4?stem.slice(0,-2):stem;
+  const re=new RegExp("(\\b"+s2.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"[\\w'-]*)","i");
+  $("bEx").innerHTML=esc(c.ex).replace(re,"<b>$1</b>");$("bExTh").textContent=c.exth||"";$("bEx").parentElement.hidden=false;$("thEx").hidden=!c.exth}
+
 /* ---------- achievements ---------- */
 const lvConf=id=>cardsFor(id).filter(c=>status(c)==="confident").length;
 const confN=()=>all().filter(c=>status(c)==="confident").length;
 const ACH=[
- {id:"first",ic:"🌱",name:"การ์ดแรก",how:"ทบทวนการ์ดใบแรก",t:()=>S.total>=1},
- {id:"r100",ic:"💯",name:"ทวน 100 ใบ",how:"ทบทวนครบ 100 ครั้ง",t:()=>S.total>=100},
- {id:"r500",ic:"🚀",name:"ทวน 500 ใบ",how:"ทบทวนครบ 500 ครั้ง",t:()=>S.total>=500},
- {id:"goal",ic:"🎯",name:"ครบเป้า",how:"ทบทวนครบเป้าหมายรายวัน",t:()=>S.goalHit>=1},
- {id:"s3",ic:"🔥",name:"ติดกัน 3 วัน",how:"ฝึกต่อเนื่อง 3 วัน",t:()=>S.streak>=3},
- {id:"s7",ic:"⚡",name:"ติดกัน 7 วัน",how:"ฝึกต่อเนื่อง 7 วัน",t:()=>S.streak>=7},
- {id:"s30",ic:"🏆",name:"ติดกัน 30 วัน",how:"ฝึกต่อเนื่อง 30 วัน",t:()=>S.streak>=30},
- {id:"c25",ic:"⭐",name:"มั่นใจ 25 คำ",how:"มีคำระดับ CONFIDENT 25 คำ",t:()=>confN()>=25},
- {id:"c100",ic:"🌟",name:"มั่นใจ 100 คำ",how:"มีคำระดับ CONFIDENT 100 คำ",t:()=>confN()>=100},
- {id:"w10",ic:"✍️",name:"นักเขียน",how:"ทำแบบฝึกเขียนครบ 10 ครั้ง",t:()=>(S.writes||0)>=10},
- {id:"p100",ic:"💎",name:"เต็ม 100",how:"ได้คะแนนแบบฝึกเขียน 100 เต็ม",t:()=>!!S.perfect},
- {id:"match",ic:"🧩",name:"นักจับคู่",how:"เล่นเกมจับคู่คำจบ 1 รอบ",t:()=>(S.matchWins||0)>=1},
- {id:"b2",ic:"🎓",name:"พร้อม B2",how:"มั่นใจ 10 คำในระดับ B2",t:()=>lvConf("b2")>=10},
- {id:"c1",ic:"👑",name:"แตะ C1",how:"มั่นใจ 10 คำในระดับ C1",t:()=>lvConf("c1")>=10},
- {id:"l5",ic:"🎖️",name:"Level 5",how:"ไปถึงเลเวล 5",t:()=>S.xp>=4*XP_PER_LVL},
- {id:"l10",ic:"🏅",name:"Level 10",how:"ไปถึงเลเวล 10",t:()=>S.xp>=9*XP_PER_LVL}];
+ {id:"first",ic:"🌱",name:"First card",how:"Review your first card",t:()=>S.total>=1},
+ {id:"r100",ic:"💯",name:"100 reviews",how:"Review 100 cards",t:()=>S.total>=100},
+ {id:"r500",ic:"🚀",name:"500 reviews",how:"Review 500 cards",t:()=>S.total>=500},
+ {id:"goal",ic:"🎯",name:"Goal met",how:"Reach your daily goal",t:()=>S.goalHit>=1},
+ {id:"s3",ic:"🔥",name:"3-day streak",how:"Practise 3 days in a row",t:()=>S.streak>=3},
+ {id:"s7",ic:"⚡",name:"7-day streak",how:"Practise 7 days in a row",t:()=>S.streak>=7},
+ {id:"s30",ic:"🏆",name:"30-day streak",how:"Practise 30 days in a row",t:()=>S.streak>=30},
+ {id:"c25",ic:"⭐",name:"25 confident",how:"Have 25 CONFIDENT words",t:()=>confN()>=25},
+ {id:"c100",ic:"🌟",name:"100 confident",how:"Have 100 CONFIDENT words",t:()=>confN()>=100},
+ {id:"w10",ic:"✍️",name:"Writer",how:"Complete 10 writing tasks",t:()=>(S.writes||0)>=10},
+ {id:"p100",ic:"💎",name:"Perfect 100",how:"Score 100 on a writing task",t:()=>!!S.perfect},
+ {id:"match",ic:"🧩",name:"Matcher",how:"Finish one Word Match game",t:()=>(S.matchWins||0)>=1},
+ {id:"b2",ic:"🎓",name:"B2 ready",how:"10 confident B2 words",t:()=>lvConf("b2")>=10},
+ {id:"c1",ic:"👑",name:"C1 reached",how:"10 confident C1 words",t:()=>lvConf("c1")>=10},
+ {id:"l5",ic:"🎖️",name:"Level 5",how:"Reach level 5",t:()=>S.xp>=4*XP_PER_LVL},
+ {id:"l10",ic:"🏅",name:"Level 10",how:"Reach level 10",t:()=>S.xp>=9*XP_PER_LVL}];
 function checkAch(){const got=ACH.filter(a=>!S.ach[a.id]&&a.t());if(!got.length)return;
   got.forEach(a=>S.ach[a.id]=Date.now());save();vib([20,60,20]);
-  setTimeout(()=>toast(`ได้ตราใหม่ ${got.map(a=>a.ic+" "+a.name).join(", ")}`),400)}
+  setTimeout(()=>toast(`New badge: ${got.map(a=>a.ic+" "+a.name).join(", ")}`),400)}
 
 /* ---------- visual thesaurus ---------- */
 const TCOL={syn:"var(--familiar)",rel:"var(--new)",ant:"var(--bad)"};
 async function openThes(c){const box=document.createElement("div");box.style.cssText="display:flex;flex-direction:column;gap:12px";
-  box.innerHTML=`<div class="thinking">กำลังสร้างแผนผังคำ…</div>`;openSheet("แผนผังคำ · "+c.w,box);
+  box.innerHTML=`<div class="thinking">Building word map…</div>`;openSheet("Word map · "+c.w,box);
   let data=null;const sample=getSample();
   if(sample){sheetCtl=new AbortController();
     const prompt=`ทำแผนผังคำ (visual thesaurus) สำหรับคำว่า "${c.w}" (${c.pos}, แปลว่า ${c.th}) สำหรับผู้เรียนคนไทยที่เตรียมสอบ IELTS
@@ -1145,10 +1767,10 @@ async function openThes(c){const box=document.createElement("div");box.style.css
   let syn=arr("synonyms"),rel=arr("related"),ant=arr("antonyms"),tip=String(data?.tip||"");
   if(!syn.length&&!rel.length){syn=c.syn&&c.syn!=="—"?[{w:c.syn,th:""}]:[];
     rel=all().filter(x=>x.deck===c.deck&&x.w!==c.w).sort(()=>Math.random()-.5).slice(0,4).map(x=>({w:x.w,th:x.th}));
-    tip=sample?"สร้างแผนผังจาก AI ไม่สำเร็จ ตอนนี้แสดงคำจากคลังแทน":NOAI+" ตอนนี้แสดงคำจากคลังแทน"}
+    tip=sample?"Couldn't build the AI word map. Showing words from your bank instead.":NOAI+" Showing words from your bank instead."}
   const nodes=[...syn.slice(0,4).map(x=>({...x,k:"syn"})),...rel.slice(0,3).map(x=>({...x,k:"rel"})),...ant.slice(0,2).map(x=>({...x,k:"ant"}))];
   const W=360,H=320,cx=180,cy=160;
-  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="แผนผังคำพ้องของ ${esc(c.w)}">`;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Word map for ${esc(c.w)}">`;
   nodes.forEach((n,i)=>{const a=-Math.PI/2+i*2*Math.PI/nodes.length;
     n.bw=Math.min(132,Math.max(n.w.length*8,n.th.length*6.4)+20);
     n.x=Math.max(4+n.bw/2,Math.min(W-4-n.bw/2,cx+124*Math.cos(a)));n.y=Math.max(24,Math.min(H-24,cy+118*Math.sin(a)));
@@ -1161,10 +1783,10 @@ async function openThes(c){const box=document.createElement("div");box.style.css
     <text x="${n.x}" y="${n.y+12}" text-anchor="middle" style="fill:var(--muted);font:500 10px var(--body)">${esc(n.th)}</text></g>`});
   s+="</svg>";
   box.innerHTML=`<div class="thes">${s}</div>
-    <div class="legend"><span style="--sc:var(--familiar)"><i></i>คำพ้อง</span><span style="--sc:var(--new)"><i></i>คำที่ใช้คู่กัน</span><span style="--sc:var(--bad)"><i></i>คำตรงข้าม</span></div>
+    <div class="legend"><span style="--sc:var(--familiar)"><i></i>Synonyms</span><span style="--sc:var(--new)"><i></i>Collocations</span><span style="--sc:var(--bad)"><i></i>Antonyms</span></div>
     ${tip?`<p style="margin:0">${esc(tip)}</p>`:""}
     <div class="tlist">${nodes.map(n=>`<button style="--sc:${TCOL[n.k]}" data-w="${esc(n.w)}">${esc(n.w)}</button>`).join("")}</div>
-    <p class="note" style="margin:0">แตะคำเพื่อฟังเสียงและดูความหมาย (ถ้ามีในคลัง)</p>`;
+    <p class="note" style="margin:0">Tap a word to hear it and see its meaning</p>`;
   box.querySelectorAll("[data-w]").forEach(el=>el.addEventListener("click",()=>{speak(el.dataset.w,null,true);lookup(el.dataset.w)}))}
 
 /* ---------- share card as image ---------- */
@@ -1204,52 +1826,52 @@ async function shareCard(c){const d=deckOf(c.deck),t=THEMES[c.t]||THEMES.day;
   wrapLines(x,c.def,940).slice(0,3).forEach(l=>{x.fillText(l,70,y);y+=50});
   x.font='italic 34px "IBM Plex Sans Thai", Lexend, sans-serif';x.fillStyle="rgba(255,255,255,.8)";y+=16;
   wrapLines(x,"“"+c.ex+"”",940).slice(0,3).forEach(l=>{x.fillText(l,70,y);y+=48});
-  x.font='600 28px Lexend, "IBM Plex Sans Thai", sans-serif';x.fillStyle="rgba(255,255,255,.55)";x.fillText("ศัพท์ภาพสวย · IELTS vocabulary",70,1300);
-  const blob=await new Promise(r=>cv.toBlob(r,"image/png"));if(!blob){toast("สร้างรูปไม่สำเร็จ");return}
+  x.font='600 28px Lexend, "IBM Plex Sans Thai", sans-serif';x.fillStyle="rgba(255,255,255,.55)";x.fillText("Picture Vocab · IELTS vocabulary",70,1300);
+  const blob=await new Promise(r=>cv.toBlob(r,"image/png"));if(!blob){toast("Couldn't create the image");return}
   const url=URL.createObjectURL(blob),fname=c.w.replace(/[^a-z0-9]+/gi,"-")+".png",file=new File([blob],fname,{type:"image/png"});
   const canShare=!!(navigator.canShare&&navigator.canShare({files:[file]}));
   const wrap=document.createElement("div");wrap.style.cssText="display:flex;flex-direction:column;gap:10px";
-  wrap.innerHTML=`<img class="shareimg" src="${url}" alt="การ์ดคำว่า ${esc(c.w)}"><div class="trow">${canShare?`<button class="primary" id="imgShare">แชร์รูป</button>`:""}<a class="ghost" style="text-decoration:none" href="${url}" download="${fname}">บันทึกรูป</a><button class="ghost" id="txtCopy">คัดลอกข้อความ</button></div>
-    <p class="note" style="margin:0">แชร์ไป LINE, Facebook หรือบันทึกลงเครื่องได้เลย</p>`;
-  openSheet("แชร์การ์ด",wrap);
+  wrap.innerHTML=`<img class="shareimg" src="${url}" alt="Card for ${esc(c.w)}"><div class="trow">${canShare?`<button class="primary" id="imgShare">Share image</button>`:""}<a class="ghost" style="text-decoration:none" href="${url}" download="${fname}">Save image</a><button class="ghost" id="txtCopy">Copy text</button></div>
+    <p class="note" style="margin:0">Share to LINE or Facebook, or save it to your phone</p>`;
+  openSheet("Share card",wrap);
   if(canShare)$("imgShare").onclick=()=>navigator.share({files:[file],title:c.w,text:`${c.w} = ${c.th}`}).catch(()=>{});
-  $("txtCopy").onclick=async()=>{const s=`${c.w} (${c.th}) — ${c.ex}`;try{await navigator.clipboard.writeText(s);toast("คัดลอกแล้ว")}catch(e){toast(s)}}}
+  $("txtCopy").onclick=async()=>{const s=`${c.w} (${c.th}) — ${c.ex}`;try{await navigator.clipboard.writeText(s);toast("Copied")}catch(e){toast(s)}}}
 
 /* ---------- backup ---------- */
 const BACKUP_NAME="vivid-vocab-backup.json";
 async function exportData(){const o={...S};delete o.aiKey;const blob=new Blob([JSON.stringify(o)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=BACKUP_NAME;document.body.append(a);a.click();a.remove();toast("ส่งออกไฟล์สำรองแล้ว")}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=BACKUP_NAME;document.body.append(a);a.click();a.remove();toast("Backup exported")}
 function importData(e){const f=e.target.files?.[0];e.target.value="";if(!f)return;
   f.text().then(t=>{const o=JSON.parse(t);if(!o||typeof o!=="object"||typeof o.st!=="object")throw 0;
     const keep={aiProv:S.aiProv,aiKey:S.aiKey};S=Object.assign(DEFAULTS(),o);if(!o.aiKey)Object.assign(S,keep);
     if(S.day!==todayStr){S.day=todayStr;S.today=0}save();fillFilter();header();hist=[];cur=null;buildQueue();next();renderProfile();
-    toast(`นำเข้าข้อมูลแล้ว (${Object.keys(S.st).length} คำที่เคยเรียน)`)}).catch(()=>toast("ไฟล์นี้ไม่ใช่ไฟล์สำรองของแอปนี้"))}
+    toast(`Imported (${Object.keys(S.st).length} words studied)`)}).catch(()=>toast("This isn't a backup file from this app"))}
 
 /* ---------- surprise + matching game ---------- */
 $("surprise").onclick=()=>{const pool=all().filter(c=>!S.known.includes(c.w));
-  if(Math.random()<.5&&pool.length){const c=pool[Math.floor(Math.random()*pool.length)];go("review");if(cur)queue.unshift(cur);show(c,"card");toast("🎲 คำสุ่ม: "+c.w)}
-  else{const ds=DECKS.filter(d=>cardsFor(d.id).length),d=ds[Math.floor(Math.random()*ds.length)];startDeck(d.id);toast("🎲 ชุดสุ่ม: "+d.name)}};
+  if(Math.random()<.5&&pool.length){const c=pool[Math.floor(Math.random()*pool.length)];go("review");if(cur)queue.unshift(cur);show(c,"card");toast("🎲 Random word: "+c.w)}
+  else{const ds=DECKS.filter(d=>cardsFor(d.id).length),d=ds[Math.floor(Math.random()*ds.length)];startDeck(d.id);toast("🎲 Random deck: "+d.name)}};
 let mTimer=null;
 function matchGame(){const seen=new Set(),src=(cardsFor(S.filter).length>=5?cardsFor(S.filter):all()).filter(c=>c.th&&!seen.has(c.th)&&seen.add(c.th));
-  const pick=src.sort(()=>Math.random()-.5).slice(0,5);if(pick.length<3){toast("มีคำไม่พอสำหรับเกม");return}
+  const pick=src.sort(()=>Math.random()-.5).slice(0,5);if(pick.length<3){toast("Not enough words for the game");return}
   const wrap=document.createElement("div");wrap.className="mgame";
-  wrap.innerHTML=`<p class="note" style="margin:0">แตะคำอังกฤษ แล้วแตะความหมายไทยที่ตรงกัน ตอบผิดบวกเวลา 3 วินาที</p>
-    <div class="mtop"><span id="mTime">0.0 วิ</span><span id="mLeft">เหลือ ${pick.length} คู่</span></div>
+  wrap.innerHTML=`<p class="note" style="margin:0">Tap an English word, then its Thai meaning. Wrong answers add 3 seconds.</p>
+    <div class="mtop"><span id="mTime">0.0s</span><span id="mLeft">${pick.length} pairs left</span></div>
     <div class="mgrid"><div class="mcol" id="mL"></div><div class="mcol" id="mR"></div></div><div id="mEnd"></div>`;
-  openSheet("เกมจับคู่คำ",wrap);
+  openSheet("Word Match",wrap);
   const t0=Date.now();let pen=0,sel=null,left=pick.length;
   [...pick].sort(()=>Math.random()-.5).forEach(c=>{const b=document.createElement("button");b.className="mbtn en";b.textContent=c.w;b.dataset.w=c.w;
     b.onclick=()=>{$("mL").querySelectorAll(".sel").forEach(z=>z.classList.remove("sel"));b.classList.add("sel");sel=b;speak(c.w,null,true)};$("mL").append(b)});
   [...pick].sort(()=>Math.random()-.5).forEach(c=>{const b=document.createElement("button");b.className="mbtn";b.textContent=c.th;
-    b.onclick=()=>{if(!sel){toast("แตะคำอังกฤษก่อน");return}
-      if(sel.dataset.w===c.w){sel.classList.remove("sel");sel.classList.add("done");b.classList.add("done");sel=null;vib(15);left--;$("mLeft").textContent=`เหลือ ${left} คู่`;if(!left)finish()}
+    b.onclick=()=>{if(!sel){toast("Tap an English word first");return}
+      if(sel.dataset.w===c.w){sel.classList.remove("sel");sel.classList.add("done");b.classList.add("done");sel=null;vib(15);left--;$("mLeft").textContent=`${left} pairs left`;if(!left)finish()}
       else{pen+=3000;b.classList.add("bad");vib([30,40,30]);setTimeout(()=>b.classList.remove("bad"),450)}};$("mR").append(b)});
-  clearInterval(mTimer);mTimer=setInterval(()=>{const el=$("mTime");if(!el){clearInterval(mTimer);return}el.textContent=((Date.now()-t0+pen)/1000).toFixed(1)+" วิ"},100);
+  clearInterval(mTimer);mTimer=setInterval(()=>{const el=$("mTime");if(!el){clearInterval(mTimer);return}el.textContent=((Date.now()-t0+pen)/1000).toFixed(1)+"s"},100);
   function finish(){clearInterval(mTimer);const sec=+((Date.now()-t0+pen)/1000).toFixed(1),best=!S.matchBest||sec<S.matchBest;
     if(best)S.matchBest=sec;S.matchWins=(S.matchWins||0)+1;save();addXP(15);
-    $("mTime").textContent=sec+" วิ";
-    $("mEnd").innerHTML=`<div class="panel" style="background:var(--surface-2);text-align:center;align-items:center"><div style="font:800 22px var(--display)">${best?"สถิติใหม่! 🏆":"เสร็จแล้ว! 🎉"}</div>
-      <div class="note">${sec} วินาที · สถิติดีที่สุด ${S.matchBest} วินาที · +15 XP</div><button class="primary" id="mAgain">เล่นอีกรอบ</button></div>`;
+    $("mTime").textContent=sec+"s";
+    $("mEnd").innerHTML=`<div class="panel" style="background:var(--surface-2);text-align:center;align-items:center"><div style="font:800 22px var(--display)">${best?"New record! 🏆":"Done! 🎉"}</div>
+      <div class="note">${sec}s · best ${S.matchBest}s · +15 XP</div><button class="primary" id="mAgain">Play again</button></div>`;
     $("mAgain").onclick=matchGame}}
 $("matchBtn").onclick=matchGame;
 
@@ -1264,8 +1886,8 @@ function listen(lang){return new Promise((res,rej)=>{if(!SR)return rej("unsuppor
   r.onresult=e=>{got=true;res([...e.results[0]].map(a=>a.transcript.trim()).filter(Boolean))};
   r.onerror=e=>rej(e.error||"error");r.onend=()=>{srActive=null;if(!got)rej("no-speech")};
   try{r.start()}catch(e){rej("error")}})}
-function micErr(e){return e==="not-allowed"||e==="service-not-allowed"?"ยังไม่ได้อนุญาตให้ใช้ไมค์ เปิดได้ที่การตั้งค่าของเบราว์เซอร์":
-  e==="no-speech"?"ไม่ได้ยินเสียง ลองพูดใกล้ไมค์อีกครั้ง":e==="network"?"การแปลงเสียงต้องใช้อินเทอร์เน็ต":"ใช้ไมค์ไม่ได้ ลองใหม่อีกครั้ง"}
+function micErr(e){return e==="not-allowed"||e==="service-not-allowed"?"Microphone not allowed — enable it in browser settings":
+  e==="no-speech"?"Didn't hear anything — try again closer to the mic":e==="network"?"Speech recognition needs an internet connection":"Microphone unavailable. Try again."}
 const norm=t=>String(t).toLowerCase().replace(/[^a-z' -]/g,"").replace(/\s+/g," ").trim();
 function lev(a,b){const m=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=m[0];m[0]=i;
   for(let j=1;j<=b.length;j++){const t=m[j];m[j]=Math.min(m[j]+1,m[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return m[b.length]}
@@ -1276,12 +1898,12 @@ function matchSpoken(alts,options){for(const raw of alts){const a=norm(raw);if(!
 $("qMic").onclick=async e=>{e.stopPropagation();if(answered||!cur)return;const b=e.currentTarget;b.classList.add("on");
   try{const alts=await listen(S.accent==="uk"?"en-GB":"en-US");const btns=[...$("choices").children];
     const hit=matchSpoken(alts,btns.map(x=>x.textContent));
-    if(hit)pick(btns.find(x=>x.textContent===hit),hit===answer);else toast(`ได้ยินว่า "${alts[0]}" ไม่ตรงตัวเลือก ลองอีกครั้ง`)}
+    if(hit)pick(btns.find(x=>x.textContent===hit),hit===answer);else toast(`Heard "${alts[0]}" — not one of the options. Try again.`)}
   catch(err){toast(micErr(err))}finally{b.classList.remove("on")}};
 $("pronBtn").hidden=!SR;
-$("pronBtn").onclick=async e=>{e.stopPropagation();if(!cur)return;const b=e.currentTarget,w=cur.w;b.classList.add("on");toast(`พูดคำว่า "${w}"`);
+$("pronBtn").onclick=async e=>{e.stopPropagation();if(!cur)return;const b=e.currentTarget,w=cur.w;b.classList.add("on");toast(`Say "${w}"`);
   try{const alts=await listen(S.accent==="uk"?"en-GB":"en-US");const ok=alts.some(a=>{const n=norm(a);return n===w||n.split(" ").includes(w)||n.includes(w)});
-    if(ok){addXP(5);vib(20);toast("ออกเสียงถูกต้อง! ✓ +5 XP")}else{vib([30,40,30]);toast(`ได้ยินเป็น "${alts[0]}" ลองฟัง 🔊 แล้วพูดอีกครั้ง`)}}
+    if(ok){addXP(5);vib(20);toast("Great pronunciation! ✓ +5 XP")}else{vib([30,40,30]);toast(`Heard "${alts[0]}" — listen with 🔊 and try again`)}}
   catch(err){toast(micErr(err))}finally{b.classList.remove("on")}};
 
 /* ---------- install prompt + offline ---------- */

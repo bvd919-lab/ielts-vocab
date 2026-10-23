@@ -1,7 +1,7 @@
 {
-  "name": "ศัพท์ภาพสวย · IELTS Vocab",
-  "short_name": "ศัพท์ภาพสวย",
-  "description": "ฝึกศัพท์อังกฤษสำหรับ IELTS ด้วยการ์ดภาพ ควิซ และ AI ตรวจประโยค",
+  "name": "Picture Vocab · IELTS",
+  "short_name": "Picture Vocab",
+  "description": "IELTS vocabulary with picture cards, quizzes and AI sentence checking",
   "lang": "th",
   "dir": "ltr",
   "start_url": "./",
