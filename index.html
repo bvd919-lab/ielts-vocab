@@ -58,7 +58,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 #v-review{overflow-y:auto;overflow-x:hidden}
 .stage{flex:1;min-height:440px;position:relative}
 .stage.compact{flex:0 0 auto;min-height:0;height:250px}
-.swipe{position:relative;height:100%;perspective:1400px;touch-action:pan-y;transition:transform .25s ease;will-change:transform}
+.swipe{position:relative;height:100%;perspective:1400px;touch-action:none;transition:transform .25s ease;will-change:transform}
 .swipe.dragging{transition:none}
 .sl{position:absolute;top:22px;z-index:6;padding:6px 14px;border-radius:12px;font:800 17px var(--display);letter-spacing:.04em;border:3px solid;opacity:0;pointer-events:none;background:rgba(16,19,18,.75)}
 .sl.ok{left:18px;color:var(--confident);border-color:var(--confident);transform:rotate(-10deg)}
@@ -269,6 +269,18 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .lvrow{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;padding:4px 0;font-variant-numeric:tabular-nums}
 .lvrow b{font:700 14px var(--display)}
 
+.tabs2{display:flex;gap:6px;overflow-x:auto;flex:none;padding-bottom:2px;scrollbar-width:none}
+.tabs2 button{flex:none;background:var(--surface);border-radius:99px;padding:8px 14px;font:600 14px var(--display);color:var(--muted)}
+.tabs2 button small{font-weight:500;opacity:.75;font-variant-numeric:tabular-nums}
+.tabs2.small button{padding:5px 11px;font-size:12.5px}
+.tabs2 button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.wgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.wt{position:relative;overflow:hidden;background:var(--surface);border-radius:14px;min-height:62px;padding:8px 6px;display:grid;place-items:center;text-align:center;font:700 12px var(--display);letter-spacing:.03em;text-transform:uppercase;word-break:break-word;line-height:1.25}
+.wt i{position:absolute;inset:0;display:grid;place-items:center;font-size:40px;opacity:.16;font-style:normal}
+.wt span{position:relative}
+.wt.learned{background:#1f3a2a}.wt.learning{background:#3d311c}.wt.known{background:#1e2c45}
+.wl{cursor:pointer}
+
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(16,19,18,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
@@ -404,7 +416,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
   <!-- MY DECKS -->
   <section class="view" id="v-mine" hidden>
     <h2 class="vh">My Decks</h2>
-    <p class="sub">Saved words and words found with AI</p>
+    <p class="sub">Every word you've met, by status and level</p>
     <div class="scroll" id="mineList"></div>
   </section>
 
@@ -1212,7 +1224,7 @@ const BASE=DECKS.flatMap(d=>d.w.map(a=>mk(a,d.id)));
 /* ---------- state ---------- */
 const KEY="vividvocab-v1";
 const DEFAULTS=()=>({st:{},saved:[],fav:[],mine:[],extra:{},known:[],ach:{},log:[],xp:0,streak:0,last:"",day:"",today:0,total:0,goalHit:0,goal:12,
-  filter:"all",mix:"some",accent:"us",interests:"",qtypes:{syn:1,def:1,img:1,spell:1},matchBest:0});
+  filter:"all",mix:"some",sound:true,accent:"us",interests:"",qtypes:{syn:1,def:1,img:1,spell:1},matchBest:0});
 let S=DEFAULTS();
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==="object")S=Object.assign(S,s)}catch(e){}
 for(const[k,v]of Object.entries(DEFAULTS()))if(S[k]==null||typeof S[k]!==typeof v)S[k]=v;
@@ -1262,7 +1274,8 @@ function fillFilter(){const sel=$("filter");sel.innerHTML="";
   const opts=[["all","All Decks"],...DECKS.map(d=>[d.lv?"lv:"+d.lv:d.id,d.lv?"All "+d.lv+" words":d.name]),["saved","My Decks"],["fav","Favourites"]];
   opts.forEach(([v,n])=>{const o=document.createElement("option");o.value=v;o.textContent=n;sel.append(o)});
   if(!opts.some(o=>o[0]===S.filter))S.filter="all";sel.value=S.filter}
-function addXP(n){S.xp+=n;header();checkAch()}
+function addXP(n){const before=Math.floor(S.xp/XP_PER_LVL);S.xp+=n;header();checkAch();
+  if(Math.floor(S.xp/XP_PER_LVL)>before){sfx("level");setTimeout(()=>toast(`Level up! You reached level ${Math.floor(S.xp/XP_PER_LVL)+1} 🎉`),900)}}
 function touchStreak(){if(S.last===todayStr)return;const y=new Date(Date.now()-864e5).toDateString();S.streak=S.last===y?S.streak+1:1;S.last=todayStr}
 
 /* ---------- review ---------- */
@@ -1344,7 +1357,7 @@ function lookup(w){const f=all().find(x=>x.w===w)||all().find(x=>x.syn===w);
   toast(f?(f.w===w?`${w} = ${f.th}`:`${w} ≈ ${f.w} (${f.th})`):`${w} isn't in your word bank yet — try the search button`)}
 function revealWord(){if(!cur)return;$("fWord").classList.remove("hiddenw");$("fWord").textContent=cur.w.toUpperCase();$("fPronBox").hidden=false}
 function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
-function afterAnswer(ok){addXP(ok?10:2);save();vib(ok?20:[30,40,30]);revealWord();
+function afterAnswer(ok){sfx(ok?"right":"wrong");addXP(ok?10:2);save();vib(ok?20:[30,40,30]);revealWord();
   $("hint").textContent=ok?"Correct! +10 XP · Tap other options to see their meanings":`Not quite — the answer is ${answer} · Swipe left to see it again`;
   const c=cur,n=S.total;setTimeout(()=>{if(cur===c&&S.total===n&&answered&&!$("card").classList.contains("flipped"))flip()},ok?900:1500)}
 function pick(btn,ok){if(answered)return;answered=true;
@@ -1354,7 +1367,7 @@ function pick(btn,ok){if(answered)return;answered=true;
 $("spell").addEventListener("submit",e=>{e.preventDefault();if(answered||!cur)return;const i=$("spIn"),v=i.value.trim().toLowerCase().replace(/\s+/g," ");
   if(!v){i.focus();return}answered=true;const ok=v===cur.w;i.className=ok?"right":"wrong";i.disabled=true;if(!ok)i.value=v+"  →  "+cur.w;afterAnswer(ok)});
 $("spell").addEventListener("click",e=>e.stopPropagation());
-function flip(){if(!cur)return;$("card").classList.toggle("flipped")}
+function flip(){if(!cur)return;$("card").classList.toggle("flipped");sfx("flip")}
 function rate(r){if(!cur)return;const now=Date.now(),old=S.st[cur.w],st=old?{...old}:{b:0};
   if(r===0){st.b=0;st.due=now+INT[0];queue.splice(Math.min(3,queue.length),0,cur)}
   else{st.b=okBox(cur);st.due=now+INT[st.b]}
@@ -1378,23 +1391,48 @@ function speak(t,lang,quiet){if(!HAS_TTS){if(!quiet)noTTS(t);return}
   speechSynthesis.speak(u)}catch(e){HAS_TTS=false;if(!quiet)noTTS(t)}}
 try{speechSynthesis.getVoices();speechSynthesis.onvoiceschanged=()=>{}}catch(e){}
 
-/* swipe: right = know it (comes back later), left = again soon */
-const sw=$("swipe");let sx=0,sy=0,dx=0,pid=null,dragging=false,moved=false,busy=false;
-sw.addEventListener("pointerdown",e=>{if(!cur||busy||e.target.closest("button,textarea,input,select"))return;pid=e.pointerId;sx=e.clientX;sy=e.clientY;dx=0;dragging=false;moved=false});
+/* swipe: right = know it (comes back later), left = again soon.
+   Thumb-friendly: diagonal swipes count, a quick flick is enough, and the card follows the finger in both axes. */
+const sw=$("swipe");let sx=0,sy=0,dx=0,dy=0,pid=null,dragging=false,moved=false,busy=false,t0=0,lastX=0,lastT=0,vx=0,armed=0;
+const swipeDist=()=>Math.min(85,sw.clientWidth*.22);
+sw.addEventListener("pointerdown",e=>{if(!cur||busy||e.target.closest("button,textarea,input,select"))return;
+  pid=e.pointerId;sx=lastX=e.clientX;sy=e.clientY;dx=dy=vx=0;t0=lastT=performance.now();dragging=false;moved=false;armed=0});
 sw.addEventListener("pointermove",e=>{if(pid!==e.pointerId)return;const x=e.clientX-sx,y=e.clientY-sy;
-  if(!dragging){if(Math.abs(x)>10&&Math.abs(x)>Math.abs(y)*1.2){dragging=true;moved=true;try{sw.setPointerCapture(pid)}catch(err){}sw.classList.add("dragging")}
-    else{if(Math.abs(y)>12)pid=null;return}}
-  dx=x;sw.style.transform=`translateX(${dx}px) rotate(${dx/20}deg)`;
-  $("okL").style.opacity=Math.max(0,Math.min(1,dx/110));$("againL").style.opacity=Math.max(0,Math.min(1,-dx/110))});
+  if(!dragging){const ax=Math.abs(x),ay=Math.abs(y);
+    if(ax>6&&ax>=ay*.45){dragging=true;moved=true;try{sw.setPointerCapture(pid)}catch(err){}sw.classList.add("dragging")}
+    else{if(ay>26&&ay>ax*2.8)pid=null;return}}
+  const now=performance.now();vx=.7*vx+.3*((e.clientX-lastX)/Math.max(1,now-lastT));lastX=e.clientX;lastT=now;
+  dx=x;dy=y;const k=Math.max(-1,Math.min(1,dx/swipeDist()));
+  sw.style.transform=`translate(${dx}px,${dy*.35}px) rotate(${dx/18}deg)`;
+  $("okL").style.opacity=Math.max(0,k);$("againL").style.opacity=Math.max(0,-k);
+  const a=k>=1?1:k<=-1?-1:0;if(a&&a!==armed){vib(8);sfx("tick")}armed=a});
 function endDrag(e){if(pid!==e.pointerId)return;pid=null;if(!dragging)return;dragging=false;sw.classList.remove("dragging");
-  if(dx>100)swipeOut(1);else if(dx<-100)swipeOut(0);else resetSwipe()}
+  const fling=Math.abs(vx)>.35&&Math.abs(dx)>25&&Math.sign(vx)===Math.sign(dx);
+  if(dx>=swipeDist()||(fling&&dx>0))swipeOut(1);else if(dx<=-swipeDist()||(fling&&dx<0))swipeOut(0);else resetSwipe()}
 sw.addEventListener("pointerup",endDrag);
 sw.addEventListener("pointercancel",e=>{if(pid!==e.pointerId)return;pid=null;dragging=false;sw.classList.remove("dragging");resetSwipe()});
 function resetSwipe(){sw.style.transform="";$("okL").style.opacity=0;$("againL").style.opacity=0}
-function swipeOut(r){if(!cur||busy)return;busy=true;const dir=r?1:-1;
-  $(r?"okL":"againL").style.opacity=1;sw.style.transform=`translateX(${dir*130}%) rotate(${dir*16}deg)`;
-  setTimeout(()=>{sw.classList.add("dragging");rate(r);resetSwipe();sw.offsetWidth;sw.classList.remove("dragging");busy=false},260)}
+function swipeOut(r){if(!cur||busy)return;busy=true;const dir=r?1:-1;sfx(r?"ok":"again");vib(r?15:[20,30,20]);
+  $(r?"okL":"againL").style.opacity=1;sw.style.transform=`translate(${dir*140}%,${Math.max(-120,Math.min(120,dy*.6))}px) rotate(${dir*18}deg)`;
+  setTimeout(()=>{sw.classList.add("dragging");rate(r);resetSwipe();sw.offsetWidth;sw.classList.remove("dragging");busy=false},240)}
 
+/* sound effects, synthesised with Web Audio (no files needed) */
+let AC=null;
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){return null}}if(AC.state==="suspended")AC.resume().catch(()=>{});return AC}
+function tone(f,at,dur,type,vol,f2){const c=ac();if(!c)return;const t=c.currentTime+at,o=c.createOscillator(),g=c.createGain();
+  o.type=type||"sine";o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol||.12,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.connect(g).connect(c.destination);o.start(t);o.stop(t+dur+.02)}
+const SFX={
+  flip:()=>tone(380,0,.09,"triangle",.07,760),
+  right:()=>{tone(659,0,.12,"sine",.14);tone(988,.09,.22,"sine",.12)},
+  wrong:()=>{tone(196,0,.2,"sawtooth",.05,150);tone(185,.05,.2,"square",.03,140)},
+  ok:()=>{tone(523,0,.08,"triangle",.1);tone(784,.06,.14,"triangle",.1)},
+  again:()=>tone(440,0,.16,"triangle",.08,294),
+  tick:()=>tone(1400,0,.025,"square",.025),
+  badge:()=>[523,659,784,1047].forEach((f,i)=>tone(f,i*.09,.22,"sine",.11)),
+  level:()=>[392,523,659,784,1047].forEach((f,i)=>tone(f,i*.07,.25,"triangle",.1))};
+function sfx(n){if(S.sound===false)return;try{SFX[n]&&SFX[n]()}catch(e){}}
 $("card").addEventListener("click",e=>{if(moved){moved=false;return}if(e.target.closest("button"))return;flip()});
 $("card").addEventListener("keydown",e=>{if(e.target!==$("card"))return;
   if(e.key==="Enter"||e.key===" "){e.preventDefault();flip()}else if(e.key==="ArrowRight")swipeOut(1);else if(e.key==="ArrowLeft")swipeOut(0)});
@@ -1454,7 +1492,7 @@ function renderResult(r,a,c){const s=Math.max(0,Math.min(100,Math.round(Number(r
     if(r.better)h+=`<div><div class="lab">More natural example</div><div class="fix"><span>${esc(r.better)}<span class="thtxt">${esc(r.better_th||"")}</span></span><button class="ib" data-say="${esc(r.better)}" aria-label="Play sound">🔊</button></div></div>`}
   else if(r.model_answer)h+=`<div><div class="lab">Model answer</div><div class="fix"><span>${esc(r.model_answer)}</span></div></div>`;
   h+=`<div class="trow"><button class="ghost" id="retry">Resubmit</button><span class="note">${s>=85?"Swipe right for the next word":"Edit and resubmit, or swipe left to review this word again"}</span></div>`;
-  const out=$("result");out.innerHTML=h;
+  const out=$("result");out.innerHTML=h;sfx(s>=85?"right":s>=60?"ok":"wrong");
   out.querySelectorAll("[data-say]").forEach(b=>b.onclick=()=>speak(b.dataset.say));
   $("retry").onclick=()=>{$("checkBtn").disabled=false;$("ans").focus()};
   addXP(Math.round(s/10));S.log=(S.log||[]).slice(-49).concat({w:c.w,m:ctype,a,s,d:Date.now()});
@@ -1522,18 +1560,34 @@ ${SCHEMA}`;
 function itemEl(c){const st=status(c),b=document.createElement("button");b.className="item";
   b.innerHTML=`<span class="thumb">${sceneHTML(c.t,(c.e||[]).slice(0,1))}</span><span style="min-width:0"><b>${esc(c.w)}</b><span>${esc(c.th)}</span></span><span class="pill" style="--sc:${ST_COLOR[st]}">${ST_LABEL[st]}</span>`;
   b.onclick=()=>{go("review");if(cur)queue.unshift(cur);show(c,"card")};return b}
+/* My Decks: every word you have met, filterable by status and level */
+let mineTab="learned",mineLv="all",mineLimit=150;
+const MINE_TABS=[["learned","Learned"],["learning","Learning"],["new","New"],["known","Known"],["saved","Saved"]];
+function wordState(c){if(S.known.includes(c.w))return"known";const s=status(c);return s==="new"?"new":s==="learning"?"learning":"learned"}
+function openMine(tab,lv){mineTab=tab||mineTab;mineLv=lv||mineLv;mineLimit=150;go("mine")}
 function renderMine(){const L=$("mineList");L.innerHTML="";
-  const sv=cardsFor("saved"),sb=statusBar(sv);
-  const head=document.createElement("div");head.className="tiles";
-  head.innerHTML=`<div class="tile"><b>${sv.length}</b><span>Saved</span></div><div class="tile"><b>${S.mine.length}</b><span>From AI</span></div><div class="tile"><b>${sb.n.confident}</b><span>Confident</span></div>`;
-  L.append(head);
-  if(!sv.length){const e=document.createElement("div");e.className="empty";e.innerHTML="No saved words yet<br>Tap ＋ on the back of a card, or find new words with the search button";L.append(e)}
-  else{const btn=document.createElement("button");btn.className="primary";btn.textContent="Review My Decks";btn.onclick=()=>startDeck("saved");L.append(btn);
-    sv.forEach(c=>L.append(itemEl(c)))}
-  const kn=all().filter(c=>S.known.includes(c.w));
-  if(kn.length){const h=document.createElement("h3");h.className="sech";h.textContent=`Known words · not reviewed (${kn.length})`;L.append(h);
-    const n=document.createElement("p");n.className="note";n.style.margin="0";n.textContent="Tap a word to open it, then tap ✓ again to bring it back";L.append(n);
-    kn.forEach(c=>L.append(itemEl(c)))}}
+  const a=uniq(all()),byLv=c=>mineLv==="all"||(levelOf(c)||"Other")===mineLv;
+  const count=t=>a.filter(byLv).filter(c=>t==="saved"?S.saved.includes(c.w):wordState(c)===t).length;
+  const tabs=document.createElement("div");tabs.className="tabs2";
+  tabs.innerHTML=MINE_TABS.map(([k,n])=>`<button data-t="${k}" aria-pressed="${k===mineTab}">${n} <small>${count(k)}</small></button>`).join("");
+  tabs.querySelectorAll("button").forEach(b=>b.onclick=()=>{mineTab=b.dataset.t;mineLimit=150;renderMine()});L.append(tabs);
+  const lvs=document.createElement("div");lvs.className="tabs2 small";
+  lvs.innerHTML=["all",...LEVELS,"Other"].map(l=>`<button data-l="${l}" aria-pressed="${l===mineLv}">${l==="all"?"All levels":l}</button>`).join("");
+  lvs.querySelectorAll("button").forEach(b=>b.onclick=()=>{mineLv=b.dataset.l;mineLimit=150;renderMine()});L.append(lvs);
+  const list=a.filter(byLv).filter(c=>mineTab==="saved"?S.saved.includes(c.w):wordState(c)===mineTab)
+    .sort((x,y)=>mineTab==="new"?x.w.localeCompare(y.w):((S.st[y.w]?.due||0)-(S.st[x.w]?.due||0)));
+  const empty={learned:"No learned words yet. Swipe a card right when you know it.",learning:"Nothing in progress. Words you swipe left show up here.",
+    new:"You've seen every word here!",known:"Words you mark with ✓ (I know this) show up here.",saved:"No saved words yet. Tap ＋ on the back of a card."};
+  if(!list.length){const e=document.createElement("div");e.className="empty";e.textContent=empty[mineTab];L.append(e);return}
+  const tools=document.createElement("div");tools.className="rowb";
+  tools.innerHTML=`<span class="note">${list.length} words · tap a word to open it</span>${mineTab!=="known"?`<button class="ghost" style="padding:7px 14px">Study these</button>`:""}`;
+  tools.querySelector("button")?.addEventListener("click",()=>{hist=[];cur=null;queue=list.slice().sort(()=>Math.random()-.5);go("review");next()});L.append(tools);
+  const g=document.createElement("div");g.className="wgrid";
+  list.slice(0,mineLimit).forEach(c=>{const st=wordState(c),b=document.createElement("button");b.className="wt "+st;
+    b.innerHTML=`<i aria-hidden="true">${esc((c.e||[])[0]||"")}</i><span>${esc(c.w)}</span>`;b.title=c.th;
+    b.onclick=()=>{go("review");if(cur)queue.unshift(cur);show(c,"card")};g.append(b)});
+  L.append(g);
+  if(list.length>mineLimit){const m=document.createElement("button");m.className="ghost";m.textContent=`Show more (${list.length-mineLimit})`;m.onclick=()=>{mineLimit+=300;renderMine()};L.append(m)}}
 function renderProfile(){const P=$("profile");const lvl=1+Math.floor(S.xp/XP_PER_LVL),into=S.xp%XP_PER_LVL;
   const a=all(),sb=statusBar(a),log=S.log||[];
   const avg=log.length?Math.round(log.reduce((t,x)=>t+x.s,0)/log.length):null;
@@ -1548,6 +1602,7 @@ function renderProfile(){const P=$("profile");const lvl=1+Math.floor(S.xp/XP_PER
       <span class="note">Sentence and meaning tasks only appear for words you've seen before</span>
       <h3>Quiz types</h3>
       <div class="tg">${[["syn","Closest word"],["def","Word from meaning"],["img","Word from picture"],["spell","Listen & spell"]].map(([k,n])=>`<label><input type="checkbox" id="qt-${k}" data-k="${k}"${S.qtypes[k]?" checked":""}>${n}</label>`).join("")}</div>
+      <div class="rowb"><h3>Sound effects</h3><select id="sndSel" aria-label="Sound effects"><option value="1"${S.sound!==false?" selected":""}>On</option><option value="0"${S.sound===false?" selected":""}>Off</option></select></div>
       <div class="rowb"><h3>Voice accent</h3><select id="accSel" aria-label="Accent"><option value="us"${S.accent==="us"?" selected":""}>American 🇺🇸</option><option value="uk"${S.accent==="uk"?" selected":""}>British 🇬🇧</option></select></div>${HAS_TTS?"":`<span class="note">No text-to-speech here: 🔊 opens Cambridge Dictionary instead, and the listening quiz is skipped.</span>`}</div>
     <div class="panel"><h3>Your interests</h3><span class="note">Used to pick words for Made for You, e.g. movies, football, cooking</span>
       <form class="ifield" id="intForm"><input id="intIn" value="${esc(S.interests)}" placeholder="Type your interests, separated by commas"><button type="submit">Save</button></form></div>
@@ -1564,6 +1619,7 @@ function renderProfile(){const P=$("profile");const lvl=1+Math.floor(S.xp/XP_PER
   wireProgress(P);
   $("goalSel").onchange=e=>{S.goal=+e.target.value;save();header()};
   $("mixSel").onchange=e=>{S.mix=e.target.value;save()};
+  $("sndSel").onchange=e=>{S.sound=e.target.value==="1";save();sfx("ok")};
   $("accSel").onchange=e=>{S.accent=e.target.value;save();speak("Hello, let's learn some new words.",null,true)};
   P.querySelectorAll(".tg input").forEach(i=>i.onchange=()=>{S.qtypes[i.dataset.k]=i.checked?1:0;
     if(!Object.values(S.qtypes).some(Boolean)){S.qtypes[i.dataset.k]=1;i.checked=true;toast("Keep at least one quiz type on")}save()});
@@ -1742,9 +1798,9 @@ const isLearned=c=>{const s=status(c);return s==="familiar"||s==="confident"};
 function progressHTML(){const a=uniq(all()),T=a.length,L=a.filter(isLearned).length,lr=a.filter(c=>status(c)==="learning").length,pct=T?Math.round(L/T*100):0;
   const rows=[...LEVELS,"Other"].map(lv=>{const cs=a.filter(c=>(levelOf(c)||"Other")===lv);if(!cs.length)return"";const l=cs.filter(isLearned).length;
     return `<button class="lvrow" data-lv="${lv}"><b>${lv}</b><div class="bar"><span style="width:${l/cs.length*100}%;background:var(--confident)"></span><span style="width:${cs.filter(c=>status(c)==="learning").length/cs.length*100}%;background:var(--learning)"></span></div><span class="note">${l}/${cs.length}</span></button>`}).join("");
-  return `<div class="wl"><div><b class="wlnum">${L} / ${T}</b><span>WORDS LEARNED</span><div class="note" style="margin-top:6px">Learning ${lr} · New ${T-L-lr}</div></div><div class="pring" style="--p:${pct}"><div>${pct}%</div></div></div>
-    <div class="panel"><h3>By level</h3>${rows}<div class="legend"><span style="--sc:var(--confident)"><i></i>Learned</span><span style="--sc:var(--learning)"><i></i>Learning</span></div><span class="note">Tap a level to study all its words</span></div>`}
-function wireProgress(root){root.querySelectorAll(".lvrow").forEach(b=>b.onclick=()=>{if(b.dataset.lv!=="Other")startDeck("lv:"+b.dataset.lv)})}
+  return `<div class="wl" role="button" tabindex="0" onclick="openMine('learned','all')"><div><b class="wlnum">${L} / ${T}</b><span>WORDS LEARNED</span><div class="note" style="margin-top:6px">Learning ${lr} · New ${T-L-lr}</div></div><div class="pring" style="--p:${pct}"><div>${pct}%</div></div></div>
+    <div class="panel"><h3>By level</h3>${rows}<div class="legend"><span style="--sc:var(--confident)"><i></i>Learned</span><span style="--sc:var(--learning)"><i></i>Learning</span></div><span class="note">Tap a level to see which words you've learned</span></div>`}
+function wireProgress(root){root.querySelectorAll(".lvrow").forEach(b=>b.onclick=()=>openMine("learned",b.dataset.lv))}
 
 /* ---------- achievements ---------- */
 const lvConf=id=>cardsFor(id).filter(c=>status(c)==="confident").length;
@@ -1767,7 +1823,7 @@ const ACH=[
  {id:"l5",ic:"🎖️",name:"Level 5",how:"Reach level 5",t:()=>S.xp>=4*XP_PER_LVL},
  {id:"l10",ic:"🏅",name:"Level 10",how:"Reach level 10",t:()=>S.xp>=9*XP_PER_LVL}];
 function checkAch(){const got=ACH.filter(a=>!S.ach[a.id]&&a.t());if(!got.length)return;
-  got.forEach(a=>S.ach[a.id]=Date.now());save();vib([20,60,20]);
+  got.forEach(a=>S.ach[a.id]=Date.now());save();sfx("badge");vib([20,60,20]);
   setTimeout(()=>toast(`New badge: ${got.map(a=>a.ic+" "+a.name).join(", ")}`),400)}
 
 /* ---------- visual thesaurus ---------- */
@@ -1882,8 +1938,8 @@ function matchGame(){const seen=new Set(),src=(cardsFor(S.filter).length>=5?card
     b.onclick=()=>{$("mL").querySelectorAll(".sel").forEach(z=>z.classList.remove("sel"));b.classList.add("sel");sel=b;speak(c.w,null,true)};$("mL").append(b)});
   [...pick].sort(()=>Math.random()-.5).forEach(c=>{const b=document.createElement("button");b.className="mbtn";b.textContent=c.th;
     b.onclick=()=>{if(!sel){toast("Tap an English word first");return}
-      if(sel.dataset.w===c.w){sel.classList.remove("sel");sel.classList.add("done");b.classList.add("done");sel=null;vib(15);left--;$("mLeft").textContent=`${left} pairs left`;if(!left)finish()}
-      else{pen+=3000;b.classList.add("bad");vib([30,40,30]);setTimeout(()=>b.classList.remove("bad"),450)}};$("mR").append(b)});
+      if(sel.dataset.w===c.w){sel.classList.remove("sel");sel.classList.add("done");b.classList.add("done");sel=null;vib(15);sfx("ok");left--;$("mLeft").textContent=`${left} pairs left`;if(!left)finish()}
+      else{pen+=3000;b.classList.add("bad");vib([30,40,30]);sfx("wrong");setTimeout(()=>b.classList.remove("bad"),450)}};$("mR").append(b)});
   clearInterval(mTimer);mTimer=setInterval(()=>{const el=$("mTime");if(!el){clearInterval(mTimer);return}el.textContent=((Date.now()-t0+pen)/1000).toFixed(1)+"s"},100);
   function finish(){clearInterval(mTimer);const sec=+((Date.now()-t0+pen)/1000).toFixed(1),best=!S.matchBest||sec<S.matchBest;
     if(best)S.matchBest=sec;S.matchWins=(S.matchWins||0)+1;save();addXP(15);
