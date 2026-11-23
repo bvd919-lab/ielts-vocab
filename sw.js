@@ -1,5 +1,5 @@
 /* Picture Vocab service worker: app works offline; AI calls always go to the network */
-const VERSION = "vv-bc5ac81f";
+const VERSION = "vv-1b69dba2";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => {
