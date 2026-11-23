@@ -19,7 +19,7 @@
   --bg:#101312; --surface:#1b1f1e; --surface-2:#262c2a; --surface-3:#323a37;
   --fg:#eef3f1; --muted:#97a39f; --line:#2d3432;
   --ai-a:#c86bfa; --ai-b:#4f8cff;
-  --new:#7aa7ff; --learning:#f2b25c; --familiar:#5fc9c0; --confident:#6ad48f; --bad:#ec6b62;
+  --new:#7aa7ff; --relearn:#b08cf5; --learning:#f2b25c; --familiar:#5fc9c0; --confident:#6ad48f; --bad:#ec6b62;
   --display:"Lexend","Segoe UI",system-ui,sans-serif;
   --body:"IBM Plex Sans Thai","Leelawadee UI","Thonburi",system-ui,sans-serif;
   color-scheme:dark;
@@ -281,6 +281,27 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .wt.learned{background:#1f3a2a}.wt.learning{background:#3d311c}.wt.known{background:#1e2c45}
 .wl{cursor:pointer}
 
+.addbox{display:flex;flex-direction:column;gap:12px}
+.addbox textarea{width:100%;box-sizing:border-box;background:var(--surface-2);color:var(--fg);border:1.5px solid var(--line);border-radius:14px;padding:12px;font:inherit;resize:vertical;min-height:130px}
+.addbox .panel{gap:8px}
+.alist{display:flex;flex-direction:column;gap:6px}
+.arow{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--surface-2);border-radius:12px;padding:4px 4px 4px 12px}
+.arow>span{min-width:0;overflow-wrap:anywhere}
+.arow .ib{width:34px;height:34px;font-size:14px;flex:none;color:var(--muted)}
+.addbtn{flex:none;padding:10px 16px}
+
+.defl{margin:0;font-size:17px;line-height:1.55}
+.defl .thbtn{vertical-align:1px}
+.qdef.big{font:700 clamp(20px,6vw,26px)/1.35 var(--display);max-width:none;text-wrap:balance}
+.choices.lc .choice{text-transform:none;letter-spacing:0;font-size:15.5px}
+.qdef .blank{display:inline-block;min-width:3.2em;border-bottom:3px solid rgba(255,255,255,.75);color:#fff}
+
+.thumbs{display:flex;gap:8px;flex-wrap:wrap}.thumbs img{width:72px;height:96px;object-fit:cover;border-radius:10px}
+.sinput{background:var(--surface-2);color:var(--fg);border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;font:inherit;width:100%;box-sizing:border-box}
+.chkbox{background:var(--surface-3);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.codebox{width:100%;box-sizing:border-box;background:var(--surface-2);color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:8px;font:12px ui-monospace,monospace;resize:none}
+.meta button.del{color:var(--bad)}
+
 /* nav */
 .nav{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(16,19,18,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
@@ -365,8 +386,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
               <div class="whead"><h2 id="bWord"></h2><button class="ib" id="sayB" aria-label="Play sound">🔊</button></div>
               <div class="mean">
                 <span class="posc" id="bPos"></span>
-                <div class="mrow"><span class="lang">EN</span><span id="bDef"></span></div>
-                <div class="mrow th"><span class="lang">TH</span><span id="bTh"></span></div>
+                <p class="defl"><span id="bDef"></span> <button class="thbtn" id="defLang" aria-pressed="false" aria-label="Switch definition language">TH</button></p>
               </div>
               <div class="ex"><span id="bEx"></span><button class="thbtn" id="thEx" aria-pressed="false">TH</button><span class="thtxt" id="bExTh" hidden></span></div>
               <div class="acts">
@@ -465,7 +485,7 @@ const DECKS=[
   ["learn","LURN","verb","เรียนรู้","To get new knowledge or a new skill.","I learn five new words every day.","ฉันเรียนคำใหม่วันละห้าคำ","study","room",["📖","✏️","🧠"]],
   ["job","JOB","noun","งาน, อาชีพ","Work that you are paid to do.","My job is in an office in Bangkok.","ฉันทำงานออฟฟิศในกรุงเทพฯ","occupation","city",["💼","🏢","🧑‍💼"]],
   ["cold","KOHLD","adj.","หนาว, เย็น","Having a low temperature.","It is cold in the mountains at night.","บนภูเขาตอนกลางคืนอากาศหนาว","chilly","night",["🥶","🏔️","❄️"]],
-  ["healthy","HEL-thee","adj.","สุขภาพดี","Strong and not sick.","Eating vegetables keeps you healthy.","การกินผักทำให้สุขภาพดี","fit","day",["🥦","💪","🍎"]],
+  ["healthy","HEL-thee","adj.","สุขภาพดี","Physically well; also good for your health.","Eating vegetables keeps you healthy.","การกินผักทำให้สุขภาพดี","fit","day",["🥦","💪","🍎"]],
   ["busy","BIZ-ee","adj.","ยุ่ง","Having a lot to do.","I'm too busy to watch TV today.","วันนี้ฉันยุ่งเกินกว่าจะดูทีวี","occupied","room",["😵‍💫","💻","📞"]],
   ["visit","VIZ-it","verb","ไปเยี่ยม, ไปเที่ยว","To go to see a person or place.","We visit our grandparents every Sunday.","เราไปเยี่ยมตายายทุกวันอาทิตย์","call on","day",["👵","🏡","🎁"]],
   ["quiet","KWY-ut","adj.","เงียบ","Making very little noise.","The library is a quiet place to study.","ห้องสมุดเป็นที่เงียบเหมาะกับการอ่านหนังสือ","silent","room",["🤫","📚","🕯️"]],
@@ -489,7 +509,7 @@ const DECKS=[
   ["safe","SAYF","adj.","ปลอดภัย","Not in danger.","Wear a helmet to stay safe.","ใส่หมวกกันน็อกเพื่อความปลอดภัย","secure","city",["⛑️","🛵","✅"]],
   ["culture","KUL-cher","noun","วัฒนธรรม","The customs, art and ideas of a group of people.","Songkran is an important part of Thai culture.","สงกรานต์เป็นส่วนสำคัญของวัฒนธรรมไทย","tradition","day",["🛕","💦","🎉"]],
   ["agree","uh-GREE","verb","เห็นด้วย","To have the same opinion as someone.","I agree that students need more free time.","ฉันเห็นด้วยว่านักเรียนต้องการเวลาว่างมากขึ้น","concur","room",["🤝","👍","🙂"]],
-  ["local","LOH-kul","adj.","ท้องถิ่น","From the area where you are.","We bought fruit from a local market.","เราซื้อผลไม้จากตลาดท้องถิ่น","regional","day",["🧺","🥭","🏘️"]],
+  ["local","LOH-kul","adj.","ท้องถิ่น","Belonging to the area where you live or are.","We bought fruit from a local market.","เราซื้อผลไม้จากตลาดท้องถิ่น","regional","day",["🧺","🥭","🏘️"]],
   ["enough","ih-NUF","adj.","เพียงพอ","As much as you need.","I don't have enough time to finish.","ฉันมีเวลาไม่พอที่จะทำให้เสร็จ","adequate","room",["⏳","📄","🙅"]],
   ["rule","ROOL","noun","กฎ","Something that tells you what you must or must not do.","The school has a rule about phones in class.","โรงเรียนมีกฎเรื่องการใช้โทรศัพท์ในห้องเรียน","regulation","room",["📵","🏫","📏"]]
  ]},
@@ -541,7 +561,7 @@ const DECKS=[
   ["detrimental","det-rih-MEN-tul","adj.","เป็นผลเสีย","Causing harm or damage.","Too much screen time is detrimental to sleep.","การจ้องจอมากเกินไปส่งผลเสียต่อการนอน","harmful","night",["📱","😵","🛏️"]],
   ["inevitable","in-EV-ih-tuh-bul","adj.","หลีกเลี่ยงไม่ได้","Certain to happen.","Some job losses are inevitable as technology develops.","การตกงานบางส่วนเป็นสิ่งหลีกเลี่ยงไม่ได้เมื่อเทคโนโลยีพัฒนา","unavoidable","city",["🤖","🏭","👷"]],
   ["mitigate","MIT-ih-gayt","verb","บรรเทา, ลดความรุนแรง","To make something bad less serious.","Planting trees can mitigate the effects of flooding.","การปลูกต้นไม้ช่วยบรรเทาผลกระทบจากน้ำท่วม","alleviate","rain",["🌳","🌊","🏘️"]],
-  ["profound","pruh-FOUND","adj.","ลึกซึ้ง, ใหญ่หลวง","Very great or intense.","The internet has had a profound impact on education.","อินเทอร์เน็ตส่งผลกระทบอย่างใหญ่หลวงต่อการศึกษา","deep","room",["🌐","🎓","💡"]],
+  ["profound","pruh-FOUND","adj.","ลึกซึ้ง, ใหญ่หลวง","Very great, or showing deep understanding.","The internet has had a profound impact on education.","อินเทอร์เน็ตส่งผลกระทบอย่างใหญ่หลวงต่อการศึกษา","deep","room",["🌐","🎓","💡"]],
   ["scrutiny","SKROO-tuh-nee","noun","การตรวจสอบอย่างละเอียด","Careful and detailed examination.","Large companies are under constant public scrutiny.","บริษัทใหญ่ถูกสาธารณชนจับตาตรวจสอบตลอดเวลา","examination","room",["🔍","🏢","👀"]],
   ["advocate","AD-vuh-kayt","verb","สนับสนุน (อย่างเปิดเผย)","To publicly support an idea or plan.","Many experts advocate free public transport.","ผู้เชี่ยวชาญหลายคนสนับสนุนขนส่งสาธารณะฟรี","champion","city",["📣","🚌","🙋"]],
   ["disparity","dih-SPAIR-ih-tee","noun","ความเหลื่อมล้ำ","A big difference, often an unfair one.","There is a wide disparity between rich and poor areas.","มีความเหลื่อมล้ำมากระหว่างพื้นที่รวยและจน","inequality","city",["🏚️","🏙️","⚖️"]],
@@ -551,9 +571,9 @@ const DECKS=[
   ["prevalent","PREV-uh-lunt","adj.","พบได้ทั่วไป","Common in a particular place or time.","Obesity is more prevalent in wealthy countries.","โรคอ้วนพบได้ทั่วไปมากกว่าในประเทศร่ำรวย","widespread","city",["🍔","🍟","🏙️"]],
   ["undermine","un-der-MYN","verb","บ่อนทำลาย","To gradually make something weaker.","Fake news can undermine trust in the media.","ข่าวปลอมบ่อนทำลายความเชื่อมั่นในสื่อ","weaken","night",["📰","❌","🕳️"]],
   ["incentive","in-SEN-tiv","noun","แรงจูงใจ","Something that encourages people to do something.","Tax cuts are an incentive to buy electric cars.","การลดภาษีเป็นแรงจูงใจให้ซื้อรถยนต์ไฟฟ้า","motivation","city",["🚗","⚡","💰"]],
-  ["substantial","sub-STAN-shul","adj.","มากพอสมควร","Large in amount or importance.","A substantial number of students work part-time.","นักศึกษาจำนวนมากพอสมควรทำงานพาร์ตไทม์","considerable","room",["👩‍🎓","☕","💼"]],
+  ["substantial","sub-STAN-shul","adj.","จำนวนมาก, มากอย่างมีนัยสำคัญ","Large in amount or importance.","A substantial number of students work part-time.","นักศึกษาจำนวนมากพอสมควรทำงานพาร์ตไทม์","considerable","room",["👩‍🎓","☕","💼"]],
   ["deteriorate","dih-TEER-ee-uh-rayt","verb","เสื่อมลง","To become worse.","Air quality deteriorates during the dry season.","คุณภาพอากาศแย่ลงในช่วงหน้าแล้ง","worsen","city",["🌫️","😷","🏙️"]],
-  ["coherent","koh-HEER-unt","adj.","สอดคล้อง, เป็นเหตุเป็นผล","Clear and logical.","A coherent essay links each idea to the next.","เรียงความที่ดีจะเชื่อมแต่ละความคิดเข้าหากันอย่างเป็นเหตุเป็นผล","logical","room",["📝","🔗","✅"]],
+  ["coherent","koh-HEER-unt","adj.","สอดคล้อง, เป็นเหตุเป็นผล","Clear and logical, with parts that connect well.","A coherent essay links each idea to the next.","เรียงความที่ดีจะเชื่อมแต่ละความคิดเข้าหากันอย่างเป็นเหตุเป็นผล","logical","room",["📝","🔗","✅"]],
   ["allocate","AL-uh-kayt","verb","จัดสรร","To give something for a particular purpose.","The city allocated more money to public parks.","เมืองจัดสรรงบให้สวนสาธารณะมากขึ้น","assign","day",["🏞️","💰","🌳"]],
   ["ambiguous","am-BIG-yoo-us","adj.","กำกวม","Having more than one possible meaning.","The question was ambiguous, so I asked the examiner.","คำถามกำกวม ฉันเลยถามผู้คุมสอบ","unclear","room",["❓","🤷","📄"]],
   ["consensus","kun-SEN-sus","noun","ฉันทามติ","General agreement among a group.","There is a scientific consensus on global warming.","นักวิทยาศาสตร์มีฉันทามติเรื่องภาวะโลกร้อน","agreement","room",["👥","🤝","🌡️"]],
@@ -566,15 +586,15 @@ const DECKS=[
   ["conducive","kun-DOO-siv","adj.","เอื้ออำนวย","Making something likely or easy to happen.","A quiet room is conducive to studying.","ห้องที่เงียบเอื้อต่อการเรียน","favorable","room",["📚","🕯️","🤫"]],
   ["juxtapose","JUK-stuh-pohz","verb","นำมาวางเทียบกัน","To put two things side by side to compare them.","The photo juxtaposes luxury hotels and slums.","ภาพถ่ายนำโรงแรมหรูกับชุมชนแออัดมาวางเทียบกัน","contrast","city",["🏨","🏚️","📷"]],
   ["proliferation","pruh-lif-uh-RAY-shun","noun","การแพร่ขยายอย่างรวดเร็ว","A rapid increase in number.","The proliferation of fast food has affected public health.","การแพร่ขยายของฟาสต์ฟู้ดส่งผลต่อสุขภาพของประชาชน","spread","city",["🍔","🍟","🏙️"]],
-  ["intrinsic","in-TRIN-zik","adj.","ที่มีอยู่ในตัว","Belonging naturally to something.","Learning has intrinsic value beyond passing exams.","การเรียนรู้มีคุณค่าในตัวเองมากกว่าแค่การสอบผ่าน","inherent","room",["🧠","💎","📖"]],
+  ["intrinsic","in-TRIN-zik","adj.","ที่มีอยู่ในตัว","Being a basic, natural part of something.","Learning has intrinsic value beyond passing exams.","การเรียนรู้มีคุณค่าในตัวเองมากกว่าแค่การสอบผ่าน","inherent","room",["🧠","💎","📖"]],
   ["alleviate","uh-LEE-vee-ayt","verb","บรรเทา","To make pain or a problem less severe.","New metro lines may alleviate traffic congestion.","รถไฟฟ้าสายใหม่อาจช่วยบรรเทาปัญหารถติด","ease","city",["🚇","🚗","😌"]],
   ["perpetuate","per-PECH-oo-ayt","verb","ทำให้คงอยู่ต่อไป","To make something, usually bad, continue.","Stereotypes in films perpetuate prejudice.","ภาพเหมารวมในภาพยนตร์ทำให้อคติคงอยู่ต่อไป","prolong","night",["🎬","🔁","👥"]],
   ["meticulous","muh-TIK-yuh-lus","adj.","พิถีพิถัน","Very careful about every detail.","She kept meticulous notes for her research.","เธอจดบันทึกงานวิจัยอย่างพิถีพิถัน","thorough","room",["📝","🔎","✒️"]],
-  ["tenuous","TEN-yoo-us","adj.","อ่อน, ไม่หนักแน่น","Very weak or slight.","The link between the two events is tenuous.","ความเชื่อมโยงระหว่างสองเหตุการณ์นี้ค่อนข้างอ่อน","flimsy","rain",["🧵","❓","🌧️"]],
-  ["ostensibly","os-TEN-suh-blee","adv.","อย่างที่ดูเหมือน (แต่อาจไม่จริง)","Seeming to be true but perhaps not really true.","The tax was ostensibly introduced to protect the environment.","ภาษีนี้ดูเหมือนออกมาเพื่อปกป้องสิ่งแวดล้อม","apparently","room",["🎭","💰","🌍"]],
+  ["tenuous","TEN-yoo-us","adj.","อ่อน, ไม่หนักแน่น (เหตุผลหรือความเชื่อมโยง)","Very weak or slight.","The link between the two events is tenuous.","ความเชื่อมโยงระหว่างสองเหตุการณ์นี้ค่อนข้างอ่อน","flimsy","rain",["🧵","❓","🌧️"]],
+  ["ostensibly","os-TEN-suh-blee","adv.","ดูเหมือนว่า (แต่อาจไม่จริง)","Seeming to be true but perhaps not really true.","The tax was ostensibly introduced to protect the environment.","ภาษีนี้ดูเหมือนออกมาเพื่อปกป้องสิ่งแวดล้อม","apparently","room",["🎭","💰","🌍"]],
   ["quintessential","kwin-tih-SEN-shul","adj.","ที่เป็นแบบฉบับ","Being the most typical example of something.","Pad Thai is the quintessential Thai street food.","ผัดไทยคืออาหารริมทางแบบฉบับของไทย","classic","night",["🍜","🏮","🛵"]],
   ["dichotomy","dy-KOT-uh-mee","noun","การแบ่งออกเป็นสองขั้ว","A division between two opposite things.","The dichotomy between work and leisure is disappearing.","การแบ่งขั้วระหว่างงานกับเวลาพักผ่อนกำลังหายไป","division","dusk",["⚖️","💼","🏖️"]],
-  ["exemplify","ig-ZEM-plih-fy","verb","เป็นตัวอย่าง","To be a typical example of something.","Singapore exemplifies successful urban planning.","สิงคโปร์เป็นตัวอย่างของการวางผังเมืองที่ประสบความสำเร็จ","illustrate","city",["🏙️","🌳","🏆"]],
+  ["exemplify","ig-ZEM-plih-fy","verb","เป็นตัวอย่างที่ดีของ","To be a typical example of something.","Singapore exemplifies successful urban planning.","สิงคโปร์เป็นตัวอย่างของการวางผังเมืองที่ประสบความสำเร็จ","illustrate","city",["🏙️","🌳","🏆"]],
   ["precarious","prih-KAIR-ee-us","adj.","ไม่มั่นคง, เสี่ยง","Likely to fall or fail; not safe.","Many gig workers are in a precarious financial position.","คนทำงานฟรีแลนซ์หลายคนมีสถานะการเงินที่ไม่มั่นคง","unstable","site",["🧗","🪨","⚠️"]],
   ["inexorable","in-EK-ser-uh-bul","adj.","หยุดยั้งไม่ได้","Impossible to stop.","The inexorable rise of AI is changing every industry.","การเติบโตที่หยุดยั้งไม่ได้ของ AI กำลังเปลี่ยนทุกอุตสาหกรรม","relentless","night",["🤖","📈","⚡"]],
   ["salient","SAY-lee-unt","adj.","โดดเด่น, สำคัญที่สุด","Most noticeable or important.","Summarise the salient features of the chart.","สรุปจุดเด่นที่สำคัญของแผนภูมิ","prominent","room",["📊","⭐","🔍"]],
@@ -604,10 +624,10 @@ const DECKS=[
   ["set up","set-UP","phrasal v.","ตั้ง, จัดเตรียม","To build, prepare, or start something.","We set up the tent before it got dark.","เรากางเต็นท์ก่อนฟ้ามืด","establish","dusk",["⛺","🔦","🌲"]]
  ]},
  {id:"hero",lv:"",name:"Heroes & Action",desc:"Words from hero movies and tokusatsu",c:["#7a3550","#341424"],w:[
-  ["transform","trans-FORM","verb","แปลงร่าง, เปลี่ยนรูป","To change completely in form or appearance.","With one press of his belt, he transformed into a hero.","กดเข็มขัดครั้งเดียว เขาก็แปลงร่างเป็นฮีโร่","convert","night",["🦸","⚡","🌀"]],
+  ["transform","trans-FORM","verb","เปลี่ยนแปลงอย่างสิ้นเชิง, แปลงร่าง","To change completely in form or appearance.","With one press of his belt, he transformed into a hero.","กดเข็มขัดครั้งเดียว เขาก็แปลงร่างเป็นฮีโร่","convert","night",["🦸","⚡","🌀"]],
   ["defeat","dih-FEET","verb","เอาชนะ","To win against someone in a fight or game.","The hero finally defeated the monster.","ในที่สุดฮีโร่ก็เอาชนะสัตว์ประหลาดได้","beat","dusk",["👾","💥","🥊"]],
   ["villain","VIL-un","noun","ตัวร้าย","The bad character in a story.","The villain laughed as storm clouds covered the city.","ตัวร้ายหัวเราะขณะเมฆพายุปกคลุมเมือง","antagonist","night",["🦹","🌩️","🏙️"]],
-  ["rescue","RES-kyoo","verb","ช่วยชีวิต, ช่วยเหลือ","To save someone from danger.","She rescued the child from the burning building.","เธอช่วยเด็กออกมาจากตึกที่กำลังไฟไหม้","save","city",["🧒","🔥","🦸‍♀️"]],
+  ["rescue","RES-kyoo","verb","ช่วยให้รอด, ช่วยเหลือ","To save someone from danger.","She rescued the child from the burning building.","เธอช่วยเด็กออกมาจากตึกที่กำลังไฟไหม้","save","city",["🧒","🔥","🦸‍♀️"]],
   ["courage","KUR-ij","noun","ความกล้าหาญ","The ability to do something that frightens you.","It takes courage to stand up to a bully.","ต้องใช้ความกล้าหาญในการยืนหยัดสู้กับคนชอบรังแก","bravery","dusk",["🦁","🛡️","🔥"]],
   ["ally","AL-eye","noun","พันธมิตร, พวกพ้อง","A person or group that helps you, especially in a fight.","The two riders became allies against the enemy.","ไรเดอร์สองคนกลายเป็นพันธมิตรกันเพื่อสู้ศัตรู","partner","day",["🤝","🦸","🦸‍♂️"]],
   ["mysterious","mis-TEER-ee-us","adj.","ลึกลับ","Strange and difficult to understand or explain.","A mysterious figure appeared in the fog.","ร่างลึกลับปรากฏตัวขึ้นในหมอก","puzzling","night",["🕵️","🌫️","❓"]],
@@ -617,10 +637,10 @@ const DECKS=[
 /* IELTS topic word bank (B1–C1): word|pos|level|thai|definition|closest word
    Pronunciation, example sentence and picture are filled in by AI the first time a card is studied */
 const IELTS_RAW=`#i-env|🌍 Environment & Climate|Climate change, pollution, energy, waste|day|🌍,🌱,♻️,🌡️,🏭,🌊|#3f7a52,#1b3a26
-emission|n|B2|การปล่อย (ก๊าซ/มลพิษ)|Gas or substance sent into the air|discharge
+emission|n|B2|การปล่อย (ก๊าซ/มลพิษ)|Gas or other substances released into the air|discharge
 greenhouse gas|n|B2|ก๊าซเรือนกระจก|A gas that traps heat in the atmosphere|heat-trapping gas
-carbon footprint|n|B2|รอยเท้าคาร์บอน|The amount of carbon a person or activity produces|carbon output
-renewable|adj|B2|หมุนเวียนได้|Able to be replaced naturally|inexhaustible
+carbon footprint|n|B2|รอยเท้าคาร์บอน|The amount of carbon dioxide a person or activity produces|carbon output
+renewable|adj|B2|หมุนเวียนได้|Naturally replaced, so it will not run out (e.g. wind, solar)|inexhaustible
 fossil fuel|n|B2|เชื้อเพลิงฟอสซิล|Fuel like coal or oil formed from ancient remains|coal
 deforestation|n|B2|การตัดไม้ทำลายป่า|Cutting down large areas of forest|logging
 contaminate|v|B2|ทำให้ปนเปื้อน|To make something dirty or poisonous|pollute
@@ -641,46 +661,46 @@ ecosystem|n|B2|ระบบนิเวศ|All living things in an area and thei
 toxic|adj|B2|เป็นพิษ|Poisonous and harmful|poisonous
 waste|n|B1|ขยะ, ของเสีย|Material that is no longer wanted|rubbish
 pesticide|n|B2|ยาฆ่าแมลง|A chemical used to kill insects on crops|insecticide
-harness|v|C1|นำ (พลังงาน) มาใช้|To control and use natural energy|utilise
+harness|v|C1|นำ (พลังงานธรรมชาติ) มาใช้ประโยชน์|To control something, especially natural energy, and use it|utilise
 solar power|n|B1|พลังงานแสงอาทิตย์|Energy from the sun|solar energy
 wind farm|n|B2|ฟาร์มกังหันลม|A group of wind turbines producing electricity|wind park
 depletion|n|C1|การร่อยหรอ|Reduction of a resource until little is left|exhaustion
-scarce|adj|B2|ขาดแคลน|Not enough for what is needed|limited
+scarce|adj|B2|ขาดแคลน|Not available in large amounts; in short supply|limited
 natural resources|n|B2|ทรัพยากรธรรมชาติ|Materials from nature that people use|raw materials
 acid rain|n|B2|ฝนกรด|Rain made acidic by air pollution|polluted rain
 desertification|n|C1|การกลายเป็นทะเลทราย|The process of land becoming desert|land degradation
 irreversible|adj|C1|ย้อนกลับไม่ได้|Impossible to change back|permanent
-curb|v|C1|ควบคุม, จำกัด|To limit something bad|restrain
+curb|v|C1|ควบคุม, จำกัด (สิ่งที่ไม่ดี)|To limit something bad|restrain
 offset|v|C1|ชดเชย|To balance one effect with an opposite one|counterbalance
 disposable|adj|B2|ใช้แล้วทิ้ง|Made to be thrown away after use|single-use
 biodegradable|adj|C1|ย่อยสลายได้ทางชีวภาพ|Able to decay naturally|compostable
-tackle|v|B2|จัดการ (ปัญหา)|To deal with a difficult problem|address
+tackle|v|B2|จัดการ, รับมือ (ปัญหา)|To deal with a difficult problem|address
 devastating|adj|B2|ร้ายแรงมาก|Causing great damage|destructive
 emit|v|B2|ปล่อย (ก๊าซ, แสง)|To send out gas, heat or light|release
 #i-eco|🦁 Nature & Animals|Habitats, food chains, animal behaviour|day|🦁,🐝,🦋,🐢,🌿,🦉|#5a7a2e,#27380f
 habitat|n|B2|ถิ่นที่อยู่อาศัย|The natural home of an animal or plant|natural home
-species|n|B2|สายพันธุ์|A group of similar animals or plants|kind
+species|n|B2|ชนิดพันธุ์, สปีชีส์ (ของสิ่งมีชีวิต)|A group of animals or plants that can breed with each other|kind
 predator|n|B2|ผู้ล่า|An animal that hunts others|hunter
 prey|n|B2|เหยื่อ|An animal hunted by another|quarry
-migrate|v|B2|อพยพ|To move to another place for a season|relocate
-hibernate|v|B2|จำศีล|To sleep through the winter|overwinter
-nocturnal|adj|C1|หากินกลางคืน|Active at night|night-active
+migrate|v|B2|อพยพ|To move from one region to another when the season changes|relocate
+hibernate|v|B2|จำศีล|(Of an animal) to spend the winter in a deep sleep|overwinter
+nocturnal|adj|C1|ตื่นตัวช่วงกลางคืน, ออกหากินตอนกลางคืน (สัตว์)|Active at night rather than during the day|night-time
 herbivore|n|B2|สัตว์กินพืช|An animal that eats only plants|plant-eater
 carnivore|n|B2|สัตว์กินเนื้อ|An animal that eats meat|meat-eater
-breed|v|B2|ผสมพันธุ์, เพาะพันธุ์|To produce young animals|reproduce
-offspring|n|C1|ลูกหลาน|The young of an animal or person|young
-forage|v|C1|หาอาหาร|To search for food|search
+breed|v|B2|ผสมพันธุ์, เพาะพันธุ์|(Of animals) to produce young; to keep animals in order to produce young|reproduce
+offspring|n|C1|ลูก, ทายาท (ของคนหรือสัตว์)|The young of an animal or person|young
+forage|v|C1|ออกหาอาหาร (สัตว์)|(Of an animal) to search for food|search
 thrive|v|B2|เจริญเติบโต, รุ่งเรือง|To grow strongly and healthily|prosper
 flourish|v|C1|เจริญงอกงาม|To grow or develop very well|thrive
 adapt|v|B1|ปรับตัว|To change to suit new conditions|adjust
 camouflage|n|B2|การพรางตัว|Colours that help an animal hide|disguise
-venomous|adj|C1|มีพิษ (จากการกัด)|Able to inject poison by biting|poisonous
-invasive|adj|C1|รุกราน (ชนิดพันธุ์ต่างถิ่น)|Spreading and harming other species|intrusive
+venomous|adj|C1|มีพิษ (ปล่อยพิษโดยการกัดหรือต่อย)|Able to inject poison by biting or stinging|poisonous
+invasive|adj|C1|รุกราน (ชนิดพันธุ์ต่างถิ่น)|(Of a plant or animal) spreading into new areas and harming native species|intrusive
 parasite|n|B2|ปรสิต|A living thing that feeds on another|leech
 swarm|n|B2|ฝูง (แมลง)|A large moving group of insects|cloud
-herd|n|B1|ฝูง (สัตว์กินหญ้า)|A large group of animals like cows|flock
+herd|n|B1|ฝูง (สัตว์กินหญ้า)|A large group of animals of one kind, such as cows, that live together|flock
 colony|n|B2|อาณานิคม (ของสัตว์)|A group of animals living together|community
-burrow|n|C1|โพรง|A hole an animal digs to live in|den
+burrow|n|C1|โพรงหรือรูที่สัตว์ขุดอยู่อาศัย|A hole an animal digs to live in|den
 captivity|n|B2|การถูกกักขัง|Being kept in a cage or zoo|confinement
 wildlife|n|B1|สัตว์ป่า|Animals living in nature|fauna
 vegetation|n|B2|พืชพรรณ|Plants in general in an area|plant life
@@ -688,32 +708,32 @@ aquatic|adj|C1|ที่อยู่ในน้ำ|Living in water|water-dwelli
 marine|adj|B2|เกี่ยวกับทะเล|Relating to the sea|oceanic
 lifespan|n|B2|อายุขัย|How long something lives|life expectancy
 instinct|n|B2|สัญชาตญาณ|A natural behaviour that is not learned|intuition
-mammal|n|B1|สัตว์เลี้ยงลูกด้วยนม|An animal that feeds its babies milk|warm-blooded animal
+mammal|n|B1|สัตว์เลี้ยงลูกด้วยนม|An animal whose babies drink milk from their mother|warm-blooded animal
 reptile|n|B1|สัตว์เลื้อยคลาน|A cold-blooded animal like a snake|lizard
 fungus|n|B2|เชื้อรา, เห็ด|A living thing like a mushroom or mould|mould
 pollinate|v|C1|ผสมเกสร|To carry pollen between flowers|fertilise
-food chain|n|B2|ห่วงโซ่อาหาร|The order in which living things eat each other|food web
+food chain|n|B2|ห่วงโซ่อาหาร|A series of living things in which each one is eaten by the next|food web
 extinction|n|B2|การสูญพันธุ์|When a species stops existing|dying out
 dense|adj|B2|หนาแน่น|Closely packed together|thick
 vast|adj|B2|กว้างใหญ่|Extremely large|immense
-fertile|adj|B2|อุดมสมบูรณ์|Able to produce many plants or young|productive
-poach|v|C1|ลักลอบล่าสัตว์|To hunt animals illegally|hunt illegally
+fertile|adj|B2|อุดมสมบูรณ์|(Of land) able to grow good crops; (of people or animals) able to have babies|productive
+poach|v|C1|ลักลอบล่าสัตว์|To hunt or catch animals illegally|hunt illegally
 #i-city|🏙️ Cities & Housing|Urban life, transport, housing|city|🏙️,🚇,🏘️,🚦,🏗️,🚌|#4a5f7a,#202c3d
 urbanisation|n|C1|การขยายตัวของเมือง|The growth of towns and cities|city growth
-overpopulated|adj|B2|ประชากรล้น|Having too many people|overcrowded
-congestion|n|C1|ความแออัด (การจราจร)|Too many vehicles on the roads|traffic jam
+overpopulated|adj|B2|มีประชากรมากเกินไป|Having too many people|overcrowded
+congestion|n|C1|ความแออัด (การจราจร)|A situation where roads are so full that traffic moves slowly|traffic jam
 infrastructure|n|C1|โครงสร้างพื้นฐาน|Basic systems like roads, water and power|facilities
 suburb|n|B2|ชานเมือง|A residential area outside a city centre|outskirts
 outskirts|n|C1|รอบนอกเมือง|The outer edges of a town|suburbs
 residential|adj|B2|เกี่ยวกับที่อยู่อาศัย|Used for people to live in|housing
 high-rise|adj|B2|ตึกสูง|Very tall with many floors|multi-storey
 skyscraper|n|B1|ตึกระฟ้า|A very tall building|tower block
-housing estate|n|B2|หมู่บ้านจัดสรร|A planned area of many houses|housing development
+housing estate|n|B2|โครงการที่อยู่อาศัย, หมู่บ้านจัดสรร|A large group of houses or flats built in one area at the same time|housing development
 slum|n|B2|สลัม, ชุมชนแออัด|A poor, crowded area of a city|shanty town
 amenities|n|C1|สิ่งอำนวยความสะดวก|Useful public services and facilities|facilities
-commute|v|B2|เดินทางไปทำงานประจำ|To travel regularly to work|travel to work
+commute|v|B2|เดินทางไป-กลับที่ทำงานเป็นประจำ|To travel regularly between home and work or school|travel to work
 pedestrian|n|B2|คนเดินเท้า|A person walking in the street|walker
-public transport|n|B1|ขนส่งสาธารณะ|Buses and trains that everyone can use|mass transit
+public transport|n|B1|ขนส่งสาธารณะ|Buses, trains and other services that everyone can use|mass transit
 noise pollution|n|B2|มลพิษทางเสียง|Harmful or annoying levels of noise|noise
 urban sprawl|n|C1|การขยายตัวของเมืองอย่างไร้ระเบียบ|The uncontrolled spread of a city|sprawl
 rural|adj|B1|ชนบท|Relating to the countryside|countryside
@@ -722,18 +742,18 @@ remote|adj|B2|ห่างไกล|Far from towns or people|distant
 vibrant|adj|C1|มีชีวิตชีวา|Full of energy and life|lively
 bustling|adj|C1|คึกคัก|Full of busy activity|hectic
 tranquil|adj|C1|สงบ|Calm and quiet|peaceful
-affordable|adj|B2|ราคาที่จ่ายไหว|Cheap enough for people to buy|reasonably priced
-landlord|n|B1|เจ้าของที่ให้เช่า|A person who rents out property|property owner
+affordable|adj|B2|ราคาไม่แพง, พอจ่ายไหว|Cheap enough for most people to pay for|reasonably priced
+landlord|n|B1|เจ้าของบ้านหรือห้องเช่า|A person who rents out property|property owner
 tenant|n|B2|ผู้เช่า|A person who rents a home|renter
 renovate|v|B2|ปรับปรุง (อาคาร)|To repair and improve a building|refurbish
 demolish|v|B2|รื้อถอน|To knock down a building|tear down
 construct|v|B2|ก่อสร้าง|To build something|build
 district|n|B1|เขต, ย่าน|An area of a town|area
 neighbourhood|n|B1|ละแวกบ้าน|The area around where you live|vicinity
-derelict|adj|C1|ถูกทิ้งร้าง|Empty and in bad condition|abandoned
-sewage|n|C1|น้ำเสีย|Waste water from toilets and drains|wastewater
+derelict|adj|C1|ถูกทิ้งร้าง|(Of a building) empty and falling apart because no one uses it|abandoned
+sewage|n|C1|น้ำเสีย, สิ่งปฏิกูล|Waste water from toilets and drains|wastewater
 landmark|n|B2|สถานที่สำคัญ|A famous building or place|monument
-cosmopolitan|adj|C1|มีผู้คนหลายชาติ|Full of people from many countries|multicultural
+cosmopolitan|adj|C1|มีผู้คนหลากหลายเชื้อชาติ, เป็นสากล|Having people and influences from many different countries|multicultural
 relocate|v|B2|ย้ายที่อยู่|To move to a new place|move
 concrete jungle|idm|C1|ป่าคอนกรีต|A city with many buildings and no nature|built-up area
 facilities|n|B1|สิ่งอำนวยความสะดวก|Buildings or equipment for a purpose|amenities
@@ -746,9 +766,9 @@ numeracy|n|C1|ทักษะการคำนวณ|The ability to work with n
 compulsory|adj|B2|ภาคบังคับ|Required by law or rules|mandatory
 optional|adj|B1|ไม่บังคับ, เลือกได้|Possible to choose but not required|elective
 academic|adj|B2|ทางวิชาการ|Related to study and learning|scholarly
-vocational|adj|C1|สายอาชีพ|Teaching skills for a particular job|career-focused
+vocational|adj|C1|สายอาชีพ|Providing skills and training for a particular job|career-focused
 undergraduate|n|B2|นักศึกษาปริญญาตรี|A university student studying for a first degree|student
-graduate|v|B1|สำเร็จการศึกษา|To finish a degree or school|complete
+graduate|v|B1|สำเร็จการศึกษา|To successfully complete a university degree or school course|complete
 scholarship|n|B2|ทุนการศึกษา|Money given to pay for someone's study|grant
 enrol|v|B2|ลงทะเบียนเรียน|To officially join a course|register
 assignment|n|B1|งานที่ได้รับมอบหมาย|A piece of work given as part of a course|task
@@ -756,41 +776,41 @@ dissertation|n|C1|วิทยานิพนธ์|A long piece of academic wri
 lecture|n|B1|การบรรยาย|A talk given to students|talk
 seminar|n|B2|สัมมนา|A small class for discussion|workshop
 tutor|n|B1|ครูสอนพิเศษ|A teacher for one person or a small group|instructor
-discipline|n|B2|ระเบียบวินัย|Training people to follow rules|self-control
+discipline|n|B2|ระเบียบวินัย|Making people obey rules, or controlling your own behaviour|self-control
 motivate|v|B2|จูงใจ|To make someone want to do something|inspire
 concentrate|v|B1|ตั้งใจ, มีสมาธิ|To give all your attention to something|focus
 memorise|v|B2|ท่องจำ|To learn something so you remember it|learn by heart
 plagiarism|n|C1|การลอกผลงาน|Copying someone else's work as your own|copying
-critical thinking|n|C1|การคิดเชิงวิพากษ์|Careful analysis before forming a judgement|analysis
+critical thinking|n|C1|การคิดเชิงวิพากษ์|Analysing information carefully to form your own judgement|analysis
 rote learning|n|C1|การเรียนแบบท่องจำ|Learning by repetition without understanding|memorisation
-distance learning|n|B2|การเรียนทางไกล|Studying from home through online courses|online learning
-qualification|n|B2|วุฒิการศึกษา|An official result of passing a course|certificate
+distance learning|n|B2|การเรียนทางไกล|Studying without going to a school, usually through online courses|online learning
+qualification|n|B2|วุฒิการศึกษา|An official record, such as a degree, showing you passed a course or exam|certificate
 expertise|n|C1|ความเชี่ยวชาญ|Special skill or knowledge|know-how
-acquire|v|B2|ได้มา, เรียนรู้|To get knowledge or skills|gain
+acquire|v|B2|ได้มา, ได้รับ (ความรู้หรือทักษะ)|To get knowledge or skills|gain
 proficient|adj|C1|เชี่ยวชาญ, คล่อง|Very good at something|skilled
 fluent|adj|B1|คล่องแคล่ว (ภาษา)|Able to speak a language easily|articulate
-mentor|n|C1|พี่เลี้ยง, ที่ปรึกษา|An experienced adviser|guide
-peer|n|B2|เพื่อนรุ่นเดียวกัน|A person of the same age or level|classmate
+mentor|n|C1|พี่เลี้ยง, ที่ปรึกษา|An experienced person who advises and helps someone less experienced|guide
+peer|n|B2|คนรุ่นเดียวกัน, เพื่อนร่วมรุ่น|A person of the same age or level|classmate
 truant|n|C1|เด็กหนีเรียน|A child who misses school without permission|absentee
 dropout|n|C1|คนเลิกเรียนกลางคัน|Someone who leaves school or college early|quitter
-interactive|adj|B2|ที่มีปฏิสัมพันธ์|Involving communication in both directions|participatory
+interactive|adj|B2|ที่มีปฏิสัมพันธ์|Allowing two-way communication between people, or between a person and a computer|participatory
 theoretical|adj|C1|เชิงทฤษฎี|Based on ideas rather than practice|abstract
 practical|adj|B1|ภาคปฏิบัติ, ใช้ได้จริง|Related to doing rather than theory|hands-on
-hands-on|adj|B2|ลงมือทำจริง|Learning by doing things yourself|practical
-inspiration|n|B2|แรงบันดาลใจ|Something that gives you new ideas|stimulus
+hands-on|adj|B2|ลงมือทำจริง|Involving doing something yourself rather than only learning about it|practical
+inspiration|n|B2|แรงบันดาลใจ|Something or someone that gives you ideas or makes you want to do something|stimulus
 apprenticeship|n|C1|การฝึกงานสายอาชีพ|Training for a job under a skilled worker|traineeship
 #i-biz|💼 Work & Economy|Jobs, business, money|city|💼,📈,💰,🏢,🤝,🧾|#7a5a32,#3a2914
-employment|n|B2|การจ้างงาน|Having a paid job|work
+employment|n|B2|การจ้างงาน|The state of having paid work|work
 unemployment|n|B2|การว่างงาน|Not having a job|joblessness
 recruit|v|B2|รับสมัคร (พนักงาน)|To find new people for a job|hire
-promotion|n|B1|การเลื่อนตำแหน่ง|A move to a higher job|advancement
+promotion|n|B1|การเลื่อนตำแหน่ง|A move to a more important job in the same organisation|advancement
 resign|v|B2|ลาออก|To leave a job officially|quit
-redundant|adj|C1|ถูกเลิกจ้าง|Losing a job because it is no longer needed|laid off
-workforce|n|B2|แรงงาน|All the workers in a company or country|labour force
-salary|n|B1|เงินเดือน|A fixed amount of money paid for work|pay
+redundant|adj|C1|ถูกเลิกจ้าง (เพราะตำแหน่งไม่จำเป็นแล้ว)|Without a job because your employer no longer needs your position|laid off
+workforce|n|B2|กำลังแรงงาน|All the workers in a company or country|labour force
+salary|n|B1|เงินเดือน|A fixed amount of money paid for work, usually every month|pay
 wage|n|B2|ค่าจ้าง|Money paid per hour or day|pay
-income|n|B2|รายได้|Money you receive|earnings
-revenue|n|C1|รายได้ (ของบริษัท)|Money a business receives|turnover
+income|n|B2|รายได้|Money you receive regularly, from work or investments|earnings
+revenue|n|C1|รายได้ (ของบริษัท)|Money a business or government receives|turnover
 profit|n|B1|กำไร|Money made after costs are paid|gain
 expenditure|n|C1|รายจ่าย|The amount of money spent|spending
 investment|n|B2|การลงทุน|Putting money in to make more money|funding
@@ -802,13 +822,13 @@ recession|n|C1|ภาวะเศรษฐกิจถดถอย|A period when
 economy|n|B1|เศรษฐกิจ|The system of money, trade and industry|market
 entrepreneur|n|C1|ผู้ประกอบการ|A person who starts a business|business founder
 competitor|n|B2|คู่แข่ง|A rival company or person|rival
-productivity|n|C1|ผลิตภาพ|How much work is produced|output
+productivity|n|C1|ผลิตภาพ, ประสิทธิภาพการผลิต|How much is produced compared with the time or effort used|output
 efficient|adj|B2|มีประสิทธิภาพ|Working well without waste|effective
 manufacture|v|B2|ผลิต (ในโรงงาน)|To make goods in large numbers|produce
 retail|n|B2|การค้าปลีก|Selling goods to the public|selling
 consumer|n|B2|ผู้บริโภค|A person who buys goods|buyer
-demand|n|B2|อุปสงค์, ความต้องการ|How much people want something|need
-supply|n|B2|อุปทาน|The amount of something available|stock
+demand|n|B2|อุปสงค์, ความต้องการ|The amount of a product or service that people want to buy|need
+supply|n|B2|อุปทาน|The amount of something that is available to buy or use|stock
 export|v|B1|ส่งออก|To sell goods to another country|ship abroad
 negotiate|v|B2|เจรจาต่อรอง|To discuss in order to reach an agreement|bargain
 colleague|n|B1|เพื่อนร่วมงาน|A person you work with|co-worker
@@ -816,45 +836,45 @@ flexible|adj|B2|ยืดหยุ่น|Able to change easily|adaptable
 workload|n|C1|ปริมาณงาน|The amount of work to do|burden
 work-life balance|n|B2|สมดุลชีวิตกับงาน|A healthy split between job and personal life|balance
 self-employed|adj|B2|ประกอบอาชีพอิสระ|Working for yourself|freelance
-blue-collar|adj|C1|แรงงาน (ใช้แรงกาย)|Doing manual or factory work|manual
-white-collar|adj|C1|พนักงานออฟฟิศ|Doing office or professional work|professional
+blue-collar|adj|C1|ที่ทำงานใช้แรงงาน (พนักงานคอปกน้ำเงิน)|Relating to workers who do physical work, e.g. in factories|manual
+white-collar|adj|C1|ที่ทำงานในสำนักงาน (พนักงานคอปกขาว)|Relating to workers who do office or professional work|professional
 pension|n|B2|เงินบำนาญ|Money paid regularly after you retire|retirement income
-retire|v|B1|เกษียณ|To stop working because of age|stop working
+retire|v|B1|เกษียณ|To stop working, usually because of age|stop working
 #i-tech|💻 Technology & Science|Innovation, data, experiments, space|night|💻,🔬,🚀,🤖,🛰️,🧪|#3a4f8a,#161f3d
 innovation|n|B2|นวัตกรรม|A new idea, method or invention|novelty
 innovative|adj|B2|สร้างสรรค์สิ่งใหม่|Using new methods or ideas|inventive
-cutting-edge|adj|C1|ล้ำสมัย|The most advanced|state-of-the-art
+cutting-edge|adj|C1|ล้ำสมัย|The newest and most advanced|state-of-the-art
 obsolete|adj|C1|ล้าสมัย|No longer used because it is out of date|outdated
 device|n|B1|อุปกรณ์|A machine or tool made for a purpose|gadget
-gadget|n|B2|อุปกรณ์เล็กๆ|A small useful machine|device
-artificial intelligence|n|B2|ปัญญาประดิษฐ์|Computers that can think like humans|AI
-automation|n|C1|ระบบอัตโนมัติ|Using machines instead of people|mechanisation
-virtual|adj|B2|เสมือนจริง|Existing on computers, not physically|simulated
+gadget|n|B2|อุปกรณ์ไฮเทคขนาดเล็ก|A small, clever device or tool|device
+artificial intelligence|n|B2|ปัญญาประดิษฐ์|Computer systems that can do tasks that normally need human intelligence|AI
+automation|n|C1|ระบบอัตโนมัติ|The use of machines or computers to do work that people used to do|mechanisation
+virtual|adj|B2|เสมือนจริง|Created by computers and not existing physically|simulated
 digital|adj|B1|ดิจิทัล|Using computer technology|electronic
-privacy|n|B2|ความเป็นส่วนตัว|Keeping personal things secret|confidentiality
+privacy|n|B2|ความเป็นส่วนตัว|The right to keep your personal life and information to yourself|confidentiality
 cyberspace|n|C1|โลกไซเบอร์|The online world of the internet|internet
-hacker|n|B2|แฮกเกอร์|A person who breaks into computer systems|intruder
-surveillance|n|C1|การสอดส่อง|Watching people closely|monitoring
+hacker|n|B2|แฮกเกอร์, ผู้เจาะระบบคอมพิวเตอร์|A person who breaks into computer systems|intruder
+surveillance|n|C1|การสอดส่อง|Careful watching of people, often by police or cameras|monitoring
 breakthrough|n|C1|การค้นพบครั้งสำคัญ|An important new discovery|discovery
 experiment|n|B1|การทดลอง|A test done to find something out|trial
-hypothesis|n|C1|สมมติฐาน|An idea that needs to be tested|theory
+hypothesis|n|C1|สมมติฐาน|An idea or explanation that has not yet been proved|theory
 analyse|v|B2|วิเคราะห์|To examine something in detail|examine
 laboratory|n|B1|ห้องปฏิบัติการ|A room for scientific work|lab
-invention|n|B1|สิ่งประดิษฐ์|Something newly created|creation
+invention|n|B1|สิ่งประดิษฐ์|Something useful designed or created for the first time|creation
 patent|n|C1|สิทธิบัตร|The legal right to an invention|exclusive right
 prototype|n|C1|ต้นแบบ|The first model of a new product|model
-gravity|n|B2|แรงโน้มถ่วง|The force that pulls things down|pull
+gravity|n|B2|แรงโน้มถ่วง|The force that pulls objects towards the Earth or other planets|pull
 atmosphere|n|B2|ชั้นบรรยากาศ|The gases around the Earth|air
 orbit|v|B2|โคจร|To move around a planet or star|circle
-satellite|n|B2|ดาวเทียม|A machine that circles the Earth in space|spacecraft
+satellite|n|B2|ดาวเทียม|An object, often a machine, that moves around a planet in space|spacecraft
 astronomy|n|C1|ดาราศาสตร์|The study of stars and planets|space science
 evaporation|n|C1|การระเหย|A liquid turning into gas|vaporisation
-dissolve|v|B2|ละลาย|To mix into a liquid completely|melt
-compound|n|C1|สารประกอบ|A substance made of two or more elements|mixture
+dissolve|v|B2|ละลาย|(Of a solid) to mix into a liquid and become part of it|melt
+compound|n|C1|สารประกอบ|A substance made of two or more elements joined together chemically|mixture
 genetic|adj|C1|ทางพันธุกรรม|Related to genes|hereditary
 cloning|n|C1|การโคลน|Making an exact genetic copy|replication
-genetically modified|adj|C1|ดัดแปลงพันธุกรรม|Changed by scientists at gene level|GM
-addictive|adj|B2|ทำให้เสพติด|Hard to stop using|habit-forming
+genetically modified|adj|C1|ดัดแปลงพันธุกรรม|Having genes that have been changed by scientists|GM
+addictive|adj|B2|ทำให้เสพติด|So enjoyable or habit-forming that it is hard to stop|habit-forming
 user-friendly|adj|B2|ใช้งานง่าย|Easy for people to use|easy to use
 upgrade|v|B2|อัปเกรด|To improve to a newer version|update
 storage|n|B2|การจัดเก็บ|Space for keeping things or data|memory
@@ -862,176 +882,176 @@ transmit|v|C1|ส่ง (สัญญาณ)|To send signals or information|broa
 mechanism|n|C1|กลไก|Parts that work together in a machine or system|system
 data|n|B1|ข้อมูล|Facts and numbers that are collected|information
 #i-health|🩺 Health|Diet, illness, treatment, lifestyle|day|🩺,🍎,🏃,💊,🧘,🏥|#3f7a6a,#1b3a31
-nutrition|n|B2|โภชนาการ|The food needed for good health|nourishment
-nutritious|adj|C1|มีคุณค่าทางอาหาร|Full of what the body needs|wholesome
+nutrition|n|B2|โภชนาการ|The process of getting the food your body needs to stay healthy|nourishment
+nutritious|adj|C1|มีคุณค่าทางอาหาร|Containing a lot of what the body needs to be healthy|wholesome
 balanced diet|n|B1|อาหารที่สมดุล|A healthy mix of different foods|healthy eating
-obesity|n|C1|โรคอ้วน|Being very overweight|overweight
-sedentary|adj|C1|นั่งอยู่กับที่มาก|Involving little exercise|inactive
+obesity|n|C1|โรคอ้วน|The condition of being extremely overweight in a way that harms health|overweight
+sedentary|adj|C1|นั่งอยู่กับที่เป็นส่วนใหญ่, ไม่ค่อยได้ขยับร่างกาย|Involving a lot of sitting and very little physical activity|inactive
 lifestyle|n|B1|วิถีชีวิต|The way someone lives|way of life
 symptom|n|B2|อาการ|A sign of an illness|sign
 diagnose|v|C1|วินิจฉัย|To identify an illness|identify
 prescription|n|B2|ใบสั่งยา|A doctor's written order for medicine|medicine order
 treatment|n|B1|การรักษา|Medical care for an illness|therapy
 recover|v|B1|ฟื้นตัว|To get better after an illness|heal
-infection|n|B2|การติดเชื้อ|A disease caused by germs|contamination
+infection|n|B2|การติดเชื้อ|An illness caused by bacteria or viruses entering the body|contamination
 contagious|adj|C1|ติดต่อได้|Spreading from person to person|infectious
-epidemic|n|C1|โรคระบาด|A disease spreading among many people|outbreak
-vaccine|n|B2|วัคซีน|A substance that protects from a disease|immunisation
+epidemic|n|C1|โรคระบาด|A disease that spreads quickly to many people in one area|outbreak
+vaccine|n|B2|วัคซีน|A substance given to people to protect them from a disease|immunisation
 immune|adj|C1|มีภูมิคุ้มกัน|Protected from a disease|resistant
-chronic|adj|C1|เรื้อรัง|Lasting a long time|long-term
+chronic|adj|C1|เรื้อรัง|(Of an illness or problem) lasting a long time or keeps coming back|long-term
 fatal|adj|C1|ถึงแก่ชีวิต|Causing death|deadly
 side effect|n|B2|ผลข้างเคียง|An unwanted result of a medicine|adverse effect
 dose|n|B2|ปริมาณ (ยา)|The amount of medicine taken at one time|measure
 healthcare|n|B2|การดูแลสุขภาพ|Medical services for people|medical care
-life expectancy|n|C1|อายุขัยเฉลี่ย|How long people usually live|average lifespan
+life expectancy|n|C1|อายุขัยเฉลี่ย|The average number of years a person is expected to live|average lifespan
 stress|n|B1|ความเครียด|Worry caused by pressure|tension
-mental health|n|B2|สุขภาพจิต|The condition of the mind|psychological health
-wellbeing|n|C1|สุขภาวะ|Being healthy and happy|welfare
+mental health|n|B2|สุขภาพจิต|The health of a person's mind and emotions|psychological health
+wellbeing|n|C1|สุขภาวะ|Being healthy, comfortable and happy|welfare
 fitness|n|B1|ความฟิต|Being physically strong and healthy|condition
 injury|n|B1|การบาดเจ็บ|Physical damage to the body|wound
 surgery|n|B2|การผ่าตัด|A medical operation|operation
 therapy|n|B2|การบำบัด|Treatment for an illness or problem|treatment
-addiction|n|C1|การเสพติด|Not being able to stop something harmful|dependency
-hygiene|n|C1|สุขอนามัย|Keeping clean to stay healthy|cleanliness
-processed food|n|B2|อาหารแปรรูป|Food changed by factories|packaged food
+addiction|n|C1|การเสพติด|Not being able to stop taking or doing something harmful|dependency
+hygiene|n|C1|สุขอนามัย|Keeping yourself and things clean to prevent illness|cleanliness
+processed food|n|B2|อาหารแปรรูป|Food changed in a factory, often with added salt, sugar or fat|packaged food
 junk food|n|B1|อาหารขยะ|Unhealthy fast food|fast food
-organic|adj|B2|ออร์แกนิก|Grown without chemicals|natural
+organic|adj|B2|ออร์แกนิก|Grown or produced without artificial chemicals|natural
 deficiency|n|C1|การขาด (สารอาหาร)|A lack of something needed|shortage
-vulnerable|adj|C1|เปราะบาง, เสี่ยง|Easily harmed|at risk
-outbreak|n|C1|การระบาด|The sudden start of a disease|epidemic
+vulnerable|adj|C1|เปราะบาง, เสี่ยง|Easily hurt or harmed, physically or emotionally|at risk
+outbreak|n|C1|การระบาด|A sudden start of a disease or something bad, such as violence|epidemic
 sanitation|n|C1|การสุขาภิบาล|Systems for clean water and waste removal|hygiene
 prevention|n|B2|การป้องกัน|Stopping something before it happens|avoidance
 exhaustion|n|C1|ความเหนื่อยล้า|Extreme tiredness|fatigue
 #i-soc|🏛️ Society & Government|Policy, law, inequality, culture|city|🏛️,👥,⚖️,🗳️,🤝,🏘️|#6a4a7a,#2e1f38
-policy|n|B2|นโยบาย|A plan of action by a government|strategy
+policy|n|B2|นโยบาย|A set of ideas or a plan of action agreed by a government or organisation|strategy
 legislation|n|C1|กฎหมาย (ที่ตราขึ้น)|Laws made by a government|law
 regulation|n|B2|ข้อบังคับ|An official rule|rule
 enforce|v|C1|บังคับใช้|To make people obey a rule|impose
-authorities|n|B2|เจ้าหน้าที่, ทางการ|People with official power|officials
-citizen|n|B1|พลเมือง|A member of a country|national
-welfare|n|C1|สวัสดิการ|Help given to people in need|social security
+authorities|n|B2|เจ้าหน้าที่, ทางการ|The people or organisations with official power, e.g. government or police|officials
+citizen|n|B1|พลเมือง|A person who legally belongs to a country|national
+welfare|n|C1|สวัสดิการ|Help, often money, given by the government to people in need|social security
 taxation|n|C1|การเก็บภาษี|The system of taxes|tax
 subsidise|v|C1|อุดหนุน|To pay part of the cost of something|fund
 funding|n|B2|เงินทุน|Money given for a purpose|finance
 poverty|n|B2|ความยากจน|Being very poor|hardship
 inequality|n|C1|ความไม่เท่าเทียม|An unfair difference between groups|imbalance
-discrimination|n|C1|การเลือกปฏิบัติ|Treating people unfairly|unfair treatment
+discrimination|n|C1|การเลือกปฏิบัติ|Treating people unfairly because of their race, sex, age, etc|unfair treatment
 prejudice|n|C1|อคติ|An unfair opinion not based on facts|bias
 minority|n|B2|ชนกลุ่มน้อย|A smaller group in society|small group
-ethnic|adj|B2|ทางเชื้อชาติ|Related to race or culture|cultural
-immigrant|n|B2|ผู้อพยพเข้าเมือง|A person who moves to a new country|migrant
+ethnic|adj|B2|ทางเชื้อชาติ|Relating to a group of people with a shared culture, language or origin|cultural
+immigrant|n|B2|ผู้อพยพเข้าเมือง|A person who comes to live permanently in another country|migrant
 multicultural|adj|B2|พหุวัฒนธรรม|Including many cultures|diverse
 tradition|n|B1|ประเพณี|A custom passed down over time|custom
 generation gap|n|B2|ช่องว่างระหว่างวัย|Differences between young and old people|age gap
-elderly|adj|B2|สูงอายุ|Old|aged
+elderly|adj|B2|สูงอายุ|Old (a polite word for people)|aged
 ageing population|n|C1|สังคมผู้สูงอายุ|A rising share of old people in society|greying society
-volunteer|n|B1|อาสาสมัคร|A person who works without pay|helper
+volunteer|n|B1|อาสาสมัคร|A person who offers to work without being paid|helper
 charity|n|B2|องค์กรการกุศล|An organisation that helps people|foundation
-community|n|B1|ชุมชน|People living in one area|society
+community|n|B1|ชุมชน|The people living in one area, or a group with shared interests|society
 crime|n|B1|อาชญากรรม|An illegal action|offence
 offender|n|C1|ผู้กระทำผิด|A person who commits a crime|criminal
 punishment|n|B2|การลงโทษ|A penalty for doing wrong|penalty
-deter|v|C1|ยับยั้ง|To stop someone from doing something|discourage
-rehabilitate|v|C1|ฟื้นฟู (ผู้กระทำผิด)|To help someone return to normal life|reform
+deter|v|C1|ยับยั้ง, ทำให้ไม่กล้าทำ|To make someone decide not to do something, usually by making them afraid of the result|discourage
+rehabilitate|v|C1|ฟื้นฟู (ผู้กระทำผิด)|To help someone return to a normal, useful life after prison, illness, etc|reform
 justice|n|B2|ความยุติธรรม|Fair treatment|fairness
-democracy|n|B2|ประชาธิปไตย|Government chosen by the people|self-government
+democracy|n|B2|ประชาธิปไตย|A system where the government is chosen by people voting|self-government
 bureaucracy|n|C1|ระบบราชการ|Complicated official rules and processes|red tape
 civil servant|n|B2|ข้าราชการ|A person who works for the government|official
-conform|v|C1|ทำตามแบบแผน|To follow accepted rules or behaviour|comply
+conform|v|C1|ทำตามกฎหรือค่านิยมของสังคม|To follow accepted rules or behaviour|comply
 norm|n|C1|บรรทัดฐาน|Usual accepted behaviour|standard
-status|n|B2|สถานะ|A position in society|standing
+status|n|B2|สถานะทางสังคม|Someone's social or professional position|standing
 government|n|B1|รัฐบาล|The group that runs a country|administration
 vote|v|B1|ลงคะแนนเสียง|To choose in an election|elect
 safety net|n|C1|ระบบรองรับ (ทางสังคม)|Help that protects people from falling into poverty|support system
 #i-media|📺 Media & Advertising|Ads, consumerism, news, entertainment|room|📺,🛍️,📢,📰,🎬,📱|#8a3f5a,#3d1a28
 advertisement|n|B1|โฆษณา|A notice that promotes a product|advert
-commercial|n|B2|โฆษณาทางทีวี|A TV or radio advert|ad
+commercial|n|B2|โฆษณาทางทีวีหรือวิทยุ|A TV or radio advert|ad
 slogan|n|B2|สโลแกน|A short, catchy phrase|motto
-brand|n|B1|ยี่ห้อ, แบรนด์|The name of a company's products|label
+brand|n|B1|ยี่ห้อ, แบรนด์|A type of product made by a particular company, with its own name|label
 target audience|n|C1|กลุ่มเป้าหมาย|The people an advert is aimed at|market
 persuade|v|B1|โน้มน้าว|To make someone agree or do something|convince
 persuasive|adj|B2|มีพลังโน้มน้าว|Able to convince people|convincing
-gimmick|n|C1|ลูกเล่นเรียกความสนใจ|A trick to attract attention|ploy
-catchy|adj|B2|ติดหู|Easy to remember|memorable
-endorse|v|C1|รับรอง, สนับสนุน|To publicly approve a product|recommend
+gimmick|n|C1|ลูกเล่นเรียกความสนใจ|A trick or unusual idea used to attract attention, often to sell something|ploy
+catchy|adj|B2|ติดหู|(Of a tune or phrase) pleasant and easy to remember|memorable
+endorse|v|C1|รับรอง, สนับสนุน|To publicly support or recommend something, e.g. a product|recommend
 celebrity|n|B2|คนดัง|A famous person|star
 consumerism|n|C1|บริโภคนิยม|A focus on buying more goods|materialism
 materialistic|adj|C1|วัตถุนิยม|Caring too much about possessions|acquisitive
 impulse buy|n|C1|การซื้อแบบไม่ได้วางแผน|Something bought without planning|spur purchase
-bargain|n|B1|ของราคาถูก|Something bought cheaply|deal
+bargain|n|B1|ของราคาถูกคุ้มค่า|Something bought for less than its usual price|deal
 discount|n|B1|ส่วนลด|A reduced price|reduction
-luxury|n|B2|ความหรูหรา|Expensive and comfortable things|extravagance
-disposable income|n|C1|รายได้ที่ใช้จ่ายได้|Money left to spend after bills|spare money
+luxury|n|B2|ความหรูหรา|Great comfort, and expensive things you do not really need|extravagance
+disposable income|n|C1|รายได้ที่เหลือใช้ หลังหักค่าใช้จ่ายจำเป็น|Money left to spend after paying taxes and essential bills|spare money
 broadcast|v|B2|ออกอากาศ|To send out on TV or radio|air
-journalist|n|B1|นักข่าว|A person who writes the news|reporter
+journalist|n|B1|นักข่าว|A person who writes or reports news for newspapers, TV, etc|reporter
 headline|n|B1|พาดหัวข่าว|The title of a news story|title
-coverage|n|C1|การรายงานข่าว|The reporting of news|reporting
+coverage|n|C1|การรายงานข่าว|The way news about an event is reported|reporting
 biased|adj|C1|ลำเอียง|Unfairly favouring one side|partial
-censorship|n|C1|การเซ็นเซอร์|Removing parts of media or art|suppression
+censorship|n|C1|การเซ็นเซอร์|Stopping or removing parts of books, films or news that are considered harmful|suppression
 misleading|adj|C1|ชวนให้เข้าใจผิด|Giving the wrong idea|deceptive
 mislead|v|C1|ทำให้เข้าใจผิด|To make someone believe something false|deceive
 influence|v|B1|มีอิทธิพลต่อ|To change how people think or act|sway
 influential|adj|C1|มีอิทธิพล|Having great influence|powerful
 viral|adj|B2|แพร่กระจายรวดเร็ว (ออนไลน์)|Spreading fast online|trending
-subscribe|v|B2|สมัครสมาชิก|To pay or sign up regularly|sign up
+subscribe|v|B2|สมัครสมาชิก|To pay or sign up to receive something regularly|sign up
 entertainment|n|B1|ความบันเทิง|Things that amuse people|amusement
 documentary|n|B1|สารคดี|A factual film or show|factual film
-fiction|n|B1|เรื่องแต่ง|Stories that are not true|novels
+fiction|n|B1|เรื่องแต่ง|Stories about imaginary people and events|novels
 genre|n|B2|ประเภท (งานศิลปะ)|A type of film, book or music|category
 plot|n|B2|โครงเรื่อง|The story of a book or film|storyline
 gripping|adj|C1|น่าติดตาม|Very exciting and interesting|thrilling
 thought-provoking|adj|C1|ชวนคิด|Making people think deeply|stimulating
 in vogue|idm|C1|กำลังเป็นที่นิยม|Fashionable at the moment|fashionable
-all the rage|idm|C1|ฮิตมาก|Very popular for a short time|trendy
+all the rage|idm|C1|ฮิตมาก|Very popular and fashionable at the moment|trendy
 social media|n|B1|โซเชียลมีเดีย|Websites for sharing and networking|social networks
 #i-hist|🏺 History & Heritage|Archaeology, civilisations, evolution|dusk|🏺,🏛️,📜,🦕,🗿,⚱️|#7a6a3a,#3a3018
 ancient|adj|B1|โบราณ|Very old|old
 archaeologist|n|C1|นักโบราณคดี|A person who studies ancient remains|excavator
-excavate|v|C1|ขุดค้น|To dig to find old objects|dig up
-artefact|n|C1|โบราณวัตถุ|An old object made by people|relic
-remains|n|B2|ซาก|Parts left after something is gone|traces
+excavate|v|C1|ขุดค้น|To dig in the ground to find old objects or buildings|dig up
+artefact|n|C1|โบราณวัตถุ|An object made by people, especially one of historical interest|relic
+remains|n|B2|ซาก, สิ่งที่หลงเหลืออยู่|Parts left after something is gone|traces
 ruins|n|B2|ซากปรักหักพัง|The remains of old buildings|remains
 heritage|n|B2|มรดก (วัฒนธรรม)|Culture and history passed down|legacy
 civilisation|n|B2|อารยธรรม|An advanced human society|culture
-empire|n|B2|จักรวรรดิ|A group of countries ruled by one leader|kingdom
+empire|n|B2|จักรวรรดิ|A group of countries ruled by one ruler or government|kingdom
 dynasty|n|C1|ราชวงศ์|Rulers from one family|royal line
 era|n|B2|ยุค|A period of history|age
 prehistoric|adj|C1|ยุคก่อนประวัติศาสตร์|Before written history|primitive
-medieval|adj|C1|ยุคกลาง|From the Middle Ages|feudal
+medieval|adj|C1|ยุคกลาง|From the Middle Ages (about 500–1500 AD)|feudal
 bygone|adj|C1|ในอดีต|From a time long ago|past
 vestige|n|C1|ร่องรอย|A small remaining part of something|trace
 remnant|n|C1|ส่วนที่เหลือ|A small piece left over|remainder
 monument|n|B2|อนุสาวรีย์|A structure built to remember a person or event|memorial
 preservation|n|C1|การอนุรักษ์|Keeping something safe from damage|conservation
 restore|v|B2|บูรณะ|To return something to its original condition|repair
-legacy|n|C1|มรดกตกทอด|Something left from the past|inheritance
-descendant|n|C1|ผู้สืบเชื้อสาย|A person related to someone who lived long ago|offspring
+legacy|n|C1|มรดกตกทอด|Something passed on from people or events in the past|inheritance
+descendant|n|C1|ผู้สืบเชื้อสาย|A person related to someone who lived in the past, e.g. a grandchild|offspring
 ancestor|n|B2|บรรพบุรุษ|A family member from long ago|forebear
-settlement|n|B2|ถิ่นฐาน|A place where people come to live|village
+settlement|n|B2|ชุมชนที่ตั้งรกราก, ถิ่นฐาน|A place where people have come to live permanently|village
 nomadic|adj|C1|เร่ร่อน|Moving from place to place|wandering
-colonise|v|C1|ล่าอาณานิคม|To take control of another land|occupy
+colonise|v|C1|ยึดครองเป็นอาณานิคม, เข้าไปตั้งถิ่นฐาน|To take control of another country and send people to live there|occupy
 conquer|v|B2|พิชิต|To take control by force|overcome
-revolution|n|B2|การปฏิวัติ|A big sudden change|uprising
+revolution|n|B2|การปฏิวัติ|A sudden, big change, often in how a country is governed|uprising
 evolve|v|B2|วิวัฒนาการ|To develop gradually|develop
 evolution|n|B2|วิวัฒนาการ|Gradual development over time|development
-pioneer|n|C1|ผู้บุกเบิก|The first person to do something|trailblazer
+pioneer|n|C1|ผู้บุกเบิก|One of the first people to do or develop something|trailblazer
 status quo|n|C1|สถานะเดิม|The existing situation|current state
-manuscript|n|C1|ต้นฉบับเขียนมือ|An old handwritten document|document
+manuscript|n|C1|ต้นฉบับเขียนมือ|A handwritten document, especially an old one|document
 chronological|adj|C1|ตามลำดับเวลา|In the order in which things happened|sequential
 ceremony|n|B1|พิธี|A formal event|occasion
-ritual|n|C1|พิธีกรรม|Actions done the same way each time|rite
+ritual|n|C1|พิธีกรรม|A set of actions always done the same way, often as part of a ceremony|rite
 exhibit|n|B2|สิ่งที่จัดแสดง|An object shown in a museum|display
 fossil|n|B2|ฟอสซิล|Remains of an ancient plant or animal in rock|remains
 inscription|n|C1|คำจารึก|Words cut into stone or metal|engraving
 decipher|v|C1|ถอดความ|To work out the meaning of something unclear|decode
-contemporary|adj|C1|ร่วมสมัย|Belonging to the present time|modern
+contemporary|adj|C1|ร่วมสมัย|Modern; belonging to the present time|modern
 #i-travel|✈️ Travel & Tourism|Places, scenery, cultures abroad|sea|✈️,🧳,🗺️,🏝️,⛰️,📸|#2f6b8a,#163447
 destination|n|B1|จุดหมายปลายทาง|The place you are travelling to|endpoint
 itinerary|n|C1|กำหนดการเดินทาง|A plan of a journey|schedule
 accommodation|n|B2|ที่พัก|A place to stay|lodging
 sightseeing|n|B1|การเที่ยวชมสถานที่|Visiting interesting places|touring
 tourist attraction|n|B1|สถานที่ท่องเที่ยว|A place that tourists visit|sight
-ecotourism|n|C1|การท่องเที่ยวเชิงนิเวศ|Travel that protects nature|green tourism
+ecotourism|n|C1|การท่องเที่ยวเชิงนิเวศ|Tourism to natural areas that tries not to harm the environment|green tourism
 mass tourism|n|C1|การท่องเที่ยวแบบมวลชน|Huge numbers of tourists in one place|tourism boom
 off the beaten track|idm|C1|ห่างไกล ไม่ค่อยมีคนไป|Far from popular places|out of the way
 breathtaking|adj|B2|สวยจนตะลึง|Extremely beautiful|awe-inspiring
@@ -1041,95 +1061,95 @@ spectacular|adj|B2|ตระการตา|Very impressive|magnificent
 scenery|n|B1|ทิวทัศน์|The natural views of a place|view
 landscape|n|B2|ภูมิทัศน์|Everything you see in an area of land|scenery
 mountainous|adj|B2|เป็นภูเขา|Having many mountains|hilly
-coastal|adj|B2|ริมชายฝั่ง|Near the sea|seaside
-tropical|adj|B1|เขตร้อน|Hot and humid|humid
+coastal|adj|B2|ริมชายฝั่ง|On or near the coast|seaside
+tropical|adj|B1|เขตร้อน|From or in the hot, humid areas near the equator|humid
 souvenir|n|B1|ของที่ระลึก|Something bought to remember a trip|memento
-backpacker|n|B2|นักท่องเที่ยวแบกเป้|A traveller on a low budget|budget traveller
+backpacker|n|B2|นักท่องเที่ยวแบกเป้|A person travelling cheaply, carrying a backpack|budget traveller
 jet lag|n|B2|อาการเพลียจากการเปลี่ยนเวลา|Tiredness after a long flight across time zones|travel fatigue
 departure|n|B1|การออกเดินทาง|Leaving a place|leaving
 fare|n|B1|ค่าโดยสาร|The price of a ticket|ticket price
 commuter|n|B2|คนเดินทางไปทำงานทุกวัน|A person who travels to work daily|daily traveller
-vehicle|n|B1|ยานพาหนะ|A car, bus or truck|transport
+vehicle|n|B1|ยานพาหนะ|A machine for carrying people or goods, e.g. a car or bus|transport
 route|n|B1|เส้นทาง|The way from one place to another|path
 reservation|n|B1|การจอง|A booking made in advance|booking
 excursion|n|C1|ทริปสั้นๆ|A short trip for pleasure|outing
-expedition|n|C1|การเดินทางสำรวจ|A long organised journey|voyage
+expedition|n|C1|การเดินทางสำรวจ|An organised journey, often to explore a place|voyage
 explore|v|B1|สำรวจ|To travel around a place to learn about it|discover
 hospitality|n|C1|การต้อนรับขับสู้|Friendly treatment of guests|welcome
-exotic|adj|B2|แปลกใหม่ (จากต่างแดน)|Unusual and from far away|foreign
-culture shock|n|B2|ความตกใจทางวัฒนธรรม|Confusion when living in a new culture|disorientation
+exotic|adj|B2|แปลกใหม่ (จากต่างแดน)|Unusual and exciting because it comes from a distant country|foreign
+culture shock|n|B2|ภาวะช็อกทางวัฒนธรรม|Feeling confused or anxious when living in a very different culture|disorientation
 local cuisine|n|B2|อาหารท้องถิ่น|Food typical of an area|local food
 overcrowded|adj|B2|แออัดเกินไป|Too full of people|packed
 peak season|n|B2|ช่วงท่องเที่ยวสูงสุด|The busiest time of year|high season
-turbulent|adj|C1|ปั่นป่วน|Moving roughly and violently|rough
+turbulent|adj|C1|ปั่นป่วน|(Of air or water) moving roughly; (of a period) full of confusion and change|rough
 harbour|n|B2|ท่าเรือ|A sheltered place for boats|port
 resort|n|B1|รีสอร์ต|A place for holidays|holiday spot
 wanderlust|n|C1|ความอยากท่องเที่ยว|A strong desire to travel|itchy feet
 scenic|adj|B2|ทิวทัศน์สวย|Having beautiful natural views|picturesque
 #i-people|🙂 Personality & Feelings|Character, relationships, emotions|room|🙂,🤝,💭,😤,🥰,🧑‍🤝‍🧑|#8a6a2b,#3d2d10
-ambitious|adj|B2|ทะเยอทะยาน|Wanting great success|driven
-assertive|adj|C1|กล้าแสดงออก|Confident in saying what you want|self-assured
+ambitious|adj|B2|ทะเยอทะยาน|Having a strong wish to be successful|driven
+assertive|adj|C1|กล้าแสดงความคิดเห็นอย่างมั่นใจ|Confident in expressing your opinions and needs|self-assured
 arrogant|adj|B2|หยิ่งยโส|Thinking you are better than others|conceited
 modest|adj|B2|ถ่อมตัว|Not talking proudly about yourself|humble
 generous|adj|B1|ใจกว้าง|Happy to give to others|giving
 stubborn|adj|B2|ดื้อ, หัวรั้น|Refusing to change your mind|obstinate
 sociable|adj|B2|ชอบเข้าสังคม|Enjoying being with people|gregarious
-introverted|adj|C1|เก็บตัว|Quiet and focused inward|reserved
+introverted|adj|C1|เก็บตัว|Quiet and preferring to spend time alone or with few people|reserved
 outgoing|adj|B2|เปิดเผย, เข้ากับคนง่าย|Friendly and confident with people|extroverted
 cautious|adj|B2|ระมัดระวัง|Careful to avoid risks|careful
 impulsive|adj|C1|หุนหันพลันแล่น|Acting without thinking|rash
-indecisive|adj|C1|ไม่เด็ดขาด|Unable to make decisions|hesitant
-gullible|adj|C1|หลงเชื่อง่าย|Easily tricked|naive
-cynical|adj|C1|ไม่เชื่อในความดีของคน|Believing people are only selfish|sceptical
-eccentric|adj|C1|แปลก, ประหลาด|Strange in an interesting way|quirky
-tactful|adj|C1|รู้จักพูด|Careful not to upset others|diplomatic
+indecisive|adj|C1|ไม่เด็ดขาด|Finding it hard to make decisions|hesitant
+gullible|adj|C1|หลงเชื่อง่าย|Easily tricked because you believe what people tell you|naive
+cynical|adj|C1|ไม่เชื่อในความดีของคน|Believing that people usually act only for themselves|sceptical
+eccentric|adj|C1|แปลก, ประหลาด|Behaving in an unusual and slightly strange way|quirky
+tactful|adj|C1|พูดจาถนอมน้ำใจ, รู้กาลเทศะ|Careful not to say things that upset or embarrass people|diplomatic
 considerate|adj|B2|ใส่ใจผู้อื่น|Thinking about others' feelings|thoughtful
 self-centred|adj|C1|เห็นแก่ตัว|Thinking only of yourself|selfish
-resilient|adj|C1|ฟื้นตัวเร็ว, อึด|Able to recover from difficulties|tough
+resilient|adj|C1|ฟื้นตัวเร็ว, ล้มแล้วลุกได้|Able to recover from difficulties|tough
 optimistic|adj|B2|มองโลกในแง่ดี|Hopeful about the future|positive
 pessimistic|adj|B2|มองโลกในแง่ร้าย|Expecting bad things to happen|negative
 anxious|adj|B2|กังวล|Worried and nervous|nervous
 apprehensive|adj|C1|หวั่นใจ|Worried about something in the future|uneasy
 frustrated|adj|B2|หงุดหงิด|Annoyed because you cannot succeed|exasperated
-overwhelmed|adj|C1|รับมือไม่ไหว|Feeling too much at once|swamped
+overwhelmed|adj|C1|รับมือไม่ไหว, ท่วมท้น|Feeling unable to cope because there is too much to deal with|swamped
 content|adj|B2|พอใจ|Happy and satisfied|satisfied
 nostalgic|adj|C1|คิดถึงอดีต|Thinking fondly about the past|sentimental
 grateful|adj|B1|ซาบซึ้งใจ|Feeling thankful|thankful
-empathy|n|C1|ความเข้าอกเข้าใจ|Understanding other people's feelings|compassion
+empathy|n|C1|ความเข้าอกเข้าใจ|The ability to understand and share other people's feelings|compassion
 trait|n|C1|ลักษณะนิสัย|A quality of someone's character|characteristic
 temperament|n|C1|อุปนิสัย|A person's usual mood and nature|disposition
-adolescent|n|C1|วัยรุ่น|A young person becoming an adult|teenager
+adolescent|n|C1|วัยรุ่น|A young person developing into an adult; a teenager|teenager
 upbringing|n|C1|การเลี้ยงดู|The way a child is raised|nurture
 sibling|n|B2|พี่น้อง|A brother or sister|brother or sister
 bond|n|B2|ความผูกพัน|A close connection between people|connection
 rivalry|n|C1|การแข่งขันกัน|Competition between people or groups|competition
-peer pressure|n|B2|แรงกดดันจากเพื่อน|Influence from people your own age|social pressure
+peer pressure|n|B2|แรงกดดันจากเพื่อน|Pressure to behave like other people of your age or group|social pressure
 role model|n|B2|แบบอย่าง|A person others want to copy|example
 independent|adj|B1|เป็นอิสระ|Not needing help from others|self-reliant
-mature|adj|B2|เป็นผู้ใหญ่|Behaving like an adult|grown-up
+mature|adj|B2|เป็นผู้ใหญ่|Behaving sensibly, like an adult|grown-up
 #i-acad|📊 Academic Writing|Graph language, linking words, argument|room|📊,📝,🔗,📈,📉,🧠|#4a6a8a,#1f2f3d
 fluctuate|v|C1|ขึ้นๆ ลงๆ|To go up and down|vary
 plummet|v|C1|ดิ่งลงอย่างรวดเร็ว|To fall very quickly|plunge
 soar|v|C1|พุ่งสูงขึ้น|To rise very quickly|rocket
 surge|n|C1|การพุ่งขึ้นอย่างฉับพลัน|A sudden large increase|upswing
-plateau|v|C1|ทรงตัว|To stay at the same level after rising|level off
+plateau|v|C1|คงที่ (หลังจากเพิ่มขึ้น)|To stay at the same level after a period of change|level off
 peak|v|B2|ถึงจุดสูงสุด|To reach the highest point|top out
-steady|adj|B2|สม่ำเสมอ|Changing gradually and evenly|constant
-sharp|adj|B2|รวดเร็ว (การเปลี่ยนแปลง)|Sudden and large|steep
-marginal|adj|C1|เล็กน้อย|Very small|slight
+steady|adj|B2|สม่ำเสมอ|Changing at a slow, regular rate|constant
+sharp|adj|B2|อย่างรวดเร็วและมาก (การเปลี่ยนแปลง)|Sudden and large|steep
+marginal|adj|C1|เล็กน้อย|Very small and not important|slight
 proportion|n|B2|สัดส่วน|A part of a whole|share
 majority|n|B2|ส่วนใหญ่|More than half|most
-approximately|adv|B1|ประมาณ|Close to an exact number|roughly
+approximately|adv|B1|ประมาณ|Close to, but not exactly, a number; about|roughly
 respectively|adv|C1|ตามลำดับ|In the order already mentioned|in turn
 whereas|conj|B2|ในขณะที่ (เปรียบเทียบ)|Used to show a contrast|while
 nevertheless|adv|B2|อย่างไรก็ตาม|In spite of that|nonetheless
 furthermore|adv|B2|ยิ่งไปกว่านั้น|In addition|moreover
 consequently|adv|B2|ดังนั้น|As a result|therefore
 thus|adv|C1|ดังนั้น|As a result; in this way|hence
-albeit|conj|C1|แม้ว่า|Although|though
+albeit|conj|C1|แม้ว่าจะ|Although (used before a word or phrase)|though
 in contrast|phr|B2|ในทางตรงกันข้าม|Used to show a difference|conversely
-to some extent|phr|B2|ในระดับหนึ่ง|Partly|partly
-outweigh|v|C1|มีน้ำหนักมากกว่า|To be more important than something else|exceed
+to some extent|phr|B2|ในระดับหนึ่ง|Partly; not completely|partly
+outweigh|v|C1|มีความสำคัญหรือมากกว่า (ข้อดีหรือข้อเสีย)|To be more important than something else|exceed
 drawback|n|B2|ข้อเสีย|A disadvantage|downside
 merit|n|C1|ข้อดี|A good quality|advantage
 justify|v|B2|ให้เหตุผลสนับสนุน|To show that something is right|defend
@@ -1139,15 +1159,15 @@ fundamental|adj|C1|พื้นฐานและสำคัญ|Basic and very 
 implement|v|C1|นำไปปฏิบัติ|To put a plan into action|carry out
 illustrate|v|B2|แสดงให้เห็น|To show something clearly|demonstrate
 indicate|v|B2|ชี้ให้เห็น|To show or point to something|suggest
-attribute|v|C1|ระบุว่าเป็นสาเหตุ|To say something is caused by something|ascribe
+attribute|v|C1|ถือว่าเป็นผลมาจาก, ยกให้เป็นสาเหตุ|To say something is caused by something|ascribe
 derive|v|C1|ได้มาจาก|To get something from a source|originate
-underlying|adj|C1|ที่แฝงอยู่ (สาเหตุ)|Real but not immediately obvious|root
-prominent|adj|C1|โดดเด่น|Important and well known|notable
+underlying|adj|C1|ที่แฝงอยู่ (สาเหตุ)|Real and important but not obvious at first, e.g. an underlying cause|root
+prominent|adj|C1|โดดเด่น|Important and well known; easy to see|notable
 prior to|phr|C1|ก่อน|Before|before
 subsequent|adj|C1|ที่ตามมา|Coming after something else|following
-in terms of|phr|B2|ในแง่ของ|Regarding|regarding
-whereby|adv|C1|ซึ่งโดยวิธีนั้น|By which|through which
-argue|v|B1|โต้แย้ง|To give reasons for an opinion|claim
+in terms of|phr|B2|ในแง่ของ|When talking about a particular aspect of something|regarding
+whereby|adv|C1|ซึ่งโดยวิธีหรือระบบนั้น|By which; through which (used for a method or system)|through which
+argue|v|B1|โต้แย้ง|To give reasons why you think something is true; also to disagree angrily|claim
 #i-idiom|💬 Idioms & Collocations|Natural phrases for IELTS Speaking|dusk|💬,✨,🗣️,⏰,🌦️,🎯|#5a4a95,#271f47
 a piece of cake|idm|B1|ง่ายมาก|Very easy|easy
 once in a blue moon|idm|B2|นานๆ ครั้ง|Very rarely|rarely
@@ -1158,23 +1178,23 @@ a storm in a teacup|idm|C1|เรื่องเล็กทำเป็นเ�
 every cloud has a silver lining|idm|C1|ในร้ายมีดี|Bad situations have some good side|bright side
 under the weather|idm|B2|ไม่ค่อยสบาย|Feeling slightly ill|unwell
 hit the books|idm|B2|ตั้งใจอ่านหนังสือ|To study hard|study
-learn the ropes|idm|C1|เรียนรู้วิธีทำงาน|To learn how to do a job|get trained
+learn the ropes|idm|C1|เรียนรู้วิธีทำงานในที่ใหม่|To learn the basic skills of a new job or activity|get trained
 on the same page|idm|B2|เข้าใจตรงกัน|Agreeing about something|in agreement
 break the ice|idm|B2|ทำให้บรรยากาศผ่อนคลาย|To make people feel relaxed when they first meet|warm up
 cost an arm and a leg|idm|B2|แพงมาก|To be very expensive|be pricey
 over the moon|idm|B2|ดีใจมาก|Extremely happy|delighted
-get the hang of|idm|B2|เริ่มทำเป็น|To learn how to do something|master
+get the hang of|idm|B2|เริ่มทำเป็น|To gradually learn how to do something|master
 keep in touch|phr|B1|ติดต่อกันไว้|To continue communicating|stay in contact
-make ends meet|idm|C1|หาเงินพอใช้|To have just enough money to live|get by
+make ends meet|idm|C1|หาเงินให้พอใช้จ่ายไปวันๆ|To have just enough money to live|get by
 the tip of the iceberg|idm|C1|แค่ส่วนเล็กๆ ของปัญหา|A small visible part of a big problem|small part
-go the extra mile|idm|C1|ทำเกินกว่าที่ต้องทำ|To make an extra effort|try harder
-take for granted|idm|C1|มองข้ามความสำคัญ|Not to value something properly|undervalue
+go the extra mile|idm|C1|ทุ่มเทเกินกว่าที่ต้องทำ|To make an extra effort|try harder
+take for granted|idm|C1|มองข้าม, ไม่เห็นคุณค่า (เพราะคิดว่ามีอยู่แล้ว)|To not value something because you expect it to always be there|undervalue
 take into account|phr|B2|นำมาพิจารณา|To consider something|factor in
 play a vital role|phr|C1|มีบทบาทสำคัญ|To be very important|be key
-raise awareness|phr|C1|สร้างความตระหนัก|To make people know about something|inform
+raise awareness|phr|C1|สร้างความตระหนัก|To make more people know about a problem or issue|inform
 pose a threat|phr|C1|เป็นภัยคุกคาม|To be a danger|endanger
 meet the needs of|phr|C1|ตอบสนองความต้องการ|To provide what is needed|satisfy
-bridge the gap|idm|C1|ลดช่องว่าง|To reduce a difference between groups|close the gap
+bridge the gap|idm|C1|ลดช่องว่าง|To reduce the difference between two groups or things|close the gap
 a double-edged sword|idm|C1|ดาบสองคม|Something with both good and bad results|mixed blessing
 ups and downs|idm|B2|ช่วงดีและร้ายในชีวิต|Good and bad times|highs and lows
 the pros and cons|idm|B2|ข้อดีและข้อเสีย|Advantages and disadvantages|merits and drawbacks
@@ -1185,16 +1205,57 @@ not my cup of tea|idm|B2|ไม่ใช่สไตล์ฉัน|Not somethin
 a passing trend|phr|C1|กระแสชั่วคราว|Something popular only for a short time|fad
 in the long run|idm|B2|ในระยะยาว|Over a long period of time|eventually
 on the other hand|phr|B1|ในอีกแง่หนึ่ง|Used to show another side|alternatively
-by and large|idm|C1|โดยรวม|Generally|mostly
-make a concerted effort|idm|C1|ร่วมกันพยายามอย่างจริงจัง|To try very hard together|work together
+by and large|idm|C1|โดยรวม|Generally; on the whole|mostly
+make a concerted effort|idm|C1|ร่วมกันพยายามอย่างจริงจัง|To try very hard in a planned, determined way (often together)|work together
 trial and error|idm|B2|การลองผิดลองถูก|Learning by trying and making mistakes|experimentation
-in no time|idm|B2|ในเวลาไม่นาน|Very soon|quickly`;
+in no time|idm|B2|ในเวลาไม่นาน|Very quickly or soon|quickly`;
 (function(){const POSF={n:"noun",v:"verb",adj:"adj.",adv:"adv.",phr:"phrase",idm:"idiom",conj:"conj."};
   const have=new Set(DECKS.flatMap(d=>d.w.map(a=>a[0])));let d=null;
   const hash=w=>{let h=0;for(const ch of w)h=(h*31+ch.charCodeAt(0))>>>0;return h};
   for(const line of IELTS_RAW.split("\n")){if(!line.trim())continue;const f=line.split("|");
     if(line[0]==="#"){const c=f[5].split(",");d={id:f[0].slice(1),lv:"",ielts:1,name:f[1],desc:f[2],theme:f[3],em:f[4].split(","),c,w:[]};DECKS.push(d);continue}
     const[w,pos,lv,th,def,syn]=f;if(have.has(w))continue;have.add(w);
+    const h=hash(w),E=d.em,e=[E[h%E.length],E[(h+1)%E.length],E[(h+2)%E.length]];
+    d.w.push([w,"",POSF[pos]||pos,th,def,"","",syn,d.theme,e,lv])}})();
+/* My Cambridge notes — each week's words, grouped by category. Same parser as IELTS_RAW, but duplicates are allowed */
+const NOTES_RAW=`#n12-home|🏠 Home & Everyday Life|Cambridge 12 · Listening · week of 22 Nov|room|🏠,🧹,🧾,🩴,🗄️|#7a5a32,#3a2914
+cheque|n|B1|เช็ค (ใบสั่งจ่ายเงินจากบัญชีธนาคาร)|A printed form that you write on and sign to pay money from your bank account (US spelling: check)|bank draft
+cupboard|n|A2|ตู้ที่มีประตู ใช้เก็บจาน อาหาร หรือของใช้|A piece of furniture with doors and shelves, used for storing dishes, food or clothes|cabinet
+sweep|v|B1|กวาด|To clean a floor or surface by pushing dirt away with a brush|brush
+sandal|n|A2|รองเท้าแตะแบบมีสายรัด|An open shoe that is held on the foot by straps|flip-flop
+fiddle with|phr|B2|เล่นหรือจับนู่นนี่ไปเรื่อย (มักเพราะเบื่อหรือประหม่า)|To keep touching or moving something with your fingers, often because you are bored or nervous|fidget with
+#n12-farm|🌾 Farm & Countryside|Cambridge 12 · Listening · week of 22 Nov|day|🌾,🐄,🌳,🏡,🚜|#5a7a2e,#27380f
+barn|n|B1|โรงนา, ยุ้งฉาง|A large farm building for keeping animals, crops or machinery|farm building
+farmyard|n|B2|ลานในฟาร์ม (ล้อมด้วยอาคารฟาร์ม)|An open area surrounded by farm buildings, often where animals are kept|yard
+hedge|n|B1|รั้วต้นไม้, แนวพุ่มไม้|A line of bushes growing close together, used as a fence or wall|hedgerow
+branch|n|B1|กิ่งไม้; (กริยา) แยกออกเป็นสองทางหรือมากกว่า|A part of a tree that grows out from the main trunk; as a verb, to divide into two or more parts|bough
+uneven|adj|B2|ขรุขระ, ไม่เรียบ|Not flat or smooth, for example an uneven path or floor|bumpy
+further up|phr|B1|ถัดขึ้นไปอีก (ตามถนนหรือทางเดิน)|A little more distance from where you are now, along a road or path|farther along
+#n12-nature|🦋 Nature & Wildlife|Cambridge 12 · Listening · week of 22 Nov|day|🦋,🐦,🌿,🦌,🌍|#3f7a52,#1b3a26
+endangered|adj|B2|ใกล้สูญพันธุ์|(Of an animal or plant) at high risk of no longer existing|threatened
+congregate|v|C1|รวมตัว, ชุมนุมกันเป็นกลุ่มใหญ่|(Of people or animals) to come together in a large group|gather
+nutrient|n|B2|สารอาหาร|A substance in food that plants, animals and people need to live and grow|nourishment
+migration|n|B2|การอพยพ, การย้ายถิ่น|The movement of animals or people from one region to another, often when the season changes|movement
+reserve|n|B2|เขตอนุรักษ์; ของสำรอง|An area of land where wild animals and plants are protected; also a supply kept for later use|sanctuary
+#n12-mind|💭 Thinking & Feelings|Cambridge 12 · Listening · week of 22 Nov|dusk|💭,😨,💪,🥺,🗣️|#6a4a7a,#2e1f38
+insist|v|B1|ยืนกราน, ยืนยันหนักแน่น (ว่าต้อง…)|To say firmly that something must happen or that something is true, even if others disagree|demand
+presume|v|C1|สันนิษฐาน (เดาจากสิ่งที่ดูน่าจะเป็น)|To believe something is true without being certain, because it seems likely|assume
+frighten|v|B1|ทำให้กลัว|To make someone feel afraid or nervous|scare
+affirmation|n|C1|การยืนยัน; คำพูดให้กำลังใจ|A statement that something is true, or words that give support and encouragement|confirmation
+overcome|v|B2|เอาชนะ, ก้าวข้าม (ปัญหา); (be overcome) ถูกอารมณ์ครอบงำ|To successfully deal with a problem or difficulty; if a feeling overcomes you, it affects you very strongly|conquer
+pity|n|B2|ความสงสาร; (it's a pity) น่าเสียดาย|A feeling of sadness for someone who is in trouble; "it's a pity" means something is disappointing|sympathy
+#n12-study|📚 Study & Academic|Cambridge 12 · Listening · week of 22 Nov|room|📚,📝,📊,🎓,🔬|#4f5a8f,#222844
+discipline|n|B2|ระเบียบวินัย; สาขาวิชา|The practice of following rules or controlling your behaviour; also a subject of study at university|field
+relatively|adv|B2|ค่อนข้าง (เมื่อเทียบกับอย่างอื่น)|Quite, when compared with other things or with what is usual|comparatively
+factual|adj|B2|อิงข้อเท็จจริง|Based on or containing facts rather than opinions|true
+assessment|n|B2|การประเมิน|The process of judging the quality, value or level of something|evaluation
+retain|v|B2|รักษาไว้, คงไว้|To keep or continue to have something|keep
+beforehand|adv|B2|ก่อนหน้านั้น, ล่วงหน้า|Before a particular event or time|in advance`;
+(function(){const POSF={n:"noun",v:"verb",adj:"adj.",adv:"adv.",phr:"phrase",idm:"idiom",conj:"conj."};let d=null;
+  const hash=w=>{let h=0;for(const ch of w)h=(h*31+ch.charCodeAt(0))>>>0;return h};
+  for(const line of NOTES_RAW.split("\n")){if(!line.trim())continue;const f=line.split("|");
+    if(line[0]==="#"){d={id:f[0].slice(1),lv:"",notes:1,name:f[1],desc:f[2],theme:f[3],em:f[4].split(","),c:f[5].split(","),w:[]};DECKS.push(d);continue}
+    const[w,pos,lv,th,def,syn]=f;if(d.w.some(a=>a[0]===w))continue;
     const h=hash(w),E=d.em,e=[E[h%E.length],E[(h+1)%E.length],E[(h+2)%E.length]];
     d.w.push([w,"",POSF[pos]||pos,th,def,"","",syn,d.theme,e,lv])}})();
 const THEMES={
@@ -1209,8 +1270,8 @@ const THEMES={
 };
 const STARS=[[8,10],[22,22],[35,8],[48,18],[62,6],[74,26],[88,14],[15,38],[56,32],[92,40],[40,40],[28,4]];
 const POS=[[50,70,33],[22,34,17],[79,32,15],[86,78,11]];
-const ST_LABEL={new:"NEW",learning:"LEARNING",familiar:"FAMILIAR",confident:"CONFIDENT"};
-const ST_COLOR={new:"var(--new)",learning:"var(--learning)",familiar:"var(--familiar)",confident:"var(--confident)"};
+const ST_LABEL={new:"NEW",relearning:"RELEARNING",learning:"LEARNING",familiar:"FAMILIAR",confident:"CONFIDENT"};
+const ST_COLOR={new:"var(--new)",relearning:"var(--relearn)",learning:"var(--learning)",familiar:"var(--familiar)",confident:"var(--confident)"};
 const INT=[60e3,864e5,3*864e5,7*864e5,16*864e5,35*864e5,70*864e5];
 const XP_PER_LVL=120;
 const POS_TH={"phrase":"phrase","idiom":"idiom","noun":"noun","verb":"verb","adj.":"adjective","adv.":"adverb","phrasal v.":"phrasal verb","prep.":"preposition","conj.":"conjunction"};
@@ -1223,29 +1284,35 @@ const BASE=DECKS.flatMap(d=>d.w.map(a=>mk(a,d.id)));
 
 /* ---------- state ---------- */
 const KEY="vividvocab-v1";
-const DEFAULTS=()=>({st:{},saved:[],fav:[],mine:[],extra:{},known:[],ach:{},log:[],xp:0,streak:0,last:"",day:"",today:0,total:0,goalHit:0,goal:12,
-  filter:"all",mix:"some",sound:true,accent:"us",interests:"",qtypes:{syn:1,def:1,img:1,spell:1},matchBest:0});
+const DEFAULTS=()=>({st:{},saved:[],fav:[],mine:[],extra:{},known:[],udecks:[],ach:{},log:[],xp:0,streak:0,last:"",day:"",today:0,total:0,goalHit:0,goal:12,
+  filter:"all",mix:"some",sound:true,accent:"us",interests:"",qtypes:{cloze:1,syn:1,def:1,img:1,spell:1},matchBest:0});
 let S=DEFAULTS();
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==="object")S=Object.assign(S,s)}catch(e){}
 for(const[k,v]of Object.entries(DEFAULTS()))if(S[k]==null||typeof S[k]!==typeof v)S[k]=v;
+if(S.qtypes.cloze===undefined)S.qtypes.cloze=1;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 if(!S.enr||typeof S.enr!=="object")S.enr={};
-function applyEnr(c){const x=S.enr[c.w];if(!x)return c;if(!c.p&&x.p)c.p=x.p;if(!c.ex&&x.ex){c.ex=x.ex;c.exth=x.exth||""}
+function applyEnr(c){const x=S.enr[c.w];if(!x)return c;if(x.def)c.def=x.def;if(x.dth)c.dth=x.dth;if(x.cz)c.cz=x.cz;if(!c.p&&x.p)c.p=x.p;if(!c.ex&&x.ex){c.ex=x.ex;c.exth=x.exth||""}
   if(x.e&&x.e.length&&!c.enrE){c.e=x.e;c.enrE=1}if(x.t&&THEMES[x.t])c.t=x.t;return c}
 BASE.forEach(applyEnr);
 const todayStr=new Date().toDateString();
 if(S.day!==todayStr){S.day=todayStr;S.today=0;save()}
 
 function all(){const ex=Object.entries(S.extra).flatMap(([d,arr])=>(arr||[]).map(c=>({...c,deck:d})));
-  return BASE.concat(ex,S.mine.map(c=>({...c,deck:"mine"})))}
-const deckOf=id=>DECKS.find(d=>d.id===id)||{name:"My added words",c:["#4b3f7a","#211b3d"]};
+  const ud=(S.udecks||[]).flatMap(d=>(d.w||[]).map(c=>applyEnr({...c,deck:d.id})));
+  return BASE.concat(ex,ud,S.mine.map(c=>({...c,deck:"mine"})))}
+const deckOf=id=>DECKS.find(d=>d.id===id)||(S.udecks||[]).find(d=>d.id===id)||{name:"My added words",c:["#4b3f7a","#211b3d"]};
 const LEVELS=["A1","A2","B1","B2","C1","C2"];
 function levelOf(c){return c.lv||deckOf(c.deck).lv||""}
 function uniq(cs){const m=new Map();cs.forEach(c=>{if(!m.has(c.w))m.set(c.w,c)});return[...m.values()]}
 function cardsFor(f){const a=all();
   if(f==="all")return a; if(f.startsWith("lv:"))return uniq(a.filter(c=>levelOf(c)===f.slice(3))); if(f==="saved")return a.filter(c=>S.saved.includes(c.w));
   if(f==="fav")return a.filter(c=>S.fav.includes(c.w)); return a.filter(c=>c.deck===f)}
-function status(c){const s=S.st[c.w];if(!s)return"new";return s.b<=1?"learning":s.b<=3?"familiar":"confident"}
+function status(c){const s=S.st[c.w];if(!s)return"new";if(s.re&&s.b===0)return"relearning";return s.b<=1?"learning":s.b<=3?"familiar":"confident"}
+function isLearningSt(c){const s=status(c);return s==="learning"||s==="relearning"}
+/* definition: English learner-dictionary sentence; TH = full Thai translation of it + the closest Thai word */
+function renderDef(c){const th=!!S.defTh,b=$("defLang");
+  $("bDef").textContent=th?(c.dth||c.th||"—"):(c.def||c.th||"—");b.textContent=th?"EN":"TH";b.setAttribute("aria-pressed",th)}
 function sceneHTML(theme,em){
   const t=THEMES[theme]||THEMES.day;
   let h=`<div class="sc${t.flat?" flat":""}" style="--s1:${t.s[0]};--s2:${t.s[1]};--g1:${t.g[0]};--g2:${t.g[1]}">`;
@@ -1260,9 +1327,9 @@ function sceneHTML(theme,em){
   return h+"</div>"}
 // normalise an AI-made word object into a card
 function toCard(r,deck){if(!r||typeof r.word!=="string"||!r.word.trim())return null;
-  return{w:r.word.trim().toLowerCase().slice(0,40),p:String(r.pron||""),pos:String(r.pos||""),th:String(r.th||""),def:String(r.def||""),ex:String(r.ex||""),exth:String(r.exth||""),
+  return{w:r.word.trim().toLowerCase().slice(0,40),p:String(r.pron||""),pos:String(r.pos||""),th:String(r.th||""),def:String(r.def||""),dth:String(r.def_th||""),cz:String(r.cloze||""),ex:String(r.ex||""),exth:String(r.exth||""),
     syn:String(r.syn||"").toLowerCase().trim()||"—",t:THEMES[r.theme]?r.theme:"day",e:(Array.isArray(r.emoji)&&r.emoji.length?r.emoji:["✨"]).map(String).slice(0,4).map(x=>x.slice(0,8)),deck}}
-const SCHEMA=`{"word":"lowercase word","pron":"syllables with stress in caps e.g. i-ma-juh-NAY-shun","pos":"noun|verb|adj.|adv.|phrasal v.","th":"คำแปลไทยสั้นๆ","def":"simple English definition under 15 words","ex":"one natural example sentence using the word, IELTS-style topic","exth":"คำแปลประโยคตัวอย่าง","syn":"one close synonym, lowercase","theme":"one of day|dusk|night|room|sea|site|city|rain that fits the example","emoji":["3 emoji that picture the example sentence, main subject first"]}`;
+const SCHEMA=`{"word":"lowercase word","pron":"syllables with stress in caps e.g. i-ma-juh-NAY-shun","pos":"noun|verb|adj.|adv.|phrasal v.","th":"คำแปลไทยสั้นๆ ที่ตรงความหมายตามบริบท ไม่กำกวม ไม่ใช้คำที่คนไทยอาจเข้าใจไปเป็นความหมายอื่น (ถ้าใช้กับสัตว์หรือเรื่องเฉพาะ ให้วงเล็บกำกับ)","def":"English learner-dictionary definition as one full sentence, e.g. 'To put someone in prison, usually as punishment or while waiting for a trial.' Clear and specific: say who or what it is used about and the usual situation, 10-25 simple words","def_th":"แปลความหมายภาษาอังกฤษข้างบนเป็นภาษาไทยที่เป็นธรรมชาติ ครบใจความ แล้วปิดท้ายด้วยคำไทยที่ตรงที่สุดในวงเล็บ เช่น การนำใครบางคนเข้าคุก โดยปกติเป็นการลงโทษหรือระหว่างรอการพิจารณาคดี (จำคุก)","cloze":"a different short sentence that uses the word naturally, with the word replaced by ____ so that only this word fits","ex":"one natural example sentence using the word, IELTS-style topic","exth":"คำแปลประโยคตัวอย่าง","syn":"one close synonym, lowercase","theme":"one of day|dusk|night|room|sea|site|city|rain that fits the example","emoji":["3 emoji that picture the example sentence, main subject first"]}`;
 
 /* ---------- header ---------- */
 function header(){
@@ -1271,7 +1338,7 @@ function header(){
   $("lvl").textContent=1+Math.floor(S.xp/XP_PER_LVL);
   $("lvlRing").style.setProperty("--p",(S.xp%XP_PER_LVL)/XP_PER_LVL*100)}
 function fillFilter(){const sel=$("filter");sel.innerHTML="";
-  const opts=[["all","All Decks"],...DECKS.map(d=>[d.lv?"lv:"+d.lv:d.id,d.lv?"All "+d.lv+" words":d.name]),["saved","My Decks"],["fav","Favourites"]];
+  const opts=[["all","All Decks"],...DECKS.map(d=>[d.lv?"lv:"+d.lv:d.id,d.lv?"All "+d.lv+" words":d.name]),...(S.udecks||[]).map(d=>[d.id,d.name]),["mine","My added words"],["saved","My Decks"],["fav","Favourites"]];
   opts.forEach(([v,n])=>{const o=document.createElement("option");o.value=v;o.textContent=n;sel.append(o)});
   if(!opts.some(o=>o[0]===S.filter))S.filter="all";sel.value=S.filter}
 function addXP(n){const before=Math.floor(S.xp/XP_PER_LVL);S.xp+=n;header();checkAch();
@@ -1280,7 +1347,7 @@ function touchStreak(){if(S.last===todayStr)return;const y=new Date(Date.now()-8
 
 /* ---------- review ---------- */
 let queue=[],cur=null,ctype="card",hist=[],answered=false,checkCtl=null;
-function buildQueue(){const now=Date.now(),cs=cardsFor(S.filter).filter(c=>!S.known.includes(c.w));
+function buildQueue(){const now=Date.now(),cs=uniq(cardsFor(S.filter)).filter(c=>!S.known.includes(c.w));
   const due=cs.filter(c=>S.st[c.w]&&S.st[c.w].due<=now).sort((a,b)=>S.st[a.w].due-S.st[b.w].due);
   const nw=cs.filter(c=>!S.st[c.w]).sort(()=>Math.random()-.5);
   queue=[...due,...nw]}
@@ -1311,11 +1378,11 @@ function show(c,type){cur=c;ctype=type||pickType(c);answered=false;checkCtl?.abo
   $("bPic").innerHTML=sceneHTML(c.t,c.e)+`<span class="badge" style="--sc:${ST_COLOR[st]}">${ST_LABEL[st]}</span><button class="play" id="sayEx" aria-label="Play example sentence">▶</button>`;
   $("sayEx").onclick=e=>{e.stopPropagation();speak(c.ex||c.w)};
   $("bWord").textContent=c.w;$("bPos").textContent=posLabel(c.pos);
-  $("bDef").textContent=c.def||"—";$("bTh").textContent=c.th||"—";
+  renderDef(c);
   const stem=c.w.split(" ")[0],s=stem.length>4?stem.slice(0,-2):stem;
   const re=new RegExp("(\\b"+s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"[\\w'-]*)","i");
   $("bEx").innerHTML=esc(c.ex||"").replace(re,"<b>$1</b>");$("bExTh").textContent=c.exth||"";$("bEx").parentElement.hidden=!c.ex;
-  if(!c.ex)enrichSoon(c);
+  if(!c.ex||!c.dth)enrichSoon(c);
   $("thEx").setAttribute("aria-pressed","false");$("bExTh").hidden=true;
   $("thEx").hidden=!c.exth;
   $("saveBtn").setAttribute("aria-pressed",S.saved.includes(c.w));
@@ -1330,32 +1397,39 @@ function show(c,type){cur=c;ctype=type||pickType(c);answered=false;checkCtl?.abo
     $("ans").placeholder=ctype==="write"?"Write your sentence here":"e.g. It means… You use it when…";
     $("hint").textContent="Answer, tap Check, then swipe for the next word"}}
 /* quiz types: syn = closest word, def = word from meaning, img = word from picture, spell = type what you hear */
-const QT={syn:"What's the closest word?",def:"Which word matches this meaning?",img:"Which word is this picture?",spell:"Listen and type the word"};
+const QT={cloze:"Which completes the sentence?",syn:"What's the closest word?",def:"Which word matches this meaning?",img:"Which word is this picture?",spell:"Listen and type the word"};
 let qtype="syn",answer="";
-function pickQType(c){let on=Object.keys(QT).filter(k=>S.qtypes[k]);if(!c.syn||c.syn==="—")on=on.filter(k=>k!=="syn");if(!HAS_TTS)on=on.filter(k=>k!=="spell");if(!c.ex)on=on.filter(k=>k!=="img");
+function pickQType(c){let on=Object.keys(QT).filter(k=>S.qtypes[k]);if(!c.syn||c.syn==="—")on=on.filter(k=>k!=="syn");if(!c.def)on=on.filter(k=>k!=="def");if(!HAS_TTS)on=on.filter(k=>k!=="spell");if(!c.ex)on=on.filter(k=>k!=="img");if(!clozeText(c))on=on.filter(k=>k!=="cloze");
   if(!on.length)on=["def"];return on[Math.floor(Math.random()*on.length)]}
 function distractors(c,field,n){const same=all().filter(x=>x.w!==c.w&&x.deck===c.deck).map(x=>x[field]);
   const any=all().filter(x=>x.w!==c.w).flatMap(x=>field==="w"?[x.w]:[x.syn,x.w]);
   const out=[];for(const pool of[same,any]){const p=[...new Set(pool)].filter(x=>x&&x!=="—"&&x!==answer&&!out.includes(x));
     while(out.length<n&&p.length)out.push(p.splice(Math.floor(Math.random()*p.length),1)[0])}
   return out}
+function clozeText(c){if(c.cz&&/_{2,}/.test(c.cz))return c.cz;if(!c.ex)return"";
+  const re=new RegExp("\\b"+c.w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(s|es|ed|d|ing)?\\b","i");return re.test(c.ex)?c.ex.replace(re,"_____"):""}
 function renderQuiz(c){qtype=pickQType(c);answer=qtype==="syn"?c.syn:c.w;
+  const cz=qtype==="cloze";$("fWord").hidden=cz;$("fPos").hidden=cz;$("qDef").classList.toggle("big",cz);$("choices").classList.toggle("lc",cz);
+  if(cz){$("qDef").innerHTML=esc(clozeText(c)).replace(/_{2,}/,'<span class="blank">_____</span>')}
   const hide=qtype!=="syn";
   $("fWord").classList.toggle("hiddenw",hide);
   $("fWord").textContent=!hide?c.w.toUpperCase():qtype==="spell"?c.w.replace(/[a-z]/gi,"_ ").trim():"? ? ?";
-  $("fPronBox").hidden=hide;$("qImg").hidden=qtype!=="img";$("qDef").hidden=!(qtype==="def"||qtype==="spell");
+  $("fPronBox").hidden=hide;$("qImg").hidden=qtype!=="img";$("qDef").hidden=!(qtype==="def"||qtype==="spell"||qtype==="cloze");
   if(qtype==="img")$("qImg").innerHTML=sceneHTML(c.t,c.e);
   if(qtype==="def")$("qDef").innerHTML=`${esc(c.def)}<small>${esc(c.th)}</small>`;
   if(qtype==="spell")$("qDef").innerHTML=`${esc(c.th)}<small>Tap 🔊 above to hear it again</small>`;
   $("qText").textContent=QT[qtype];$("qMic").hidden=!SR||qtype==="spell";
   const box=$("choices");box.innerHTML="";box.hidden=qtype==="spell";$("spell").hidden=qtype!=="spell";
   if(qtype==="spell"){const i=$("spIn");i.value="";i.className="";i.disabled=false;setTimeout(()=>speak(c.w,null,true),350);return}
-  const opts=[answer,...distractors(c,qtype==="syn"?"syn":"w",3)].sort(()=>Math.random()-.5);
+  const opts=[answer,...(qtype==="cloze"?samePos(c,3):distractors(c,qtype==="syn"?"syn":"w",3))].sort(()=>Math.random()-.5);
   opts.forEach(o=>{const b=document.createElement("button");b.className="choice";b.type="button";b.textContent=o;
     b.onclick=e=>{e.stopPropagation();answered?lookup(o):pick(b,o===answer)};box.append(b)})}
+function samePos(c,n){const p=[...new Set(all().filter(x=>x.w!==c.w&&x.pos===c.pos&&!x.w.includes(" ")===!c.w.includes(" ")).map(x=>x.w))];
+  const out=[];while(out.length<n&&p.length)out.push(p.splice(Math.floor(Math.random()*p.length),1)[0]);
+  return out.length<n?out.concat(distractors(c,"w",n-out.length).filter(x=>!out.includes(x))):out}
 function lookup(w){const f=all().find(x=>x.w===w)||all().find(x=>x.syn===w);
   toast(f?(f.w===w?`${w} = ${f.th}`:`${w} ≈ ${f.w} (${f.th})`):`${w} isn't in your word bank yet — try the search button`)}
-function revealWord(){if(!cur)return;$("fWord").classList.remove("hiddenw");$("fWord").textContent=cur.w.toUpperCase();$("fPronBox").hidden=false}
+function revealWord(){if(!cur)return;const bl=$("qDef").querySelector(".blank");if(bl)bl.textContent=cur.w;$("fWord").classList.remove("hiddenw");$("fWord").textContent=cur.w.toUpperCase();$("fPronBox").hidden=false}
 function vib(ms){try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
 function afterAnswer(ok){sfx(ok?"right":"wrong");addXP(ok?10:2);save();vib(ok?20:[30,40,30]);revealWord();
   $("hint").textContent=ok?"Correct! +10 XP · Tap other options to see their meanings":`Not quite — the answer is ${answer} · Swipe left to see it again`;
@@ -1369,8 +1443,8 @@ $("spell").addEventListener("submit",e=>{e.preventDefault();if(answered||!cur)re
 $("spell").addEventListener("click",e=>e.stopPropagation());
 function flip(){if(!cur)return;$("card").classList.toggle("flipped");sfx("flip")}
 function rate(r){if(!cur)return;const now=Date.now(),old=S.st[cur.w],st=old?{...old}:{b:0};
-  if(r===0){st.b=0;st.due=now+INT[0];queue.splice(Math.min(3,queue.length),0,cur)}
-  else{st.b=okBox(cur);st.due=now+INT[st.b]}
+  if(r===0){if(old&&old.b>=2)st.re=1;st.b=0;st.due=now+INT[0];queue.splice(Math.min(3,queue.length),0,cur)}
+  else{st.b=okBox(cur);st.due=now+INT[st.b];delete st.re}
   S.st[cur.w]=st;S.today++;S.total++;touchStreak();addXP(5);vib(12);
   if(S.today===S.goal){S.goalHit++;toast("Daily goal reached 🎯")}
   save();header();checkAch();next()}
@@ -1439,6 +1513,7 @@ $("card").addEventListener("keydown",e=>{if(e.target!==$("card"))return;
 $("btnOk").onclick=()=>swipeOut(1);$("btnAgain").onclick=()=>swipeOut(0);
 $("sayF").onclick=$("sayP").onclick=$("sayB").onclick=e=>{e.stopPropagation();speak(cur.w)};
 $("undo").onclick=e=>{e.stopPropagation();if(!hist.length)return;queue.unshift(cur);show(hist.pop())};
+$("defLang").onclick=e=>{e.stopPropagation();S.defTh=!S.defTh;save();if(cur)renderDef(cur)};
 $("thEx").onclick=e=>{e.stopPropagation();const on=$("bExTh").hidden;$("bExTh").hidden=!on;e.currentTarget.setAttribute("aria-pressed",on)};
 $("saveBtn").onclick=e=>{e.stopPropagation();toggle("saved",cur.w);const on=S.saved.includes(cur.w);e.currentTarget.setAttribute("aria-pressed",on);toast(on?"Saved to My Decks":"Removed from My Decks")};
 $("favBtn").onclick=e=>{e.stopPropagation();toggle("fav",cur.w);const on=S.fav.includes(cur.w);e.currentTarget.setAttribute("aria-pressed",on);e.currentTarget.textContent=on?"♥":"♡"};
@@ -1511,17 +1586,22 @@ function go(v){document.querySelectorAll(".nav button[data-v]").forEach(b=>b.set
   if(v==="explore")renderExplore();if(v==="mine")renderMine();if(v==="profile")renderProfile()}
 document.querySelectorAll(".nav button[data-v]").forEach(b=>b.onclick=()=>go(b.dataset.v));
 
-function statusBar(cs){const n={new:0,learning:0,familiar:0,confident:0};cs.forEach(c=>n[status(c)]++);
+function statusBar(cs){const n={new:0,learning:0,familiar:0,confident:0};cs.forEach(c=>{const k=status(c);n[k==="relearning"?"learning":k]++});
   const tot=cs.length||1;return{n,html:`<div class="bar">${["confident","familiar","learning"].map(k=>`<span style="width:${n[k]/tot*100}%;background:${ST_COLOR[k]}"></span>`).join("")}</div>`}}
-function deckEl(d){const key=d.lv?"lv:"+d.lv:d.id,cs=cardsFor(key),sb=statusBar(cs),f=cs[0]||{t:"dusk",e:["✨","🎯","📚"]};
+function deckEl(d){const key=d.lv?"lv:"+d.lv:d.id,isU=(S.udecks||[]).includes(d),cs=cardsFor(key),sb=statusBar(cs),f=cs[0]||{t:"dusk",e:["✨","🎯","📚"]};
   const el=document.createElement("div");el.className="deck";
   const canGen=d.lv||d.made||d.ielts;
   el.innerHTML=`<div class="thumb">${d.lv?`<span class="lv">${d.lv}</span>`:""}${sceneHTML(f.t,f.e)}</div><div style="min-width:0"><h3>${esc(d.name)}</h3><p>${esc(d.desc)}${d.band?` · ${esc(d.band)}`:""}</p>${sb.html}
-    <div class="meta"><span>Confident ${sb.n.confident}/${cs.length}</span><span class="btns">${canGen?`<button class="gen">✨ +10 words</button>`:""}${cs.length?`<button class="go">Study</button>`:""}</span></div></div>`;
+    <div class="meta"><span>Confident ${sb.n.confident}/${cs.length}</span><span class="btns">${canGen?`<button class="gen">✨ +10 words</button>`:""}${isU?`<button class="del">Remove</button>`:""}${cs.length?`<button class="go">Study</button>`:""}</span></div></div>`;
   el.querySelector(".go")?.addEventListener("click",()=>startDeck(key));
+  el.querySelector(".del")?.addEventListener("click",e=>{const b=e.currentTarget;if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Tap again to remove";return}
+    S.udecks=S.udecks.filter(x=>x!==d);if(S.filter===d.id)S.filter="all";save();fillFilter();renderExplore();toast("Removed "+d.name)});
   const g=el.querySelector(".gen");if(g)g.onclick=()=>genWords(d,g);
   return el}
 function renderExplore(){const L=$("deckList");L.innerHTML="";
+  const hn=document.createElement("div");hn.className="rowb";hn.innerHTML=`<h3 class="sech" style="margin:0">My notes</h3><button class="ghost" style="padding:7px 14px">📷 Scan notes</button>`;
+  hn.querySelector("button").onclick=openScan;L.append(hn);
+  [...(S.udecks||[]).slice().reverse(),...DECKS.filter(d=>d.notes)].forEach(d=>L.append(deckEl(d)));
   const pw=document.createElement("div");pw.style.cssText="display:flex;flex-direction:column;gap:10px";pw.innerHTML=progressHTML();wireProgress(pw);L.append(pw);
   const h1=document.createElement("h3");h1.className="sech";h1.textContent="CEFR levels";L.append(h1);
   DECKS.filter(d=>d.lv).forEach(d=>L.append(deckEl(d)));
@@ -1530,7 +1610,7 @@ function renderExplore(){const L=$("deckList");L.innerHTML="";
   const n3=document.createElement("p");n3.className="note";n3.style.margin="0";n3.textContent=`${DECKS.filter(d=>d.ielts).reduce((t,d)=>t+cardsFor(d.id).length,0)} words grouped by common exam topics. Pictures and example sentences are created the first time you open a card.`;L.append(n3);
   DECKS.filter(d=>d.ielts).forEach(d=>L.append(deckEl(d)));
   const h2=document.createElement("h3");h2.className="sech";h2.textContent="Special topics";L.append(h2);
-  DECKS.filter(d=>!d.lv&&!d.ielts).forEach(d=>L.append(deckEl(d)))}
+  DECKS.filter(d=>!d.lv&&!d.ielts&&!d.notes).forEach(d=>L.append(deckEl(d)))}
 async function genWords(d,btn){
   if(d.made&&!S.interests.trim()){toast("Add your interests in Profile first");go("profile");setTimeout(()=>$("intIn")?.focus(),100);return}
   const sample=getSample();if(!sample){toast(NOAI);return}
@@ -1562,22 +1642,24 @@ function itemEl(c){const st=status(c),b=document.createElement("button");b.class
   b.onclick=()=>{go("review");if(cur)queue.unshift(cur);show(c,"card")};return b}
 /* My Decks: every word you have met, filterable by status and level */
 let mineTab="learned",mineLv="all",mineLimit=150;
-const MINE_TABS=[["learned","Learned"],["learning","Learning"],["new","New"],["known","Known"],["saved","Saved"]];
-function wordState(c){if(S.known.includes(c.w))return"known";const s=status(c);return s==="new"?"new":s==="learning"?"learning":"learned"}
+const MINE_TABS=[["learned","Learned"],["learning","Learning"],["new","New"],["known","Known"],["saved","Saved"],["added","Added"]];
+const inTab=(t,c)=>t==="saved"?S.saved.includes(c.w):t==="added"?c.deck==="mine":wordState(c)===t;
+function wordState(c){if(S.known.includes(c.w))return"known";const s=status(c);return s==="new"?"new":(s==="learning"||s==="relearning")?"learning":"learned"}
 function openMine(tab,lv){mineTab=tab||mineTab;mineLv=lv||mineLv;mineLimit=150;go("mine")}
 function renderMine(){const L=$("mineList");L.innerHTML="";
+  const ab=document.createElement("button");ab.className="primary addbtn";ab.textContent="＋ Add words";ab.onclick=openAddWords;L.append(ab);
   const a=uniq(all()),byLv=c=>mineLv==="all"||(levelOf(c)||"Other")===mineLv;
-  const count=t=>a.filter(byLv).filter(c=>t==="saved"?S.saved.includes(c.w):wordState(c)===t).length;
+  const count=t=>a.filter(byLv).filter(c=>inTab(t,c)).length;
   const tabs=document.createElement("div");tabs.className="tabs2";
   tabs.innerHTML=MINE_TABS.map(([k,n])=>`<button data-t="${k}" aria-pressed="${k===mineTab}">${n} <small>${count(k)}</small></button>`).join("");
   tabs.querySelectorAll("button").forEach(b=>b.onclick=()=>{mineTab=b.dataset.t;mineLimit=150;renderMine()});L.append(tabs);
   const lvs=document.createElement("div");lvs.className="tabs2 small";
   lvs.innerHTML=["all",...LEVELS,"Other"].map(l=>`<button data-l="${l}" aria-pressed="${l===mineLv}">${l==="all"?"All levels":l}</button>`).join("");
   lvs.querySelectorAll("button").forEach(b=>b.onclick=()=>{mineLv=b.dataset.l;mineLimit=150;renderMine()});L.append(lvs);
-  const list=a.filter(byLv).filter(c=>mineTab==="saved"?S.saved.includes(c.w):wordState(c)===mineTab)
+  const list=a.filter(byLv).filter(c=>inTab(mineTab,c))
     .sort((x,y)=>mineTab==="new"?x.w.localeCompare(y.w):((S.st[y.w]?.due||0)-(S.st[x.w]?.due||0)));
   const empty={learned:"No learned words yet. Swipe a card right when you know it.",learning:"Nothing in progress. Words you swipe left show up here.",
-    new:"You've seen every word here!",known:"Words you mark with ✓ (I know this) show up here.",saved:"No saved words yet. Tap ＋ on the back of a card."};
+    new:"You've seen every word here!",known:"Words you mark with ✓ (I know this) show up here.",saved:"No saved words yet. Tap ＋ on the back of a card.",added:"Words you add yourself show up here. Tap ＋ Add words above."};
   if(!list.length){const e=document.createElement("div");e.className="empty";e.textContent=empty[mineTab];L.append(e);return}
   const tools=document.createElement("div");tools.className="rowb";
   tools.innerHTML=`<span class="note">${list.length} words · tap a word to open it</span>${mineTab!=="known"?`<button class="ghost" style="padding:7px 14px">Study these</button>`:""}`;
@@ -1601,7 +1683,7 @@ function renderProfile(){const P=$("profile");const lvl=1+Math.floor(S.xp/XP_PER
       <div class="rowb"><h3>Mix in writing tasks</h3><select id="mixSel" aria-label="Writing practice frequency">${[["off","Off"],["some","Sometimes"],["often","Often"]].map(([v,n])=>`<option value="${v}"${v===S.mix?" selected":""}>${n}</option>`).join("")}</select></div>
       <span class="note">Sentence and meaning tasks only appear for words you've seen before</span>
       <h3>Quiz types</h3>
-      <div class="tg">${[["syn","Closest word"],["def","Word from meaning"],["img","Word from picture"],["spell","Listen & spell"]].map(([k,n])=>`<label><input type="checkbox" id="qt-${k}" data-k="${k}"${S.qtypes[k]?" checked":""}>${n}</label>`).join("")}</div>
+      <div class="tg">${[["cloze","Fill the blank"],["syn","Closest word"],["def","Word from meaning"],["img","Word from picture"],["spell","Listen & spell"]].map(([k,n])=>`<label><input type="checkbox" id="qt-${k}" data-k="${k}"${S.qtypes[k]?" checked":""}>${n}</label>`).join("")}</div>
       <div class="rowb"><h3>Sound effects</h3><select id="sndSel" aria-label="Sound effects"><option value="1"${S.sound!==false?" selected":""}>On</option><option value="0"${S.sound===false?" selected":""}>Off</option></select></div>
       <div class="rowb"><h3>Voice accent</h3><select id="accSel" aria-label="Accent"><option value="us"${S.accent==="us"?" selected":""}>American 🇺🇸</option><option value="uk"${S.accent==="uk"?" selected":""}>British 🇬🇧</option></select></div>${HAS_TTS?"":`<span class="note">No text-to-speech here: 🔊 opens Cambridge Dictionary instead, and the listening quiz is skipped.</span>`}</div>
     <div class="panel"><h3>Your interests</h3><span class="note">Used to pick words for Made for You, e.g. movies, football, cooking</span>
@@ -1612,11 +1694,12 @@ function renderProfile(){const P=$("profile");const lvl=1+Math.floor(S.xp/XP_PER
       <div class="keyrow"><button class="ghost" id="keyTest" type="button" style="padding:8px 14px">Test</button><span class="note" id="keyMsg">${S.aiKey?"Key saved":"No key yet"}</span></div>
       <span class="note">Your key stays on this device and is only sent to the AI provider · Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener" style="color:var(--familiar)">Google AI Studio</a></span></div>
     <div class="panel" id="installPanel" hidden><div class="rowb"><h3>Install as app</h3><button class="primary" id="installBtn" style="padding:8px 14px">Install</button></div></div>
+    <div class="panel" id="remPanel"></div>
     <div class="panel"><h3>Backup</h3><span class="note">Export your progress to a file, then import it on another device or in the app.</span>
       <div class="trow"><button class="ghost" id="expBtn">Export file</button><label class="ghost" style="cursor:pointer">Import file<input type="file" id="impIn" accept=".json,application/json" hidden></label></div></div>
     <div class="panel"><div class="rowb"><h3>Start over</h3><button class="danger" id="reset">Reset</button></div><div id="resetQ" hidden class="rowb"><span class="note">Delete all progress, XP, saved words and AI words?</span><button class="danger" id="resetYes">Confirm</button></div></div>
     <p class="note">Progress is stored on this device only.</p>`;
-  wireProgress(P);
+  wireProgress(P);reminderPanel();
   $("goalSel").onchange=e=>{S.goal=+e.target.value;save();header()};
   $("mixSel").onchange=e=>{S.mix=e.target.value;save()};
   $("sndSel").onchange=e=>{S.sound=e.target.value==="1";save();sfx("ok")};
@@ -1664,17 +1747,24 @@ async function aiError(res){let msg="";try{const j=await res.json();msg=j?.error
   if(res.status===401||res.status===403||m.includes("api key")||m.includes("api_key")||m.includes("authentication"))return{code:"bad_key",message:msg};
   if(res.status===429)return{code:m.includes("quota")?"quota":"rate_limited",message:msg};
   return{code:"upstream_error",message:msg||("HTTP "+res.status)}}
+/* if Google renames or retires a model, ask the API which Flash models exist and use the newest */
+async function pickGeminiModel(key,tier){const r=await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",{headers:{"x-goog-api-key":key}});
+  if(!r.ok)return null;const ms=((await r.json()).models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent")).map(m=>m.name.replace(/^models\//,""));
+  const want=tier==="quick"?/^gemini-(\d+(?:\.\d+)?)-flash-lite$/:/^gemini-(\d+(?:\.\d+)?)-flash$/;
+  const c=ms.map(n=>[n,(n.match(want)||[])[1]]).filter(x=>x[1]).sort((a,b)=>parseFloat(b[1])-parseFloat(a[1]));return c[0]?.[0]||null}
 async function aiCall(prompt,opts,json){
   const prov=S.aiProv==="claude"?"claude":"gemini",key=(S.aiKey||"").trim();
-  const tier=opts.modelTier==="quick"?"quick":"default",model=AI_MODELS[prov][tier];
+  const tier=opts.modelTier==="quick"?"quick":"default";let model=(prov==="gemini"&&S.gm?.[tier])||AI_MODELS[prov][tier];
+  const imgs=opts.images||[];
   const ck=opts.cache?aiHash(prov+model+(json?"J":"T")+prompt):null,ttl=opts.cache?.gcTime||3e5;
   if(ck){const hit=cacheGet(ck,ttl);if(hit!=null){if(json)return parseJSONLoose(hit);opts.onText?.({text:hit,delta:hit});return hit}}
   const stream=!!opts.onText&&!json;let text="",res;
   try{
     if(prov==="gemini"){
-      const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:${stream?"streamGenerateContent?alt=sse":"generateContent"}`;
-      res=await fetch(url,{method:"POST",signal:opts.signal,headers:{"content-type":"application/json","x-goog-api-key":key},
-        body:JSON.stringify({contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:json?{responseMimeType:"application/json"}:{}})});
+      const body=JSON.stringify({contents:[{role:"user",parts:[{text:prompt},...imgs.map(i=>({inline_data:{mime_type:i.mime,data:i.data}}))]}],generationConfig:json?{responseMimeType:"application/json"}:{}});
+      const call=m=>fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:${stream?"streamGenerateContent?alt=sse":"generateContent"}`,{method:"POST",signal:opts.signal,headers:{"content-type":"application/json","x-goog-api-key":key},body});
+      res=await call(model);
+      if(res.status===404){const m=await pickGeminiModel(key,tier);if(m&&m!==model){model=m;S.gm={...(S.gm||{}),[tier]:m};save();res=await call(m)}}
       if(!res.ok)throw await aiError(res);
       const partText=d=>(d?.candidates?.[0]?.content?.parts||[]).map(p=>p.thought?"":(p.text||"")).join("");
       if(stream)await readSSE(res,d=>{const delta=partText(d);if(delta){text+=delta;opts.onText({text,delta})}});
@@ -1682,7 +1772,7 @@ async function aiCall(prompt,opts,json){
     }else{
       res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",signal:opts.signal,
         headers:{"content-type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-        body:JSON.stringify({model,max_tokens:2000,stream,messages:[{role:"user",content:json?prompt+"\n\nตอบเป็น JSON ล้วนๆ ห้ามมีข้อความอื่น":prompt}]})});
+        body:JSON.stringify({model,max_tokens:json?8000:2000,stream,messages:[{role:"user",content:(t=>imgs.length?[...imgs.map(i=>({type:"image",source:{type:"base64",media_type:i.mime,data:i.data}})),{type:"text",text:t}]:t)(json?prompt+"\n\nตอบเป็น JSON ล้วนๆ ห้ามมีข้อความอื่น":prompt)}]})});
       if(!res.ok)throw await aiError(res);
       if(stream)await readSSE(res,d=>{if(d.type==="content_block_delta"&&d.delta?.text){text+=d.delta.text;opts.onText({text,delta:d.delta.text})}});
       else text=((await res.json()).content||[]).filter(b=>b.type==="text").map(b=>b.text).join("");
@@ -1768,25 +1858,25 @@ $("magic").onclick=()=>magic();
 
 /* ---------- AI enrichment: pronunciation, example and picture for list-only words ---------- */
 let enrBusy=false,enrFailAt=0;
-async function enrichSoon(c){if(enrBusy||Date.now()-enrFailAt<6e4)return;const sample=getSampleSafe();if(!sample)return;
-  const batch=[c,...queue.filter(x=>!x.ex&&x.w!==c.w)].filter((x,i,a)=>a.findIndex(y=>y.w===x.w)===i).slice(0,10);
+async function enrichSoon(c){if(enrBusy||Date.now()-enrFailAt<6e4)return;enrBusy=true;let sample=null;try{sample=getSample()}catch(e){}if(!sample){enrBusy=false;return}
+  const batch=[c,...queue.filter(x=>(!x.ex||!x.dth)&&x.w!==c.w)].filter((x,i,a)=>a.findIndex(y=>y.w===x.w)===i).slice(0,10);
   enrBusy=true;
-  const list=batch.map(x=>`${x.w} | ${x.pos} | ${x.th} — ${x.def}`).join("\n");
-  const prompt=`สร้างข้อมูลการ์ดคำศัพท์สำหรับผู้เรียนคนไทยที่เตรียมสอบ IELTS สำหรับคำต่อไปนี้ (คำ | ชนิดคำ | ความหมาย):
+  const list=batch.map(x=>`${x.w} | ${x.pos} | ${x.th} — ${x.def}${x.ex?" | example: "+x.ex:""}`).join("\n");
+  const prompt=`สร้างข้อมูลการ์ดคำศัพท์สำหรับผู้เรียนคนไทยที่เตรียมสอบ IELTS สำหรับคำต่อไปนี้ (คำ | ชนิดคำ | ความหมาย | ตัวอย่างเดิมถ้ามี) ใช้ความหมายตามที่ให้มา:
 ${list}
 ตอบเป็น JSON array เท่านั้น 1 object ต่อ 1 คำ เรียงตามลำดับเดิม รูปแบบ:
-{"word":"คำเดิมตรงตัว","pron":"syllables with stress in caps e.g. i-ma-juh-NAY-shun","ex":"one natural example sentence using the word in the given meaning, IELTS-style topic, B1-B2 grammar","exth":"คำแปลไทยของประโยค","theme":"one of day|dusk|night|room|sea|site|city|rain that fits the example","emoji":["3 emoji that picture the example sentence, main subject first"]}`;
+{"word":"คำเดิมตรงตัว","def":"English learner-dictionary definition as one full sentence, e.g. 'To put someone in prison, usually as punishment or while waiting for a trial.' Clear and specific: say who or what it is used about and the usual situation, 10-25 simple words","def_th":"แปลความหมายภาษาอังกฤษข้างบนเป็นภาษาไทยที่เป็นธรรมชาติ ครบใจความ แล้วปิดท้ายด้วยคำไทยที่ตรงที่สุดในวงเล็บ เช่น การนำใครบางคนเข้าคุก โดยปกติเป็นการลงโทษหรือระหว่างรอการพิจารณาคดี (จำคุก)","cloze":"a different short sentence that uses the word naturally, with the word replaced by ____ so that only this word fits","pron":"syllables with stress in caps e.g. i-ma-juh-NAY-shun","ex":"one natural example sentence using the word in the given meaning, IELTS-style topic, B1-B2 grammar","exth":"คำแปลไทยของประโยค","theme":"one of day|dusk|night|room|sea|site|city|rain that fits the example","emoji":["3 emoji that picture the example sentence, main subject first"]}`;
   try{const arr=await sample.json(prompt,{modelTier:"quick"});
-    for(const r of Array.isArray(arr)?arr:[]){const w=String(r?.word||"").trim().toLowerCase();if(!w||!r.ex)continue;
-      S.enr[w]={p:String(r.pron||"").slice(0,60),ex:String(r.ex).slice(0,300),exth:String(r.exth||"").slice(0,300),t:THEMES[r.theme]?r.theme:"",
+    for(const r of Array.isArray(arr)?arr:[]){const w=String(r?.word||"").trim().toLowerCase();if(!w||!(r.ex||r.def))continue;
+      S.enr[w]={def:String(r.def||"").slice(0,240),dth:String(r.def_th||"").slice(0,300),cz:/_{2,}/.test(r.cloze||"")?String(r.cloze).slice(0,240):"",p:String(r.pron||"").slice(0,60),ex:String(r.ex||"").slice(0,300),exth:String(r.exth||"").slice(0,300),t:THEMES[r.theme]?r.theme:"",
         e:(Array.isArray(r.emoji)?r.emoji:[]).map(String).slice(0,4).map(x=>x.slice(0,8)).filter(Boolean)};
       all().concat(queue,cur?[cur]:[]).filter(x=>x.w===w).forEach(applyEnr);BASE.filter(x=>x.w===w).forEach(applyEnr)}
-    save();if(cur&&batch.some(x=>x.w===cur.w)&&cur.ex)refreshBack(cur)}
+    save();if(cur&&batch.some(x=>x.w===cur.w))refreshBack(cur)}
   catch(e){enrFailAt=Date.now()}finally{enrBusy=false}}
 function getSampleSafe(){try{return typeof getSample==="function"?getSample():null}catch(e){return null}}
 function refreshBack(c){if(c!==cur)return;
   if(!$("fWord").classList.contains("hiddenw"))$("fPron").textContent=c.p||"—";
-  const st=status(c);
+  renderDef(c);if(!c.ex)return;const st=status(c);
   $("bPic").innerHTML=sceneHTML(c.t,c.e)+`<span class="badge" style="--sc:${ST_COLOR[st]}">${ST_LABEL[st]}</span><button class="play" id="sayEx" aria-label="Play example sentence">▶</button>`;
   $("sayEx").onclick=e=>{e.stopPropagation();speak(c.ex||c.w)};
   const stem=c.w.split(" ")[0],s2=stem.length>4?stem.slice(0,-2):stem;
@@ -1795,12 +1885,127 @@ function refreshBack(c){if(c!==cur)return;
 
 /* ---------- overall progress: one total, split by level ---------- */
 const isLearned=c=>{const s=status(c);return s==="familiar"||s==="confident"};
-function progressHTML(){const a=uniq(all()),T=a.length,L=a.filter(isLearned).length,lr=a.filter(c=>status(c)==="learning").length,pct=T?Math.round(L/T*100):0;
+function progressHTML(){const a=uniq(all()),T=a.length,L=a.filter(isLearned).length,lr=a.filter(c=>isLearningSt(c)).length,pct=T?Math.round(L/T*100):0;
   const rows=[...LEVELS,"Other"].map(lv=>{const cs=a.filter(c=>(levelOf(c)||"Other")===lv);if(!cs.length)return"";const l=cs.filter(isLearned).length;
-    return `<button class="lvrow" data-lv="${lv}"><b>${lv}</b><div class="bar"><span style="width:${l/cs.length*100}%;background:var(--confident)"></span><span style="width:${cs.filter(c=>status(c)==="learning").length/cs.length*100}%;background:var(--learning)"></span></div><span class="note">${l}/${cs.length}</span></button>`}).join("");
+    return `<button class="lvrow" data-lv="${lv}"><b>${lv}</b><div class="bar"><span style="width:${l/cs.length*100}%;background:var(--confident)"></span><span style="width:${cs.filter(c=>isLearningSt(c)).length/cs.length*100}%;background:var(--learning)"></span></div><span class="note">${l}/${cs.length}</span></button>`}).join("");
   return `<div class="wl" role="button" tabindex="0" onclick="openMine('learned','all')"><div><b class="wlnum">${L} / ${T}</b><span>WORDS LEARNED</span><div class="note" style="margin-top:6px">Learning ${lr} · New ${T-L-lr}</div></div><div class="pring" style="--p:${pct}"><div>${pct}%</div></div></div>
     <div class="panel"><h3>By level</h3>${rows}<div class="legend"><span style="--sc:var(--confident)"><i></i>Learned</span><span style="--sc:var(--learning)"><i></i>Learning</span></div><span class="note">Tap a level to see which words you've learned</span></div>`}
 function wireProgress(root){root.querySelectorAll(".lvrow").forEach(b=>b.onclick=()=>openMine("learned",b.dataset.lv))}
+
+/* ---------- add your own words later ---------- */
+const LV_OK=new Set(LEVELS);let adding=false;
+function parseWordLines(txt){let lines=String(txt).split(/\n/).map(x=>x.trim()).filter(Boolean);
+  if(lines.length===1&&!/[=:]/.test(lines[0])&&lines[0].includes(","))lines=lines[0].split(",").map(x=>x.trim()).filter(Boolean);
+  return lines.slice(0,60).map(l=>{const m=l.match(/^(.+?)\s*(?:=|:|\s[-–]\s)\s*(.+)$/);
+    return m?{w:m[1].trim().toLowerCase(),th:m[2].trim()}:{w:l.toLowerCase(),th:""}}).filter(x=>/[a-z]/.test(x.w)&&x.w.length<=40)}
+const manualCard=x=>({w:x.w,p:"",pos:"",th:x.th,def:"",ex:"",exth:"",syn:"—",t:"room",e:["📝"],lv:"",deck:"mine"});
+function openAddWords(){const box=document.createElement("div");box.className="addbox";
+  box.innerHTML=`<p class="note" style="margin:0">Type or paste English words, one per line. AI fills in the meaning, example, picture and level. To use your own meaning, write it after <b>=</b></p>
+    <textarea id="addTxt" rows="6" placeholder="resilient&#10;mitigate = บรรเทา&#10;take for granted" aria-label="Words to add"></textarea>
+    <div class="trow"><span class="note" id="addMsg">Up to 60 words at a time</span><button class="primary" id="addGo">Add words</button></div>
+    <button class="ghost" id="addScan">📷 Scan notes from a photo instead</button>
+    <div id="addOut"></div><div id="addList"></div>`;
+  openSheet("Add words",box);renderAddedList();$("addScan").onclick=()=>{closeSheet();openScan()};$("addGo").onclick=()=>addWords($("addTxt").value);setTimeout(()=>$("addTxt")?.focus(),60)}
+function renderAddedList(){const el=$("addList");if(!el)return;if(!S.mine.length){el.innerHTML="";return}
+  el.innerHTML=`<h3 class="sech">Your added words (${S.mine.length})</h3><div class="alist">${S.mine.slice().reverse().map(c=>`<div class="arow"><span><b>${esc(c.w)}</b> <span class="note">${esc(c.th)}</span></span><button class="ib" data-del="${esc(c.w)}" aria-label="Remove ${esc(c.w)}">✕</button></div>`).join("")}</div>`;
+  el.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{const w=b.dataset.del;S.mine=S.mine.filter(c=>c.w!==w);S.saved=S.saved.filter(x=>x!==w);delete S.st[w];
+    queue=queue.filter(c=>c.w!==w);save();renderAddedList();toast("Removed "+w)})}
+async function addWords(txt){if(adding)return;const items=parseWordLines(txt),msg=$("addMsg"),out=$("addOut");
+  if(!items.length){toast("Type at least one English word");return}
+  const have=new Set(all().map(c=>c.w)),seen=new Set(),todo=[],dup=[],added=[],failed=[];let note="";
+  items.forEach(x=>{if(seen.has(x.w))return;seen.add(x.w);(have.has(x.w)?dup:todo).push(x)});
+  const keep=c=>{if(have.has(c.w)){dup.push(c);return}have.add(c.w);const{deck,...rest}=c;S.mine.push(rest);added.push(c.w)};
+  adding=true;$("addGo").disabled=true;
+  try{const sample=getSample();
+    if(!sample){todo.forEach(x=>x.th?keep(manualCard(x)):failed.push(x));if(failed.length)note="Without AI, add a meaning after = (e.g. mitigate = บรรเทา)"}
+    else for(let i=0;i<todo.length;i+=12){const part=todo.slice(i,i+12);msg.textContent=`Adding ${Math.min(i+part.length,todo.length)} of ${todo.length}…`;
+      const prompt=`ช่วยทำการ์ดคำศัพท์ให้ผู้เรียนคนไทยที่เตรียมสอบ IELTS สำหรับคำต่อไปนี้ (บรรทัดละคำ ถ้ามี "= ..." คือความหมายที่ผู้เรียนต้องการ ให้ใช้ความหมายนั้น):
+${part.map(x=>x.th?`${x.w} = ${x.th}`:x.w).join("\n")}
+ถ้าสะกดผิดให้แก้เป็นคำที่ถูก ตอบเป็น JSON array เท่านั้น 1 object ต่อ 1 บรรทัด เรียงตามลำดับเดิม รูปแบบ:
+{"word":"lowercase word","pron":"syllables with stress in caps e.g. i-ma-juh-NAY-shun","pos":"noun|verb|adj.|adv.|phrasal v.|idiom|phrase","level":"A1|A2|B1|B2|C1|C2","th":"คำแปลไทยสั้นๆ ที่ตรงความหมายตามบริบท ไม่กำกวม ไม่ใช้คำที่คนไทยอาจเข้าใจไปเป็นความหมายอื่น (ถ้าใช้กับสัตว์หรือเรื่องเฉพาะ ให้วงเล็บกำกับ)","def":"English learner-dictionary definition as one full sentence, e.g. 'To put someone in prison, usually as punishment or while waiting for a trial.' Clear and specific: say who or what it is used about and the usual situation, 10-25 simple words","def_th":"แปลความหมายภาษาอังกฤษข้างบนเป็นภาษาไทยที่เป็นธรรมชาติ ครบใจความ แล้วปิดท้ายด้วยคำไทยที่ตรงที่สุดในวงเล็บ เช่น การนำใครบางคนเข้าคุก โดยปกติเป็นการลงโทษหรือระหว่างรอการพิจารณาคดี (จำคุก)","cloze":"a different short sentence that uses the word naturally, with the word replaced by ____ so that only this word fits","ex":"one natural IELTS-style example sentence using the word","exth":"คำแปลประโยคตัวอย่าง","syn":"one close synonym, lowercase","theme":"one of day|dusk|night|room|sea|site|city|rain that fits the example","emoji":["3 emoji that picture the example sentence, main subject first"]}`;
+      try{const arr=await sample.json(prompt,{modelTier:"quick"}),cards=(Array.isArray(arr)?arr:[]);
+        part.forEach((x,k)=>{const r=cards[k],c=r&&toCard(r,"mine");
+          if(c){const lv=String(r.level||"").toUpperCase();c.lv=LV_OK.has(lv)?lv:"";if(x.th)c.th=x.th;keep(c)}
+          else x.th?keep(manualCard(x)):failed.push(x)})}
+      catch(e){if(e?.code==="cancelled")break;note=errMsg(e);part.forEach(x=>x.th?keep(manualCard(x)):failed.push(x))}}
+    save();fillFilter();
+    if(S.filter==="all"||S.filter==="mine")queue.push(...all().filter(c=>added.includes(c.w)));
+    out.innerHTML=`<div class="panel" style="background:var(--surface-2)">
+      <b style="font:700 16px var(--display)">${added.length?`Added ${added.length} word${added.length>1?"s":""} ✓`:"No new words added"}</b>
+      ${dup.length?`<span class="note">Already in your bank: ${dup.map(x=>esc(x.w)).join(", ")}</span>`:""}
+      ${failed.length?`<span class="note" style="color:var(--bad)">Couldn't add: ${failed.map(x=>esc(x.w)).join(", ")}${note?" · "+esc(note):""}</span>`:note?`<span class="note">${esc(note)}</span>`:""}
+      ${added.length?`<button class="primary" id="addStudy">Study them now</button>`:""}</div>`;
+    $("addTxt").value=failed.map(x=>x.th?`${x.w} = ${x.th}`:x.w).join("\n");
+    $("addStudy")?.addEventListener("click",()=>{hist=[];cur=null;queue=all().filter(c=>added.includes(c.w));closeSheet();go("review");next()});
+    if(added.length)sfx("ok");renderAddedList()}
+  finally{adding=false;const b=$("addGo");if(b)b.disabled=false;if(msg)msg.textContent="Up to 60 words at a time"}}
+
+/* ---------- scan handwritten notes into categorised decks ---------- */
+const UD_COLORS=[["#7a5a32","#3a2914"],["#3f7a52","#1b3a26"],["#6a4a7a","#2e1f38"],["#4f5a8f","#222844"],["#8a3f5a","#3d1a28"],["#2f6b8a","#163447"]];
+function shrinkImage(file){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);
+  img.onload=()=>{const k=Math.min(1,1800/Math.max(img.width,img.height)),cv=document.createElement("canvas");cv.width=Math.round(img.width*k);cv.height=Math.round(img.height*k);
+    cv.getContext("2d").drawImage(img,0,0,cv.width,cv.height);URL.revokeObjectURL(u);res({mime:"image/jpeg",data:cv.toDataURL("image/jpeg",.85).split(",")[1],url:cv.toDataURL("image/jpeg",.6)})};
+  img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("bad image"))};img.src=u})}
+let scanImgs=[],scanResult=null;
+function openScan(){scanImgs=[];scanResult=null;const box=document.createElement("div");box.className="addbox";
+  box.innerHTML=`<p class="note" style="margin:0">Take a photo of your vocabulary notes. AI reads your handwriting, fixes spelling, groups the words into categories and makes a card for each one.</p>
+    <label class="primary" style="text-align:center;cursor:pointer">📷 Take or choose photos<input type="file" id="scanIn" accept="image/*" capture="environment" multiple hidden></label>
+    <div class="thumbs" id="scanThumbs"></div>
+    <input id="scanName" class="sinput" placeholder="Name, e.g. Cambridge 12 · Listening (optional)" aria-label="Notes name">
+    <button class="primary" id="scanGo" disabled>Read my notes</button><div id="scanOut"></div>`;
+  openSheet("Scan notes",box);
+  $("scanIn").onchange=async e=>{for(const f of [...e.target.files].slice(0,4-scanImgs.length)){try{scanImgs.push(await shrinkImage(f))}catch(x){toast("Couldn't open that image")}}
+    e.target.value="";$("scanThumbs").innerHTML=scanImgs.map(i=>`<img src="${i.url}" alt="Notes photo">`).join("");$("scanGo").disabled=!scanImgs.length};
+  $("scanGo").onclick=readScan}
+async function readScan(){const out=$("scanOut"),btn=$("scanGo"),sample=getSample();
+  if(!sample){out.innerHTML=`<p class="note">${NOAI}</p>`;return}
+  btn.disabled=true;out.innerHTML=`<div class="thinking">Reading your notes… this can take up to a minute</div>`;
+  const prompt=`รูปนี้คือโน้ตคำศัพท์ภาษาอังกฤษที่ผู้เรียนคนไทยจดเอง (เตรียมสอบ IELTS) อาจเป็นลายมือ
+1) อ่านคำหรือวลีภาษาอังกฤษทุกคำ พร้อมความหมายที่ผู้เรียนเขียนไว้ (ถ้ามี) ข้ามหัวกระดาษหรือข้อความที่ไม่ใช่คำศัพท์
+2) แปลงเป็นรูปพจนานุกรม (เช่น fiddles → fiddle with, congregating → congregate) และแก้คำสะกดผิด
+3) แบ่งเป็นหมวดตามความหมาย 2-6 หมวด ชื่อหมวดภาษาอังกฤษสั้นๆ
+4) ถ้าความหมายหรือคำสะกดที่ผู้เรียนจดไว้ผิดหรือกำกวม ให้บอกใน notes_check
+ตอบเป็น JSON object เท่านั้น:
+{"title":"ชื่อแหล่งที่มาถ้าเห็นในรูป เช่น Cambridge 12 Listening ถ้าไม่เห็นให้เป็นค่าว่าง","categories":[{"name":"English category name","emoji":"1 emoji","theme":"one of day|dusk|night|room|sea|site|city|rain","words":[{"word":"lowercase word","pron":"syllables with stress in caps e.g. i-ma-juh-NAY-shun","pos":"noun|verb|adj.|adv.|phrasal v.|idiom|phrase","level":"A1|A2|B1|B2|C1|C2","th":"คำแปลไทยสั้นๆ ที่ตรงบริบท ไม่กำกวม (ใช้ความหมายของผู้เรียนถ้าถูกต้อง)","def":"English learner-dictionary definition as one full sentence, clear and specific, 10-25 simple words","def_th":"แปลความหมายภาษาอังกฤษเป็นภาษาไทยที่เป็นธรรมชาติ ครบใจความ แล้วปิดท้ายด้วยคำไทยที่ตรงที่สุดในวงเล็บ","ex":"one natural IELTS-style example sentence using the word","exth":"คำแปลประโยคตัวอย่าง","cloze":"a different short sentence with the word replaced by ____","syn":"one close synonym, lowercase","emoji":["3 emoji that picture the example sentence"]}]}],"notes_check":[{"word":"word","issue_th":"อธิบายสั้นๆ ว่าที่จดไว้ผิดหรือควรแก้อย่างไร"}]}`;
+  try{const r=await sample.json(prompt,{modelTier:"default",images:scanImgs.map(({mime,data})=>({mime,data}))});
+    const cats=(Array.isArray(r?.categories)?r.categories:[]).map(c=>({name:String(c.name||"Notes").slice(0,40),emoji:String(c.emoji||"📝").slice(0,8),theme:THEMES[c.theme]?c.theme:"room",
+      words:(Array.isArray(c.words)?c.words:[]).map(w=>{const x=toCard({...w,theme:w.theme||c.theme},"");if(x){const lv=String(w.level||"").toUpperCase();x.lv=LV_OK.has(lv)?lv:""}return x}).filter(Boolean)})).filter(c=>c.words.length);
+    if(!cats.length)throw{code:"invalid_json"};
+    scanResult={title:String(r.title||"").slice(0,60),cats};const n=cats.reduce((t,c)=>t+c.words.length,0);
+    const chk=(Array.isArray(r.notes_check)?r.notes_check:[]).filter(x=>x&&x.word);
+    if(scanResult.title&&!$("scanName").value)$("scanName").value=scanResult.title;
+    out.innerHTML=`<div class="panel" style="background:var(--surface-2)"><b style="font:700 16px var(--display)">Found ${n} words in ${cats.length} categories</b>
+      ${cats.map(c=>`<div><b>${esc(c.emoji)} ${esc(c.name)}</b> <span class="note">(${c.words.length})</span><div class="note">${c.words.map(w=>esc(w.w)).join(", ")}</div></div>`).join("")}
+      ${chk.length?`<div class="chkbox"><b>Check your notes</b>${chk.map(x=>`<div><b>${esc(x.word)}</b> — ${esc(x.issue_th)}</div>`).join("")}</div>`:""}
+      <button class="primary" id="scanAdd">Add ${n} words</button></div>`;
+    $("scanAdd").onclick=addScan}
+  catch(e){if(e?.code==="cancelled")return;out.innerHTML=`<p class="note">${errMsg(e)}${e?.message?" · "+esc(String(e.message).slice(0,120)):""}</p>`}
+  finally{btn.disabled=false}}
+function addScan(){if(!scanResult)return;const src=$("scanName").value.trim()||scanResult.title||"My notes",date=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  const made=scanResult.cats.map((c,k)=>({id:"u"+Date.now().toString(36)+k,user:1,name:`${c.emoji} ${c.name}`,desc:`${src} · ${date}`,c:UD_COLORS[(S.udecks.length+k)%UD_COLORS.length],
+    w:c.words.map(({deck,...w})=>w)}));
+  S.udecks.push(...made);save();fillFilter();closeSheet();go("explore");sfx("ok");
+  toast(`Added ${made.reduce((t,d)=>t+d.w.length,0)} words in ${made.length} categories`)}
+
+/* ---------- daily noon reminder (Web Push, sent by a GitHub Action) ---------- */
+const VAPID_PUBLIC="BEhgmHUNltY2C5aLqjAXYlAEbB8UujKQvs0H4xjcxaYNFy7WH_D-Wr-AwaQO1CtjNfw47ChdGixCcHz_uMJIJnI";
+const b64u=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");const r=atob(s+"===".slice((s.length+3)%4));return Uint8Array.from(r,c=>c.charCodeAt(0))};
+async function reminderSub(){if(!("serviceWorker" in navigator)||!("PushManager" in window))return null;try{const r=await navigator.serviceWorker.ready;return await r.pushManager.getSubscription()}catch(e){return null}}
+async function enableReminder(){if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)){toast("This browser can't receive notifications. Open the installed app in Chrome.");return}
+  const p=await Notification.requestPermission();if(p!=="granted"){toast("Notifications are blocked — allow them in your phone's app settings");return}
+  try{const r=await navigator.serviceWorker.ready;let sub=await r.pushManager.getSubscription();
+    if(!sub)sub=await r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID_PUBLIC)});
+    S.remind=1;save();renderProfile();toast("Reminder turned on")}catch(e){toast("Couldn't turn on notifications: "+(e.message||e))}}
+async function reminderPanel(){const el=$("remPanel");if(!el)return;const sub=await reminderSub(),perm=("Notification" in window)?Notification.permission:"unsupported";
+  if(!sub||perm!=="granted"){el.innerHTML=`<div class="rowb"><h3>Daily reminder · 12:00</h3><button class="primary" id="remOn" style="padding:8px 14px">Turn on</button></div>
+      <span class="note">Get a notification every day at noon with a word of the day.</span>`;$("remOn").onclick=enableReminder;return}
+  const code=JSON.stringify(sub);
+  el.innerHTML=`<div class="rowb"><h3>Daily reminder · 12:00</h3><span class="note" style="color:var(--confident)">On ✓</span></div>
+    <span class="note">Last step, once: copy this code and save it in GitHub as a secret named <b>PUSH_SUBSCRIPTION</b>. If you reinstall the app, do it again.</span>
+    <textarea class="codebox" id="remCode" readonly rows="3">${esc(code)}</textarea>
+    <div class="trow"><button class="ghost" id="remCopy" style="padding:8px 14px">Copy code</button><button class="ghost" id="remTest" style="padding:8px 14px">Test notification</button></div>`;
+  $("remCopy").onclick=async()=>{try{await navigator.clipboard.writeText(code);toast("Copied")}catch(e){$("remCode").select();toast("Select all and copy")}};
+  $("remTest").onclick=async()=>{const r=await navigator.serviceWorker.ready;r.showNotification("Time to review 📚",{body:"This is how your noon reminder will look.",icon:"icon-192.png",badge:"icon-192.png",tag:"daily-review"})}}
 
 /* ---------- achievements ---------- */
 const lvConf=id=>cardsFor(id).filter(c=>status(c)==="confident").length;

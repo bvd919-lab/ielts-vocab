@@ -1,5 +1,5 @@
 /* Picture Vocab service worker: app works offline; AI calls always go to the network */
-const VERSION = "vv-5624c19d";
+const VERSION = "vv-0b23230a";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => {
@@ -23,4 +23,19 @@ self.addEventListener("fetch", e => {
       return hit || net;
     })));
   }
+});
+
+/* daily reminder: a GitHub Action sends a Web Push at noon */
+self.addEventListener("push", e => {
+  let d = {}; try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data ? e.data.text() : "" }; }
+  e.waitUntil(self.registration.showNotification(d.title || "Time to review 📚", {
+    body: d.body || "Open Picture Vocab and review a few words.", icon: "icon-192.png", badge: "icon-192.png",
+    tag: "daily-review", renotify: true, data: { url: d.url || "./" } }));
+});
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  e.waitUntil(clients.matchAll({ type: "window", includeUncontrolled: true }).then(cs => {
+    for (const c of cs) if ("focus" in c) return c.focus();
+    return clients.openWindow((e.notification.data && e.notification.data.url) || "./");
+  }));
 });

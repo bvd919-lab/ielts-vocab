@@ -1,0 +1,23 @@
+name: Noon vocab reminder
+
+on:
+  schedule:
+    # 04:52 UTC = 11:52 in Bangkok. GitHub usually starts scheduled runs a few minutes late,
+    # so the notification lands around noon.
+    - cron: "52 4 * * *"
+  workflow_dispatch: {}   # "Run workflow" button for a test
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-save web-push@3
+      - run: node .github/scripts/send-reminder.mjs
+        env:
+          VAPID_PUBLIC_KEY: ${{ vars.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_SUBSCRIPTION: ${{ secrets.PUSH_SUBSCRIPTION }}
