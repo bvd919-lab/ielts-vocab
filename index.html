@@ -1218,33 +1218,29 @@ in no time|idm|B2|ในเวลาไม่นาน|Very quickly or soon|quic
     const h=hash(w),E=d.em,e=[E[h%E.length],E[(h+1)%E.length],E[(h+2)%E.length]];
     d.w.push([w,"",POSF[pos]||pos,th,def,"","",syn,d.theme,e,lv])}})();
 /* My Cambridge notes — each week's words, grouped by category. Same parser as IELTS_RAW, but duplicates are allowed */
-const NOTES_RAW=`#n12-home|🏠 Home & Everyday Life|Cambridge 12 · Listening · week of 22 Nov|room|🏠,🧹,🧾,🩴,🗄️|#7a5a32,#3a2914
+const NOTES_RAW=`#cambridge|📘 Cambridge IELTS|My notes from the Cambridge IELTS books · new words every week|room|📘,🎧,📝,📚,✏️|#8a3f5a,#3d1a28
 cheque|n|B1|เช็ค (ใบสั่งจ่ายเงินจากบัญชีธนาคาร)|A printed form that you write on and sign to pay money from your bank account (US spelling: check)|bank draft
 cupboard|n|A2|ตู้ที่มีประตู ใช้เก็บจาน อาหาร หรือของใช้|A piece of furniture with doors and shelves, used for storing dishes, food or clothes|cabinet
 sweep|v|B1|กวาด|To clean a floor or surface by pushing dirt away with a brush|brush
 sandal|n|A2|รองเท้าแตะแบบมีสายรัด|An open shoe that is held on the foot by straps|flip-flop
 fiddle with|phr|B2|เล่นหรือจับนู่นนี่ไปเรื่อย (มักเพราะเบื่อหรือประหม่า)|To keep touching or moving something with your fingers, often because you are bored or nervous|fidget with
-#n12-farm|🌾 Farm & Countryside|Cambridge 12 · Listening · week of 22 Nov|day|🌾,🐄,🌳,🏡,🚜|#5a7a2e,#27380f
 barn|n|B1|โรงนา, ยุ้งฉาง|A large farm building for keeping animals, crops or machinery|farm building
 farmyard|n|B2|ลานในฟาร์ม (ล้อมด้วยอาคารฟาร์ม)|An open area surrounded by farm buildings, often where animals are kept|yard
 hedge|n|B1|รั้วต้นไม้, แนวพุ่มไม้|A line of bushes growing close together, used as a fence or wall|hedgerow
 branch|n|B1|กิ่งไม้; (กริยา) แยกออกเป็นสองทางหรือมากกว่า|A part of a tree that grows out from the main trunk; as a verb, to divide into two or more parts|bough
 uneven|adj|B2|ขรุขระ, ไม่เรียบ|Not flat or smooth, for example an uneven path or floor|bumpy
 further up|phr|B1|ถัดขึ้นไปอีก (ตามถนนหรือทางเดิน)|A little more distance from where you are now, along a road or path|farther along
-#n12-nature|🦋 Nature & Wildlife|Cambridge 12 · Listening · week of 22 Nov|day|🦋,🐦,🌿,🦌,🌍|#3f7a52,#1b3a26
 endangered|adj|B2|ใกล้สูญพันธุ์|(Of an animal or plant) at high risk of no longer existing|threatened
 congregate|v|C1|รวมตัว, ชุมนุมกันเป็นกลุ่มใหญ่|(Of people or animals) to come together in a large group|gather
 nutrient|n|B2|สารอาหาร|A substance in food that plants, animals and people need to live and grow|nourishment
 migration|n|B2|การอพยพ, การย้ายถิ่น|The movement of animals or people from one region to another, often when the season changes|movement
 reserve|n|B2|เขตอนุรักษ์; ของสำรอง|An area of land where wild animals and plants are protected; also a supply kept for later use|sanctuary
-#n12-mind|💭 Thinking & Feelings|Cambridge 12 · Listening · week of 22 Nov|dusk|💭,😨,💪,🥺,🗣️|#6a4a7a,#2e1f38
 insist|v|B1|ยืนกราน, ยืนยันหนักแน่น (ว่าต้อง…)|To say firmly that something must happen or that something is true, even if others disagree|demand
 presume|v|C1|สันนิษฐาน (เดาจากสิ่งที่ดูน่าจะเป็น)|To believe something is true without being certain, because it seems likely|assume
 frighten|v|B1|ทำให้กลัว|To make someone feel afraid or nervous|scare
 affirmation|n|C1|การยืนยัน; คำพูดให้กำลังใจ|A statement that something is true, or words that give support and encouragement|confirmation
 overcome|v|B2|เอาชนะ, ก้าวข้าม (ปัญหา); (be overcome) ถูกอารมณ์ครอบงำ|To successfully deal with a problem or difficulty; if a feeling overcomes you, it affects you very strongly|conquer
 pity|n|B2|ความสงสาร; (it's a pity) น่าเสียดาย|A feeling of sadness for someone who is in trouble; "it's a pity" means something is disappointing|sympathy
-#n12-study|📚 Study & Academic|Cambridge 12 · Listening · week of 22 Nov|room|📚,📝,📊,🎓,🔬|#4f5a8f,#222844
 discipline|n|B2|ระเบียบวินัย; สาขาวิชา|The practice of following rules or controlling your behaviour; also a subject of study at university|field
 relatively|adv|B2|ค่อนข้าง (เมื่อเทียบกับอย่างอื่น)|Quite, when compared with other things or with what is usual|comparatively
 factual|adj|B2|อิงข้อเท็จจริง|Based on or containing facts rather than opinions|true
@@ -1948,11 +1944,10 @@ function shrinkImage(file){return new Promise((res,rej)=>{const img=new Image(),
   img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error("bad image"))};img.src=u})}
 let scanImgs=[],scanResult=null;
 function openScan(){scanImgs=[];scanResult=null;const box=document.createElement("div");box.className="addbox";
-  box.innerHTML=`<p class="note" style="margin:0">Take a photo of your vocabulary notes. AI reads your handwriting, fixes spelling, groups the words into categories and makes a card for each one.</p>
+  box.innerHTML=`<p class="note" style="margin:0">Take a photo of your Cambridge IELTS notes. AI reads your handwriting, fixes spelling and adds a card for each word to the Cambridge IELTS deck.</p>
     <label class="primary" style="text-align:center;cursor:pointer">📷 Take or choose photos<input type="file" id="scanIn" accept="image/*" capture="environment" multiple hidden></label>
     <div class="thumbs" id="scanThumbs"></div>
-    <input id="scanName" class="sinput" placeholder="Name, e.g. Cambridge 12 · Listening (optional)" aria-label="Notes name">
-    <button class="primary" id="scanGo" disabled>Read my notes</button><div id="scanOut"></div>`;
+        <button class="primary" id="scanGo" disabled>Read my notes</button><div id="scanOut"></div>`;
   openSheet("Scan notes",box);
   $("scanIn").onchange=async e=>{for(const f of [...e.target.files].slice(0,4-scanImgs.length)){try{scanImgs.push(await shrinkImage(f))}catch(x){toast("Couldn't open that image")}}
     e.target.value="";$("scanThumbs").innerHTML=scanImgs.map(i=>`<img src="${i.url}" alt="Notes photo">`).join("");$("scanGo").disabled=!scanImgs.length};
@@ -1973,19 +1968,17 @@ async function readScan(){const out=$("scanOut"),btn=$("scanGo"),sample=getSampl
     if(!cats.length)throw{code:"invalid_json"};
     scanResult={title:String(r.title||"").slice(0,60),cats};const n=cats.reduce((t,c)=>t+c.words.length,0);
     const chk=(Array.isArray(r.notes_check)?r.notes_check:[]).filter(x=>x&&x.word);
-    if(scanResult.title&&!$("scanName").value)$("scanName").value=scanResult.title;
-    out.innerHTML=`<div class="panel" style="background:var(--surface-2)"><b style="font:700 16px var(--display)">Found ${n} words in ${cats.length} categories</b>
-      ${cats.map(c=>`<div><b>${esc(c.emoji)} ${esc(c.name)}</b> <span class="note">(${c.words.length})</span><div class="note">${c.words.map(w=>esc(w.w)).join(", ")}</div></div>`).join("")}
+        out.innerHTML=`<div class="panel" style="background:var(--surface-2)"><b style="font:700 16px var(--display)">Found ${n} words</b>
+      <div class="note">${cats.flatMap(c=>c.words.map(w=>esc(w.w))).join(", ")}</div>
       ${chk.length?`<div class="chkbox"><b>Check your notes</b>${chk.map(x=>`<div><b>${esc(x.word)}</b> — ${esc(x.issue_th)}</div>`).join("")}</div>`:""}
-      <button class="primary" id="scanAdd">Add ${n} words</button></div>`;
+      <button class="primary" id="scanAdd">Add to Cambridge IELTS</button></div>`;
     $("scanAdd").onclick=addScan}
   catch(e){if(e?.code==="cancelled")return;out.innerHTML=`<p class="note">${errMsg(e)}${e?.message?" · "+esc(String(e.message).slice(0,120)):""}</p>`}
   finally{btn.disabled=false}}
-function addScan(){if(!scanResult)return;const src=$("scanName").value.trim()||scanResult.title||"My notes",date=new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"});
-  const made=scanResult.cats.map((c,k)=>({id:"u"+Date.now().toString(36)+k,user:1,name:`${c.emoji} ${c.name}`,desc:`${src} · ${date}`,c:UD_COLORS[(S.udecks.length+k)%UD_COLORS.length],
-    w:c.words.map(({deck,...w})=>w)}));
-  S.udecks.push(...made);save();fillFilter();closeSheet();go("explore");sfx("ok");
-  toast(`Added ${made.reduce((t,d)=>t+d.w.length,0)} words in ${made.length} categories`)}
+function addScan(){if(!scanResult)return;const have=new Set(cardsFor("cambridge").map(c=>c.w)),add=[];
+  scanResult.cats.forEach(c=>c.words.forEach(({deck,...w})=>{if(!have.has(w.w)){have.add(w.w);add.push(w)}}));
+  S.extra.cambridge=(S.extra.cambridge||[]).concat(add);save();closeSheet();go("explore");sfx("ok");
+  toast(add.length?`Added ${add.length} word${add.length>1?"s":""} to Cambridge IELTS`:"All these words are already in Cambridge IELTS")}
 
 /* ---------- daily noon reminder (Web Push, sent by a GitHub Action) ---------- */
 const VAPID_PUBLIC="BEhgmHUNltY2C5aLqjAXYlAEbB8UujKQvs0H4xjcxaYNFy7WH_D-Wr-AwaQO1CtjNfw47ChdGixCcHz_uMJIJnI";
